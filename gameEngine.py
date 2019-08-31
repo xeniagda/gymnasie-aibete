@@ -1,7 +1,7 @@
 import graphics
-import * from util
+from util import * 
 
-class gameEngine:
+class GameEngine:
     def __init__(self,level=[1,1,1,2,1,1]):
         self.level = level
         self.player = Player(0,level[0],0,0)
@@ -42,11 +42,11 @@ class Player:
         self.jump = 1
     
     def applyAction(self,action):
-        if action = Actions.LEFT:
+        if action == Actions.LEFT:
             self.vx = -self.speed
-        if action = Actions.RIGHT:
+        if action == Actions.RIGHT:
             self.vx = self.speed
-        if action = Actions.JUMP and self.isOnGround():
+        if action == Actions.JUMP and self.isOnGround():
             self.vy = self.jump
         
     def move(self,timeStep):
