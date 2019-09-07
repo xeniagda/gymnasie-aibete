@@ -2,6 +2,9 @@ import random
 import numpy as np
 from util import *
 
+# Tillåts att gå 10% över denna
+SOFT_REPLAY_LIMIT = 10000
+
 class Qlearner:
     def __init__(self, random_epsilon):
         # TODO: Implement!
@@ -20,9 +23,6 @@ class Qlearner:
 
         # Hur ofta agenten svarar med en slumpmässig action
         self.random_epsilon = random_epsilon
-
-        # Begränsa längden av self.experience_replay
-        self.max_replays = 100
 
     def getAction(self, agentInput):
         if random.random() < self.random_epsilon:
@@ -51,16 +51,16 @@ class Qlearner:
             axis=0
         )
 
-        # Tillåt 10% över self.max_replays för att inte göra clean_er varje tick
+        # Tillåt 10% över SOFT_REPLAY_LIMIT för att inte göra clean_er varje tick
         # Borde hjälpa performaance, då att ta bort saker i början inte är så billigt
-        if len(self.experience_replay[0]) > self.max_replays * 1.1:
-            self.clean_er(self.max_replays)
+        if len(self.experience_replay[0]) > SOFT_REPLAY_LIMIT * 1.1:
+            self.clean_er()
 
 
-    def clean_er(self, nr_er):
+    def clean_er(self):
         # Begränsa self.experience_replay till de nr_er sista elementen
 
-        self.experience_replay[0] = self.experience_replay[0][-nr_er:]
-        self.experience_replay[1] = self.experience_replay[1][-nr_er:]
-        self.experience_replay[2] = self.experience_replay[2][-nr_er:]
-        self.experience_replay[3] = self.experience_replay[3][-nr_er:]
+        self.experience_replay[0] = self.experience_replay[0][-SOFT_REPLAY_LIMIT:]
+        self.experience_replay[1] = self.experience_replay[1][-SOFT_REPLAY_LIMIT:]
+        self.experience_replay[2] = self.experience_replay[2][-SOFT_REPLAY_LIMIT:]
+        self.experience_replay[3] = self.experience_replay[3][-SOFT_REPLAY_LIMIT:]
