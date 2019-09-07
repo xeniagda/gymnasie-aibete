@@ -6,7 +6,7 @@ class RandomAgent:
         pass
 
     def getAction(self, agentInput):
-        if random.randint(1,10)==1:
+        if random.randint(1, 10)==1:
             return Actions.RIGHT
         else:
             return Actions.JUMP
