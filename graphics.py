@@ -25,7 +25,6 @@ def draw_loop():
         if player == None or level == None:
             continue
 
-        print(player.y)
         #level is a list of heights of pillars
         #player is a Player object
         
