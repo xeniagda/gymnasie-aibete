@@ -3,8 +3,8 @@ class AgentBase:
     def __init__(self):
         pass
 
-    def getAction(self,agentState):
+    def getAction(self, agentInput):
         raise NotImplementedError("Implement me!")
 
-    def update(self,oldAgentState,action,newAgentState,reward):
+    def update(self, oldAgentInput, action, newAgentInput, reward):
         raise NotImplementedError("Implement me!")

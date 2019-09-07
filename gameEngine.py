@@ -9,7 +9,7 @@ class GameEngine:
         self.level = level
         self.player = Player(0,level[0],0,0)
 
-    def getNextState(self,action,draw=False,timeStep=0.01):
+    def performTick(self, action, draw=False, timeStep=0.01):
         self.player.applyAction(action)
         self.player.move(timeStep)
         self.resolveCollisions()
@@ -17,12 +17,12 @@ class GameEngine:
         if draw:
             graphics.drawGame(self.level,self.player)
         
-        agentState = self.getAgentState()
+        agentInput = self.getAgentInput()
         reward = 1
         terminate = self.player.x>=len(self.level)
-        return (agentState,reward,terminate)
+        return (agentInput,reward,terminate)
     
-    def getAgentState(self):
+    def getAgentInput(self):
         return [self.player.x,self.player.y]
     
     def resolveCollisions(self):

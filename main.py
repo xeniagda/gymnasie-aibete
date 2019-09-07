@@ -8,12 +8,12 @@ class Driver:
         self.playGame()
 
     def playGame(self):
-        agentState = self.engine.getAgentState()
+        agentInput = self.engine.getAgentInput()
         while True:
-            action = self.agent.getAction(agentState)
-            newAgentState,reward,terminate = self.engine.getNextState(action,True)
+            action = self.agent.getAction(agentInput)
+            newAgentInput,reward,terminate = self.engine.performTick(action,True)
 
-            self.agent.update(agentState,action,newAgentState,reward)
+            self.agent.update(agentInput,action,newAgentInput,reward)
             if terminate:
                 break
 
