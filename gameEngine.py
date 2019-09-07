@@ -19,7 +19,7 @@ class GameEngine:
         
         agentState = self.getAgentState()
         reward = 1
-        terminate = self.player.x>=len(self.level)-1 
+        terminate = self.player.x>=len(self.level)
         return (agentState,reward,terminate)
     
     def getAgentState(self):
