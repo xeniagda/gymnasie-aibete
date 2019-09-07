@@ -1,5 +1,5 @@
 from gameEngine import * 
-from agents.randomAgent import *
+from agents.qlearner import Qlearner
 
 class Driver:
     def __init__(self,level,agent):
@@ -19,7 +19,7 @@ class Driver:
 
 
 def main():
-    agent = RandomAgent()
+    agent = Qlearner(0.1)
     driver = Driver([1,3,2,4,4,3,1,1,1,1],agent)
 
 main()
