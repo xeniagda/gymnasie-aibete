@@ -4,6 +4,8 @@ import random
 
 random.seed(1)
 
+
+
 class GameEngine:
     def __init__(self,level=[1,1,1,2,1,1]):
         self.level = level
@@ -29,30 +31,8 @@ class GameEngine:
         self.player.isOnGround = False
         for i in range(int(self.player.x)-1,int(self.player.x)+2):
             if i>=0 and i<len(self.level):
-                self.player.isOnGround |= self.resolveCollisionWithBlock(i,0,1,self.level[i])
+                self.player.isOnGround |= self.player.resolveCollisionWithBlock(i,0,1,self.level[i])
 
-    def resolveCollisionWithBlock(self,bx,by,bw,bh):
-        if(max(bx,self.player.x)<min(bx+bw,self.player.x+self.player.width)
-            and max(by,self.player.y)<min(by+bh,self.player.y+self.player.height)):
-            distLeft = self.player.x+self.player.width-bx
-            distRight = bx+bw-self.player.x
-            distDown = self.player.y+self.player.height-by
-            distUp = by+bh-self.player.y
-            minDist = min(distLeft,distRight,distUp,distDown)
-            if distUp == minDist:
-                self.player.y = by+bh
-                self.player.vy = 0
-                return True
-            if distLeft == minDist:
-                self.player.x = bx-self.player.width
-                self.player.vx = 0
-            if distRight == minDist:
-                self.player.x = bx+bw
-                self.player.vx = 0
-            if distDown == minDist:
-                self.player.y = by-self.player.height
-                self.player.vy = 0
-        return False
 
 class Player:
     def __init__(self,x,y,vx,vy):
@@ -88,4 +68,26 @@ class Player:
         self.vy += self.gravity * timeStep
         self.x += self.vx * timeStep
         self.y += self.vy * timeStep
-
+    
+    def resolveCollisionWithBlock(self,bx,by,bw,bh):
+        if(max(bx,self.x)<min(bx+bw,self.x+self.width)
+            and max(by,self.y)<min(by+bh,self.y+self.height)):
+            distLeft = self.x+self.width-bx
+            distRight = bx+bw-self.x
+            distDown = self.y+self.height-by
+            distUp = by+bh-self.y
+            minDist = min(distLeft,distRight,distUp,distDown)
+            if distUp == minDist:
+                self.y = by+bh
+                self.vy = 0
+                return True
+            if distLeft == minDist:
+                self.x = bx-self.width
+                self.vx = 0
+            if distRight == minDist:
+                self.x = bx+bw
+                self.vx = 0
+            if distDown == minDist:
+                self.y = by-self.height
+                self.vy = 0
+        return False
