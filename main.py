@@ -1,4 +1,6 @@
-from gameEngine import * 
+from gameEngine import *
+from graphics import init_screen, draw_loop
+import threading
 from agents.qlearner import Qlearner
 
 class Driver:
@@ -22,4 +24,6 @@ def main():
     agent = Qlearner(0.1)
     driver = Driver([1,3,2,4,4,3,1,1,1,1],agent)
 
-main()
+threading.Thread(target=main, daemon=True).start()
+init_screen()
+draw_loop()
