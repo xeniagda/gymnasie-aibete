@@ -20,7 +20,7 @@ def agentInput2n(agentInput):
         if x < 0.5:
             agentInput[-2] = 0
         else:
-            agentInput[-2] = 2
+            agentInput[-2] = 1
 
     elif NR_STATES_PER_BLOCK == 3:
         if y < 0.3:
