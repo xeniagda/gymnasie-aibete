@@ -4,17 +4,45 @@ from util import *
 
 FUTURE_DISCOUNT = 0.8 ** 0.01
 
-def agentInput2n(agentInput):
-    exp_2 = 2 ** np.arange(3*3+2)
-    agentInput[-1] = agentInput[-1] > 0.5
-    agentInput[-2] = agentInput[-2] > 0.5
+NR_STATES_PER_BLOCK = 2
 
-    return int((agentInput * exp_2).sum())
+def agentInput2n(agentInput):
+    exp = NR_STATES_PER_BLOCK ** np.arange(3*3+2)
+
+    y = agentInput[-1]
+    x = agentInput[-2]
+    if NR_STATES_PER_BLOCK == 2:
+        if y < 0.5:
+            agentInput[-1] = 0
+        else:
+            agentInput[-1] = 1
+
+        if x < 0.5:
+            agentInput[-2] = 0
+        else:
+            agentInput[-2] = 2
+
+    elif NR_STATES_PER_BLOCK == 3:
+        if y < 0.3:
+            agentInput[-1] = 0
+        elif y < 0.7:
+            agentInput[-1] = 1
+        else:
+            agentInput[-1] = 2
+
+        if x < 0.3:
+            agentInput[-2] = 0
+        elif x < 0.7:
+            agentInput[-2] = 1
+        else:
+            agentInput[-2] = 2
+
+    return int((agentInput * exp).sum())
 
 class Qlearner:
     def __init__(self, random_epsilon):
         # TODO: Implement!
-        self.q_table = np.random.normal(0, 0.2, size=[2 ** (3 * 3 + 2), 3])
+        self.q_table = np.random.normal(0, 0.2, size=[NR_STATES_PER_BLOCK ** (3 * 3 + 2), 3])
 
         # Hur ofta agenten svarar med en slumpmässig action
         self.random_epsilon = random_epsilon
