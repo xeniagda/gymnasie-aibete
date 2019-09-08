@@ -21,6 +21,7 @@ class Driver:
             newAgentInput,reward,terminate = self.engine.performTick(action,True)
 
             self.agent.update(agentInput,action,newAgentInput,reward)
+            agentInput = newAgentInput
             if terminate:
                 self.reset_engine()
 
