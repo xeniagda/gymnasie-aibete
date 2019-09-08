@@ -23,7 +23,7 @@ class Qlearner:
         self.t_random = [0, None] # (time, action)
 
     def getAction(self, agentInput):
-        if random.random() < 0.01:
+        if random.random() < self.random_epsilon:
             return Actions.JUMP
         if self.t_random[0] > 0:
             return self.t_random[1]
