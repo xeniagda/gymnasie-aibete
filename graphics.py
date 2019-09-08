@@ -13,7 +13,7 @@ pg_player = None
 done = False
 
 # Game units
-PLAYER_FOLLOW_X = 4
+PLAYER_FOLLOW_X = 7
 
 def init_screen():
     global screen
@@ -52,7 +52,8 @@ def draw_loop():
 
         for x, wall_height in enumerate(level):
             rec = getRect(x - delta_x, 0, 1, wall_height)
-            pygame.draw.rect(screen, (0, 0, 0), rec)
+            if screen.get_bounding_rect().colliderect(rec):
+                pygame.draw.rect(screen, (0, 0, 0), rec)
 
         pygame.display.flip()
 
@@ -66,5 +67,5 @@ def drawGame(level, player):
 
     pg_level = level
     pg_player = player
-    time.sleep(0.005)
+    time.sleep(0.002)
 
