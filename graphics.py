@@ -10,8 +10,7 @@ SCALE = 50
 
 screen = None
 
-pg_level = None
-pg_player = None
+game_engine = None
 done = False
 
 # Game units
@@ -28,7 +27,7 @@ def init_screen():
 
 
 def draw_loop():
-    global screen, pg_level, pg_player,height, done, REWARD, TIME_PER_FRAME
+    global screen, game_engine, pg_player,height, done, REWARD, TIME_PER_FRAME
 
     last_time = time.time()
 
@@ -43,14 +42,12 @@ def draw_loop():
                 if event.key == 276: # Left
                     TIME_PER_FRAME = 0.002
 
-        level = pg_level
-        player = pg_player
-        if player == None or level == None:
+        if game_engine == None:
             continue
 
         delta_x = 0
-        if player.x > PLAYER_FOLLOW_X:
-            delta_x = player.x - PLAYER_FOLLOW_X
+        if game_engine.player.x > PLAYER_FOLLOW_X:
+            delta_x = game_engine.player.x - PLAYER_FOLLOW_X
 
         if REWARD > 0:
             v = min(int(REWARD * 7000), 255)
@@ -61,12 +58,13 @@ def draw_loop():
         else:
             screen.fill((255, 255, 255))
 
-        rec = getRect(player.x - delta_x, player.y, player.width, player.height)
+        rec = getRect(game_engine.player.x - delta_x, game_engine.player.y,
+                      game_engine.player.width, game_engine.player.height)
 
         pygame.draw.rect(screen, (0, 0, 0), rec)
         pygame.draw.rect(screen, (0, 0, 255), rec.inflate(-2, -2))
 
-        for x, wall_height in enumerate(level):
+        for x, wall_height in enumerate(game_engine.level):
             rec = getRect(x - delta_x, 0, 1, wall_height)
             if screen.get_bounding_rect().colliderect(rec):
                 pygame.draw.rect(screen, (0, 0, 0), rec)
@@ -78,11 +76,10 @@ def draw_loop():
 def getRect(x,y,w,h):
     return pygame.Rect(int(x*SCALE),int(height-(y+h)*SCALE),int(w*SCALE),int(h*SCALE))
 
-def drawGame(level, player, reward):
-    global pg_level, pg_player, REWARD, TIME_PER_FRAME
+def drawGame(ge, reward):
+    global game_engine, REWARD, TIME_PER_FRAME
 
-    pg_level = level
-    pg_player = player
+    game_engine = ge
     time.sleep(TIME_PER_FRAME)
 
     REWARD = REWARD * 0.9 + 0.1 * reward
