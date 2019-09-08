@@ -21,7 +21,7 @@ class GameEngine:
         delta_x = self.player.x - last_x
         reward = delta_x
         if draw:
-            graphics.drawGame(self.level,self.player, reward)
+            graphics.drawGame(self, reward)
         
         agentInput = self.getAgentInput()
 
