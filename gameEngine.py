@@ -32,6 +32,8 @@ class GameEngine:
         for i in range(int(self.player.x)-1,int(self.player.x)+2):
             if i>=0 and i<len(self.level):
                 self.player.isOnGround |= self.player.resolveCollisionWithBlock(i,0,1,self.level[i])
+            if i < 0:
+                self.player.isOnGround |= self.player.resolveCollisionWithBlock(i,0,1,1e10)
 
 
 class Player:
