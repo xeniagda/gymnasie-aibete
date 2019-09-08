@@ -1,10 +1,11 @@
+import numpy as np
 import graphics
 from util import * 
 import random
 
-random.seed(1)
+# random.seed(1)
 
-
+AROUND_RAD = 1
 
 class GameEngine:
     def __init__(self,level=[1,1,1,2,1,1]):
@@ -25,7 +26,25 @@ class GameEngine:
         return (agentInput,reward,terminate)
     
     def getAgentInput(self):
-        return [self.player.x,self.player.y]
+        res = np.zeros(((AROUND_RAD * 2 + 1) ** 2 + 2, ))
+
+        for dx in range(-AROUND_RAD, AROUND_RAD + 1):
+            for dy in range(-AROUND_RAD, AROUND_RAD + 1):
+                ix =  dx + AROUND_RAD
+                iy =  dy + AROUND_RAD
+
+                ry = self.player.y + dy + 0.5
+                rx = int(self.player.x + dx) % len(self.level)
+
+                is_solid = ry > self.level[rx]
+
+                if is_solid:
+                    res[iy * (AROUND_RAD * 2 + 1) + ix] = 1
+
+        res[-2] = self.player.x % 1
+        res[-1] = self.player.y % 1
+
+        return res
     
     def resolveCollisions(self):
         self.player.isOnGround = False
