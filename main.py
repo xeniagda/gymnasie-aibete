@@ -38,7 +38,7 @@ def generate_level(length=20):
     return level
 
 def main():
-    agent = Qlearner(0.1)
+    agent = Qlearner(0.01)
     driver = Driver(30, agent)
 
 threading.Thread(target=main, daemon=True).start()
