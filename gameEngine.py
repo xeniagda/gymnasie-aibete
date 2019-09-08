@@ -13,15 +13,18 @@ class GameEngine:
         self.player = Player(0,level[0],0,0)
 
     def performTick(self, action, draw=False, timeStep=0.01):
+        last_x = self.player.x
         self.player.applyAction(action)
         self.player.move(timeStep)
         self.resolveCollisions()
 
+        delta_x = self.player.x - last_x
+        reward = delta_x
         if draw:
-            graphics.drawGame(self.level,self.player)
+            graphics.drawGame(self.level,self.player, reward)
         
         agentInput = self.getAgentInput()
-        reward = 1
+
         terminate = self.player.x>=len(self.level)
         return (agentInput,reward,terminate)
     
