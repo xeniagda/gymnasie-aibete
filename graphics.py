@@ -14,8 +14,8 @@ game_engine = None
 done = False
 
 # Game units
-PLAYER_FOLLOW_X = 7
 REWARD = 0
+PLAYER_FOLLOW_MARGINS = 7
 
 def init_screen():
     global screen
@@ -31,6 +31,9 @@ def draw_loop():
 
     last_time = time.time()
 
+    delta_x = 0
+    delta_y = 0
+
     while not done:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -45,9 +48,17 @@ def draw_loop():
         if game_engine == None:
             continue
 
-        delta_x = 0
-        if game_engine.player.x > PLAYER_FOLLOW_X:
-            delta_x = game_engine.player.x - PLAYER_FOLLOW_X
+        if game_engine.player.x - delta_x < PLAYER_FOLLOW_MARGINS:
+            delta_x = game_engine.player.x - PLAYER_FOLLOW_MARGINS
+
+        if game_engine.player.x - delta_x > (width - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE:
+            delta_x = game_engine.player.x - (width - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE
+
+        if game_engine.player.y - delta_y < PLAYER_FOLLOW_MARGINS:
+            delta_y = game_engine.player.y - PLAYER_FOLLOW_MARGINS
+
+        if game_engine.player.y - delta_y > (height - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE:
+            delta_y = game_engine.player.y - (height - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE
 
         if REWARD > 0:
             v = min(int(REWARD * 7000), 255)
@@ -58,14 +69,14 @@ def draw_loop():
         else:
             screen.fill((255, 255, 255))
 
-        rec = getRect(game_engine.player.x - delta_x, game_engine.player.y,
+        rec = getRect(game_engine.player.x - delta_x, game_engine.player.y - delta_y,
                       game_engine.player.width, game_engine.player.height)
 
         pygame.draw.rect(screen, (0, 0, 0), rec)
         pygame.draw.rect(screen, (0, 0, 255), rec.inflate(-2, -2))
 
         for x, wall_height in enumerate(game_engine.level):
-            rec = getRect(x - delta_x, 0, 1, wall_height)
+            rec = getRect(x - delta_x, 0 - delta_y, 1, wall_height)
             if screen.get_bounding_rect().colliderect(rec):
                 pygame.draw.rect(screen, (0, 0, 0), rec)
 
