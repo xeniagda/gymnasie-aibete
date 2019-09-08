@@ -76,7 +76,7 @@ def draw_loop():
         pygame.draw.rect(screen, (0, 0, 255), rec.inflate(-2, -2))
 
         for x, wall_height in enumerate(game_engine.level):
-            rec = getRect(x - delta_x, 0 - delta_y, 1, wall_height)
+            rec = getRect(x - delta_x, 0, 1, wall_height - delta_y)
             if screen.get_bounding_rect().colliderect(rec):
                 pygame.draw.rect(screen, (0, 0, 0), rec)
 
