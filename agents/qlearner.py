@@ -5,14 +5,16 @@ from util import *
 FUTURE_DISCOUNT = 0.8 ** 0.01
 
 def agentInput2n(agentInput):
-    exp_2 = 2 ** np.arange(11)
+    exp_2 = 2 ** np.arange(3*3+2)
+    agentInput[-1] = agentInput[-1] > 0.5
+    agentInput[-2] = agentInput[-2] > 0.5
 
-    return int((agentInput[:-2] * exp_2[:-2]).sum())
+    return int((agentInput * exp_2).sum())
 
 class Qlearner:
     def __init__(self, random_epsilon):
         # TODO: Implement!
-        self.q_table = np.random.normal(0, 0.2, size=[2 ** 9, 3])
+        self.q_table = np.random.normal(0, 0.2, size=[2 ** (3 * 3 + 2), 3])
 
         # Hur ofta agenten svarar med en slumpmässig action
         self.random_epsilon = random_epsilon
