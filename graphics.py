@@ -12,6 +12,9 @@ pg_level = None
 pg_player = None
 done = False
 
+# Game units
+PLAYER_FOLLOW_X = 4
+
 def init_screen():
     global screen
     pygame.init()
@@ -37,12 +40,18 @@ def draw_loop():
         if player == None or level == None:
             continue
 
+
+        delta_x = 0
+        if player.x > PLAYER_FOLLOW_X:
+            delta_x = player.x - PLAYER_FOLLOW_X
+
         screen.fill((255, 255, 255))
-        rec = getRect(player.x, player.y, player.width, player.height)
+        rec = getRect(player.x - delta_x, player.y, player.width, player.height)
+
         pygame.draw.rect(screen, (0, 0, 0), rec)
 
         for x, wall_height in enumerate(level):
-            rec = getRect(x, 0, 1, wall_height)
+            rec = getRect(x - delta_x, 0, 1, wall_height)
             pygame.draw.rect(screen, (0, 0, 0), rec)
 
         pygame.display.flip()
