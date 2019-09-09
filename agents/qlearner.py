@@ -1,6 +1,11 @@
 import random
+import os
+import time
 import numpy as np
 from util import *
+
+SAVE_PATH = "q-table-learner.npz"
+SAVE_INTERVAL = 10
 
 FUTURE_DISCOUNT = 0.8 ** 0.01
 
@@ -41,14 +46,23 @@ def agentInput2n(agentInput):
 
 class Qlearner:
     def __init__(self, random_epsilon):
-        # TODO: Implement!
-        self.q_table = np.random.normal(0, 0.2, size=[NR_STATES_PER_BLOCK ** (3 * 3 + 2), 3])
+        if os.path.isfile(SAVE_PATH):
+            print("Reading old q table")
+            arch = np.load(SAVE_PATH)
+            print(arch.files)
+            self.q_table = arch["qtable"]
+            print(self.q_table)
+        else:
+            print("Creating new q table")
+            self.q_table = np.random.normal(0, 0.2, size=[NR_STATES_PER_BLOCK ** (3 * 3 + 2), 3])
 
         # Hur ofta agenten svarar med en slumpmässig action
         self.random_epsilon = random_epsilon
 
         self.learning_rate = 0.1
         self.t_random = [0, None] # (time, action)
+
+        self.last_save = time.time()
 
     def getAction(self, agentInput):
         if random.random() < self.random_epsilon:
@@ -77,3 +91,8 @@ class Qlearner:
         old_i = agentInput2n(oldAgentInput)
         self.q_table[old_i][action.value] = \
             self.learning_rate * q + (1 - self.learning_rate) * self.q_table[old_i][action.value]
+
+        if time.time() - self.last_save > SAVE_INTERVAL:
+            print("Saving q table")
+            np.savez_compressed(SAVE_PATH, qtable=self.q_table)
+            self.last_save = time.time()
