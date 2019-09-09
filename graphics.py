@@ -15,6 +15,7 @@ done = False
 
 # Game units
 REWARD = 0
+REWARD_CHANGE_SPEED = 0.2
 PLAYER_FOLLOW_MARGINS = 7
 
 def init_screen():
@@ -85,7 +86,7 @@ def draw_loop():
         time.sleep(0.02)
 
 def getRect(x,y,w,h):
-    return pygame.Rect(int(x*SCALE),int(height-(y+h)*SCALE),int(w*SCALE),int(h*SCALE))
+    return pygame.Rect(int(x*SCALE),int(height-(y+h)*SCALE),math.ceil(w*SCALE+1),math.ceil(h*SCALE+1))
 
 def drawGame(ge, reward):
     global game_engine, REWARD, TIME_PER_FRAME
@@ -93,4 +94,4 @@ def drawGame(ge, reward):
     game_engine = ge
     time.sleep(TIME_PER_FRAME)
 
-    REWARD = REWARD * 0.9 + 0.1 * reward
+    REWARD = REWARD * REWARD_CHANGE_SPEED ** 0.01 + (1 - REWARD_CHANGE_SPEED ** 0.01) * reward
