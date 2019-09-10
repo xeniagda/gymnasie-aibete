@@ -2,7 +2,7 @@ import random
 from gameEngine import *
 from graphics import init_screen, draw_loop
 import threading
-from agents.qlearner import Qlearner
+from agents.deepqlearner import *
 
 class Driver:
     def __init__(self,level_size,agent):
@@ -38,7 +38,7 @@ def generate_level(length=20):
     return level
 
 def main():
-    agent = Qlearner(0.01)
+    agent = DeepQlearner(0.01)
     driver = Driver(30, agent)
 
 threading.Thread(target=main, daemon=True).start()
