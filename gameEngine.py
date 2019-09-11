@@ -2,6 +2,7 @@ import numpy as np
 import graphics
 from util import * 
 import random
+import math
 
 # random.seed(1)
 
@@ -11,6 +12,13 @@ class GameEngine:
     def __init__(self,level=[1,1,1,2,1,1]):
         self.level = level
         self.player = Player(0,level[0],0,0)
+        self.rewards = []
+
+    def logReward(self,reward):
+        self.rewards.append(reward)
+        if len(self.rewards)==10000:
+            print("Avg reward = ",int(sum(self.rewards)*100))
+            self.rewards = []
 
     def performTick(self, action, draw=False, timeStep=0.01):
         last_x = self.player.x
@@ -26,6 +34,9 @@ class GameEngine:
         agentInput = self.getAgentInput()
 
         terminate = self.player.x>=len(self.level)
+        
+        self.logReward(reward)
+
         return (agentInput,reward,terminate)
     
     def getAgentInput(self):
