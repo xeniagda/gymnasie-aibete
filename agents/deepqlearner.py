@@ -13,10 +13,10 @@ FUTURE_DISCOUNT = 0.8**0.01
 LEARNING_RATE = 0.01
 
 # Tillåts att gå 10% över denna
-SOFT_REPLAY_LIMIT = 1000
+SOFT_REPLAY_LIMIT = 5000
 
-TRAIN_RATE = 1000
-BATCH_SIZE = 256
+TRAIN_RATE = 2000
+BATCH_SIZE = 1024
 
 ACTIONS = [Actions.LEFT, Actions.RIGHT, Actions.JUMP]
 
@@ -83,15 +83,23 @@ class DeepQlearner:
 
         self.n_since_last_train = 0
 
+        self.t_random = [0, None] # (time, action)
+
     def getAction(self, agentInput):
         if random.random() < self.random_epsilon:
-            action = random.choice(ACTIONS)
-            return action
+            return Actions.JUMP
+        if self.t_random[0] > 0:
+            return self.t_random[1]
         else:
             pred = self.model(agentInput.reshape(1, 11))
             return ACTIONS[np.argmax(pred[0])]
 
     def update(self, oldAgentInput, action, newAgentInput, reward):
+        if random.random() < self.random_epsilon:
+            self.t_random = [0.1, random.choice([Actions.LEFT, Actions.RIGHT])]
+
+        self.t_random[0] -= 0.01
+
         # Lägg till i experience_replay
         self.experience_replay[0] = np.concatenate(
             [self.experience_replay[0], [oldAgentInput]], axis=0)
