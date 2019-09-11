@@ -1,9 +1,13 @@
+import os
+
 import tensorflow as tf
 import tensorflow.keras as kr
 
 import random
 import numpy as np
 from util import *
+
+SAVE_PATH = "deep-q-learner-save.h5"
 
 FUTURE_DISCOUNT = 0.8**0.01
 LEARNING_RATE = 0.01
@@ -32,10 +36,33 @@ class RLModel(kr.models.Model):
         x = self.layer2(x)
         return x
 
+
+def load_model():
+    mod = RLModel()
+    mod.build((5, 20))
+
+    if os.path.isfile(SAVE_PATH):
+        print("Loading")
+        mod.load_weights(SAVE_PATH)
+    else:
+        print("Creating new")
+    return mod
+
+
+def save_model(mod):
+    mod.save_weights(SAVE_PATH)
+
+
 class DeepQlearner:
     def __init__(self, random_epsilon):
         self.model = RLModel()
         self.model.build((None, 11))
+
+        if os.path.isfile(SAVE_PATH):
+            print("Loading")
+            self.model.load_weights(SAVE_PATH)
+        else:
+            print("Creating new model")
 
         # Står om detta i Atari-pappret
         # Basically en pool av alla saker som har hänt i alla spel
@@ -86,6 +113,7 @@ class DeepQlearner:
             print("Training")
             loss = self.train_on_random_minibatch()
             print("Loss =", loss)
+            self.model.save_weights(SAVE_PATH)
 
             self.n_since_last_train = 0
 
