@@ -3,9 +3,12 @@ from gameEngine import *
 import graphics
 import threading
 from agents.deepqlearner import *
-from levelGenerator import LevelGenerator
+import levelGenerator
 
-levelGenerator = LevelGenerator()
+RANDOM_EPSILON = 0.01
+RENDER = True
+WORLD_TYPE = levelGenerator.RandomLevelGenerator(2)
+WORLD_SIZE = 30
 
 MAX_TIME = 9000
 
@@ -19,7 +22,7 @@ class Driver:
         self.playGame()
 
     def reset_engine(self):
-        self.engine = GameEngine(levelGenerator.generateFlat(self.level_size))
+        self.engine = GameEngine(WORLD_TYPE.generate(self.level_size))
 
     def playGame(self):
         agentInput = self.engine.getAgentInput()
@@ -27,7 +30,7 @@ class Driver:
         play_time = 0
         while True:
             action = self.agent.getAction(agentInput)
-            newAgentInput,reward,terminate = self.engine.performTick(action,False)
+            newAgentInput,reward,terminate = self.engine.performTick(action, RENDER)
 
             self.agent.update(agentInput,action,newAgentInput,reward)
             agentInput = newAgentInput
@@ -50,13 +53,15 @@ class Driver:
 
 
 def main():
-    agent = DeepQlearner(0.01)
-    driver = Driver(30, agent)
-    
-    graphics.drawGame(driver.engine, 0)
+    agent = DeepQlearner(RANDOM_EPSILON)
+    driver = Driver(WORLD_SIZE, agent)
+
+    if RENDER:
+        graphics.drawGame(driver.engine, 0)
+
+if RENDER:
+    threading.Thread(target=main, daemon=True).start()
+    graphics.init_screen()
+    graphics.draw_loop()
 
 main()
-
-#threading.Thread(target=main, daemon=True).start()
-#graphics.init_screen()
-#graphics.draw_loop()

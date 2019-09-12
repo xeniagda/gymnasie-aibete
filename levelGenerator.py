@@ -4,17 +4,29 @@ class LevelGenerator:
     def __init__(self):
         pass
 
-    def generateRandom(self,length=20):
+    def generate(self, length):
+        raise NotImplementedError("Imprement me!")
+
+class RandomLevelGenerator(LevelGenerator):
+    def __init__(self, std_dev):
+        super(RandomLevelGenerator, self).__init__()
+        self.std_dev = std_dev
+
+    def generate(self,length):
         level = []
-        x = 1
+        y = 1
         for i in range(length):
-            delta_x = int(round(random.gauss(0, 2)))
-            delta_x = min(2, delta_x)
-            if x + delta_x >= 1:
-                x += delta_x
-            level.append(x)
+            delta_y = int(round(random.gauss(0, 2)))
+            delta_y = min(2, delta_y)
+            if y + delta_y >= 1:
+                y += delta_y
+            level.append(y)
 
         return level
-    
-    def generateFlat(self,length=20):
-        return [1]*length
+
+class FlatLevelGenerator(LevelGenerator):
+    def __init__(self):
+        super(FlatLevelGenerator, self).__init__()
+
+    def generateFlat(self, length):
+        return [1] * length
