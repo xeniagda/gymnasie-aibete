@@ -1,3 +1,5 @@
+import random
+
 class LevelGenerator:
     def __init__(self):
         pass
