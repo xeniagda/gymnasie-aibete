@@ -5,9 +5,9 @@ import threading
 from agents.deepqlearner import *
 import levelGenerator
 
-RANDOM_EPSILON = 0.01
+RANDOM_EPSILON = 0.005
 RENDER = True
-WORLD_TYPE = levelGenerator.RandomLevelGenerator(2)
+WORLD_TYPE = levelGenerator.RandomLevelGenerator(3)
 WORLD_SIZE = 30
 
 MAX_TIME = 9000
