@@ -28,5 +28,5 @@ class FlatLevelGenerator(LevelGenerator):
     def __init__(self):
         super(FlatLevelGenerator, self).__init__()
 
-    def generateFlat(self, length):
+    def generate(self, length):
         return [1] * length
