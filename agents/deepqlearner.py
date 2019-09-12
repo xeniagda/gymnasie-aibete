@@ -52,22 +52,6 @@ class RLModel(kr.models.Model):
         return x
 
 
-def load_model():
-    mod = RLModel()
-    mod.build((5, 20))
-
-    if os.path.isfile(SAVE_PATH):
-        print("Loading")
-        mod.load_weights(SAVE_PATH)
-    else:
-        print("Creating new")
-    return mod
-
-
-def save_model(mod):
-    mod.save_weights(SAVE_PATH)
-
-
 class DeepQlearner:
     def __init__(self, random_epsilon):
         self.model = RLModel()
