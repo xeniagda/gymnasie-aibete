@@ -20,6 +20,8 @@ BATCH_SIZE = 1024
 
 ACTIONS = [Actions.LEFT, Actions.RIGHT, Actions.JUMP]
 
+REWARD_SCALE = 100
+
 
 class RLModel(kr.models.Model):
     def __init__(self):
@@ -108,7 +110,7 @@ class DeepQlearner:
         self.experience_replay[2] = np.concatenate(
             [self.experience_replay[2], [newAgentInput]], axis=0)
         self.experience_replay[3] = np.concatenate(
-            [self.experience_replay[3], [reward]], axis=0)
+            [self.experience_replay[3], [reward * REWARD_SCALE]], axis=0)
 
         # Tillåt 10% över SOFT_REPLAY_LIMIT för att inte göra clean_er varje tick
         # Borde hjälpa performaance, då att ta bort saker i början inte är så billigt
