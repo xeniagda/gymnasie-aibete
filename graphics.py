@@ -2,7 +2,7 @@ import math
 import time
 import pygame
 
-width, height = size = 1080, 800
+width, height = size = 720, 600
 
 TIME_PER_FRAME = 0.002
 
@@ -79,7 +79,8 @@ def draw_loop():
         for x, wall_height in enumerate(game_engine.level):
             rec = getRect(x - delta_x, 0, 1, wall_height - delta_y)
             if screen.get_bounding_rect().colliderect(rec):
-                pygame.draw.rect(screen, (0, 0, 0), rec)
+                pygame.draw.rect(screen, (38, 95, 133), rec)
+                pygame.draw.rect(screen, (107, 164, 201), rec.inflate(-2, -2))
 
         pygame.display.flip()
 
