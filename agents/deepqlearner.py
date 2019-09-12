@@ -10,18 +10,20 @@ from util import *
 SAVE_PATH = "deep-q-learner-save.h5"
 
 FUTURE_DISCOUNT = 0.8**0.01
-LEARNING_RATE = 0.01
+LEARNING_RATE = 0.005
 
 # Tillåts att gå 10% över denna
 SOFT_REPLAY_LIMIT = 5000
 
-TRAIN_RATE = 2000
+TRAIN_RATE = 500
 BATCH_SIZE = 1024
 
 ACTIONS = [Actions.LEFT, Actions.RIGHT, Actions.JUMP]
 
 REWARD_SCALE = 100
 
+def elu(x, alpha):
+    return np.where(x > 0, x, alpha * (np.exp(x) - 1))
 
 class RLModel(kr.models.Model):
     def __init__(self):
@@ -36,6 +38,17 @@ class RLModel(kr.models.Model):
     def call(self, x):
         x = self.layer1(x)
         x = self.layer2(x)
+        return x
+
+    def call_fast(self, x):
+        # Om vi bara kör på ett spel, så tar det mer tid att använda tensorflow
+        l1k, l1b = self.layer1.kernel.numpy(), self.layer1.bias.numpy()
+        # Anta alpha == 1
+        x = elu(l1b + np.dot(x, l1k), 1)
+
+        l2k, l2b = self.layer2.kernel.numpy(), self.layer2.bias.numpy()
+        x = l2b + np.dot(x, l2k)
+
         return x
 
 
@@ -85,7 +98,7 @@ class DeepQlearner:
 
         self.n_since_last_train = 0
 
-        self.t_random = [0, None] # (time, action)
+        self.t_random = [0, None]  # (time, action)
 
     def getAction(self, agentInput):
         if random.random() < self.random_epsilon:
@@ -93,7 +106,7 @@ class DeepQlearner:
         if self.t_random[0] > 0:
             return self.t_random[1]
         else:
-            pred = self.model(agentInput.reshape(1, 11))
+            pred = self.model.call_fast(agentInput.reshape(1, 11))
             return ACTIONS[np.argmax(pred[0])]
 
     def update(self, oldAgentInput, action, newAgentInput, reward):
