@@ -4,6 +4,8 @@ from graphics import init_screen, draw_loop
 import threading
 from agents.deepqlearner import *
 
+MAX_TIME = 9000
+
 class Driver:
     def __init__(self,level_size,agent):
         self.level_size = level_size
@@ -16,14 +18,19 @@ class Driver:
 
     def playGame(self):
         agentInput = self.engine.getAgentInput()
+
+        play_time = 0
         while True:
             action = self.agent.getAction(agentInput)
             newAgentInput,reward,terminate = self.engine.performTick(action,True)
 
             self.agent.update(agentInput,action,newAgentInput,reward)
             agentInput = newAgentInput
-            if terminate:
+            if terminate or play_time > MAX_TIME:
                 self.reset_engine()
+                play_time = 0
+
+            play_time += 1
 
 def generate_level(length=20):
     level = []
