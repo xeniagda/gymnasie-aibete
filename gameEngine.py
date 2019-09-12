@@ -6,7 +6,7 @@ import math
 
 # random.seed(1)
 
-AROUND_RAD = 1
+AROUND_RAD = 2
 
 class GameEngine:
     def __init__(self,level=[1,1,1,2,1,1]):

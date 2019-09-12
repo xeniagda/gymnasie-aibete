@@ -55,7 +55,7 @@ class RLModel(kr.models.Model):
 class DeepQlearner:
     def __init__(self, random_epsilon):
         self.model = RLModel()
-        self.model.build((None, 11))
+        self.model.build((None, 5 * 5 + 2))
 
         if os.path.isfile(SAVE_PATH):
             print("Loading")
@@ -68,9 +68,9 @@ class DeepQlearner:
         # Varje gång träning händer så dras en slumpmässig batch härifrån
         # Består av: (agent_input, action, agent_input_after, reward)
         self.experience_replay = [
-            np.zeros(shape=(0, 3 * 3 + 2)),  # Input
+            np.zeros(shape=(0, 5 * 5 + 2)),  # Input
             np.zeros(shape=(0)),  # Action
-            np.zeros(shape=(0, 3 * 3 + 2)),  # Input after
+            np.zeros(shape=(0, 5 * 5 + 2)),  # Input after
             np.zeros(shape=(0)),  # Reward
         ]
 
@@ -90,8 +90,8 @@ class DeepQlearner:
         if self.t_random[0] > 0:
             return self.t_random[1]
         else:
-            pred = self.model.call_fast(agentInput.reshape(1, 11))
-            return ACTIONS[np.argmax(pred[0])]
+            pred = self.model.call_fast(agentInput)
+            return ACTIONS[np.argmax(pred)]
 
     def update(self, oldAgentInput, action, newAgentInput, reward):
         if random.random() < self.random_epsilon:
