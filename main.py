@@ -47,8 +47,6 @@ class Driver:
         if len(self.rewards)==1000:
             print("Avg reward = ",int(sum(self.rewards)*100))
             self.rewards = []
-        if len(self.rewards) % 100 == 0:
-            print(len(self.rewards))
 
 
 
