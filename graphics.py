@@ -73,8 +73,9 @@ def draw_loop():
         rec = getRect(game_engine.player.x - delta_x, game_engine.player.y - delta_y,
                       game_engine.player.width, game_engine.player.height)
 
-        pygame.draw.rect(screen, (0, 0, 0), rec)
-        pygame.draw.rect(screen, (0, 0, 255), rec.inflate(-2, -2))
+        pygame.draw.rect(screen, (138, 36, 55), rec)
+        pygame.draw.rect(screen, (204, 90, 112), rec.inflate(-2, -2))
+        pygame.draw.rect(screen, (186, 84, 162), rec.inflate(-4, -4))
 
         for x, wall_height in enumerate(game_engine.level):
             rec = getRect(x - delta_x, 0, 1, wall_height - delta_y)
