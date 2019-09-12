@@ -14,6 +14,8 @@ class Driver:
         self.level_size = level_size
         self.reset_engine()
         self.agent = agent
+        self.rewards = []
+
         self.playGame()
 
     def reset_engine(self):
@@ -34,6 +36,16 @@ class Driver:
                 play_time = 0
 
             play_time += 1
+
+            self.logReward(reward)
+
+    def logReward(self,reward):
+        self.rewards.append(reward)
+        if len(self.rewards)==1000:
+            print("Avg reward = ",int(sum(self.rewards)*100))
+            self.rewards = []
+        if len(self.rewards) % 100 == 0:
+            print(len(self.rewards))
 
 
 
