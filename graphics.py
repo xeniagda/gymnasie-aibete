@@ -79,9 +79,16 @@ def draw_loop():
 
         for x, wall_height in enumerate(game_engine.level):
             rec = getRect(x - delta_x, 0, 1, wall_height - delta_y)
+            col_outer = (38, 95, 133)
+            col_inner = (107, 164, 201)
+            if game_engine.bad_blocks[x]:
+                col_outer = (133, 50, 10)
+                col_inner = (201, 80, 47)
+
             if screen.get_bounding_rect().colliderect(rec):
-                pygame.draw.rect(screen, (38, 95, 133), rec)
-                pygame.draw.rect(screen, (107, 164, 201), rec.inflate(-2, -2))
+                pygame.draw.rect(screen, col_outer, rec)
+                pygame.draw.rect(screen, col_inner, rec.inflate(-2, -2))
+
 
         pygame.display.flip()
 
