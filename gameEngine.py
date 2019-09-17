@@ -80,8 +80,8 @@ class Player:
         self.width = 0.2
         self.height = 1
 
-        self.groundSpeed = 1
-        self.airSpeed = 0.5
+        self.groundSpeed = 1.5
+        self.airSpeed = 0.8
         self.gravity = -3
         self.jump = 4
 
