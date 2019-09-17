@@ -11,6 +11,7 @@ AROUND_RAD = 2
 class GameEngine:
     def __init__(self,level=[1,1,1,2,1,1]):
         self.level = level
+        self.bad_blocks = np.random.uniform(0, 1, size=(len(level), )) < 0.1
         self.player = Player(0,level[0],0,0)
 
     def performTick(self, action, draw=False, timeStep=0.01):
@@ -21,6 +22,9 @@ class GameEngine:
 
         delta_x = self.player.x - last_x
         reward = delta_x
+        if 0 <= int(self.player.x) < len(self.bad_blocks):
+            if self.bad_blocks[int(self.player.x)] and self.player.isOnGround:
+                reward -= 0.02
         if draw:
             graphics.drawGame(self, reward)
         
