@@ -89,6 +89,18 @@ def draw_loop():
                 pygame.draw.rect(screen, col_outer, rec)
                 pygame.draw.rect(screen, col_inner, rec.inflate(-2, -2))
 
+        # Rita agentInput
+        agentInput = game_engine.getAgentInput()
+        for y in range(5):
+            for x in range(5):
+                rec = pygame.Rect(x * 5,y * 5, 5, 5)
+                if agentInput[y * 5 + x] == 1:
+                    pygame.draw.rect(screen, (0, 0, 0), rec)
+                elif agentInput[y * 5 + x] == 0:
+                    pygame.draw.rect(screen, (255, 255, 255), rec)
+                else:
+                    pygame.draw.rect(screen, (255, 0, 0), rec)
+
 
         pygame.display.flip()
 
