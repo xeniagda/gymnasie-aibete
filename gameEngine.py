@@ -43,15 +43,19 @@ class GameEngine:
                 iy =  dy + AROUND_RAD
 
                 ry = self.player.y + dy + 0.5
-                rx = int(self.player.x + dx) % len(self.level)
+                rx = round(self.player.x + dx)
 
-                is_solid = ry > self.level[rx]
+                if 0 <= rx < len(self.level):
+                    is_solid = ry < self.level[rx]
+                    is_bad = self.bad_blocks[rx]
 
-                if is_solid:
-                    res[iy * (AROUND_RAD * 2 + 1) + ix] = 1
+                    if is_solid:
+                        res[iy * (AROUND_RAD * 2 + 1) + ix] = 1
+                        if is_bad:
+                            res[iy * (AROUND_RAD * 2 + 1) + ix] = -1
 
-        res[-2] = self.player.x % 1
-        res[-1] = self.player.y % 1
+        res[-2] = self.player.x - round(self.player.x)
+        res[-1] = self.player.y - round(self.player.x)
 
         return res
     
