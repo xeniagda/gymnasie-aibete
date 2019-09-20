@@ -3,6 +3,7 @@ launch.json
 *.pyc
 q-table-learner.npz
 deep-q-learner-save.h5
+.vscode/
 
 
 
