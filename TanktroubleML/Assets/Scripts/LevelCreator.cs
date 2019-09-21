@@ -11,6 +11,8 @@ public class LevelCreator : MonoBehaviour
     public Camera cam;
     public GameObject wall;
     public bool WallsAround = true;
+    
+
 
     public GameObject wallPlacementIndicator;
 
@@ -30,9 +32,9 @@ public class LevelCreator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Material mat = GetComponent<Renderer>().material;
-        mat.SetInt("XRes", xres);
-        mat.SetInt("YRes", yres);
+        Material material = GetComponent<Renderer>().material;
+        material.SetInt("Vector1_156E524C", xres);
+        material.SetInt("Vector1_5C061207", yres);
 
         if (WallsAround) {
             for(int i = 0; i < xres; i++)
@@ -51,19 +53,12 @@ public class LevelCreator : MonoBehaviour
     void Update()
     {
         wallPlacementIndicator.transform.localScale = new Vector3(2.0f * wallScaleX, wallScaleX + wallScaleY, 2.0f * wallScaleY);
-        //if (Input.GetMouseButtonDown(0))
-        //    PlaceWall();
+        if (Input.GetMouseButton(0) && wallPlacementIndicator.activeInHierarchy)
+            PlaceWall();
         ShowWallPlacement();
 
     }
     
-
-    void OnMouseDown() {
-        if (wallPlacementIndicator.activeInHierarchy) {
-            PlaceWall();
-
-        }
-    }
 
     void PlaceWall(Vector2Int gridPos) {
 

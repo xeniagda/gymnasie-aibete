@@ -14,6 +14,13 @@ public class TankController : MonoBehaviour
     public float spd;
     public float turnSpd;
 
+    public string forward;
+    public string backward;
+    public string left;
+    public string right;
+    public string shoot;
+    
+
 
     // Start is called before the first frame update
     void Start()
@@ -23,15 +30,22 @@ public class TankController : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        if (Input.GetButtonDown("Jump"))
+    { 
+        if (Input.GetKeyDown(shoot))
             Shoot();
 
-        angle += Time.deltaTime * turnSpd * 40f * Input.GetAxis("Horizontal");
 
+        if (Input.GetKey(left))
+            angle -= Time.deltaTime * turnSpd * 40f;
+        if (Input.GetKey(right))
+            angle += Time.deltaTime * turnSpd * 40f;
+        
         Quaternion rot = Quaternion.AngleAxis(angle, transform.up);
         rb.MoveRotation(rot);
-        rb.MovePosition(transform.position + transform.forward * spd * Time.deltaTime * Input.GetAxis("Vertical"));
+        if (Input.GetKey(forward))
+            rb.MovePosition(transform.position + transform.forward * spd * Time.deltaTime);
+        if (Input.GetKey(backward))
+            rb.MovePosition(transform.position - transform.forward * spd * Time.deltaTime);
 
         Halt();
     }

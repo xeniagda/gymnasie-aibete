@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class WallController : MonoBehaviour
 {
+
     // Start is called before the first frame update
     void Start()
     {
@@ -16,11 +17,12 @@ public class WallController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
-    void OnMouseDown() {
-        transform.parent.GetComponent<LevelCreator>().RemoveWall(LevelPos);
+    void OnMouseOver() {
+        if (Input.GetMouseButton(1))
+            transform.parent.GetComponent<LevelCreator>().RemoveWall(LevelPos);
         
     }
 }
