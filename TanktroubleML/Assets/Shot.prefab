@@ -12,9 +12,11 @@ GameObject:
   - component: {fileID: 1564720548981617966}
   - component: {fileID: 5839719161738240428}
   - component: {fileID: 171693342229678984}
+  - component: {fileID: 6153173202029395159}
+  - component: {fileID: 7181742729011186079}
   m_Layer: 0
   m_Name: Shot
-  m_TagString: Untagged
+  m_TagString: shot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -86,9 +88,38 @@ SphereCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8569953014207434691}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 6c6a329a6fb0993dabaa10bea2a82a7c, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &6153173202029395159
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8569953014207434691}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 116
+  m_CollisionDetection: 0
+--- !u!114 &7181742729011186079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8569953014207434691}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab0a09b348aebd0dfbaf08894c5a0e58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spd: 3

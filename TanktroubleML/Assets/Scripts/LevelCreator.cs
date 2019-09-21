@@ -14,7 +14,7 @@ public class LevelCreator : MonoBehaviour
 
     public GameObject wallPlacementIndicator;
 
-    public uint xres, yres;
+    public int xres, yres;
     Vector2Int gridSelection;
     
 
@@ -30,6 +30,10 @@ public class LevelCreator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Material mat = GetComponent<Renderer>().material;
+        mat.SetInt("XRes", xres);
+        mat.SetInt("YRes", yres);
+
         if (WallsAround) {
             for(int i = 0; i < xres; i++)
             for(int j = 0; j < yres; j++) {
