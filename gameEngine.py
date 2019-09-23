@@ -1,5 +1,5 @@
 import numpy as np
-import graphics
+from graphics import UI
 from util import * 
 import random
 import math
@@ -9,7 +9,8 @@ import math
 AROUND_RAD = 2
 
 class GameEngine:
-    def __init__(self,level=[1,1,1,2,1,1]):
+    def __init__(self,ui,level=[1,1,1,2,1,1]):
+        self.ui = ui
         self.level = level
         self.bad_blocks = np.random.uniform(0, 1, size=(len(level), )) < 0.1
         self.player = Player(0,level[0],0,0)
@@ -24,9 +25,9 @@ class GameEngine:
         reward = delta_x
         if 0 <= int(self.player.x) < len(self.bad_blocks):
             if self.bad_blocks[int(self.player.x)] and self.player.isOnGround:
-                reward -= 0.02
-        #if draw:
-        #    graphics.drawGame(self, reward)
+                reward -= 0.2
+        
+        self.ui.setReward(reward)
         
         agentInput = self.getAgentInput()
 

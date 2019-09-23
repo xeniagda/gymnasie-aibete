@@ -8,7 +8,7 @@ TIME_PER_FRAME = 0.002
 
 SCALE = 50
 # Game units
-REWARD = 0
+
 REWARD_CHANGE_SPEED = 0.2
 PLAYER_FOLLOW_MARGINS = 7
 
@@ -17,6 +17,7 @@ class Graphics():
         self.screen = screen
         self.game_engine = None
         self.agent = None
+        self.reward = 0
 
         self.font = pygame.font.SysFont("comicsansms", 72)
 
@@ -25,6 +26,9 @@ class Graphics():
 
     def setGameEngine(self,game_engine):
         self.game_engine = game_engine
+
+    def setReward(self,reward):
+        self.reward = self.reward * REWARD_CHANGE_SPEED ** 0.01 + (1 - REWARD_CHANGE_SPEED ** 0.01) * reward
 
     def set_offset(self):
         player = self.game_engine.player
@@ -49,11 +53,11 @@ class Graphics():
 
         player = self.game_engine.player
 
-        if REWARD > 0:
-            v = min(int(REWARD * 7000), 255)
+        if self.reward > 0:
+            v = min(int(self.reward * 7000), 255)
             self.screen.fill((255 - v, 255, 255 - v))
-        elif REWARD < 0:
-            v = min(int(-REWARD * 7000), 255)
+        elif self.reward < 0:
+            v = min(int(-self.reward * 7000), 255)
             self.screen.fill((255, 255 - v, 255 - v))
         else:
             self.screen.fill((255, 255, 255))
@@ -116,6 +120,8 @@ class UI():
 
         self.graphics = Graphics(self.screen)
 
+        self.sleepTime = 0.002
+
     def setGameEngine(self,ge):
         self.game_engine = ge
         self.graphics.setGameEngine(ge)
@@ -124,7 +130,7 @@ class UI():
         self.agent = ag
 
     def setReward(self,reward):
-        REWARD = REWARD * REWARD_CHANGE_SPEED ** 0.01 + (1 - REWARD_CHANGE_SPEED ** 0.01) * reward
+        self.graphics.setReward(reward)
 
     def handleInput(self):
         for event in pygame.event.get():
@@ -133,10 +139,11 @@ class UI():
                 exit()
             if event.type == pygame.KEYDOWN:
                 print(event.key)
-                if event.key == 275: # Right
-                    TIME_PER_FRAME = 0
-                if event.key == 276: # Left
-                    TIME_PER_FRAME = 0.002
+                if event.key == 276: # Left, slow down
+                    self.sleepTime = (self.sleepTime+0.001)*1.4-0.001
+                if event.key == 275: # Right, speed up
+                    self.sleepTime = (self.sleepTime+0.001)/1.4-0.001
+                    self.sleepTime = max(0,self.sleepTime)
                 if event.key == 114: # R
                     if agent.random_epsilon>0:
                         agent.random_epsilon = 0

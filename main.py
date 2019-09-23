@@ -4,6 +4,7 @@ from graphics import UI
 import threading
 from agents.deepqlearner import *
 import levelGenerator
+import time
 
 RANDOM_EPSILON = 0.005
 RENDER = True
@@ -20,7 +21,7 @@ class Driver:
         self.rewards = []
 
     def reset_engine(self):
-        self.engine = GameEngine(WORLD_TYPE.generate(self.level_size))
+        self.engine = GameEngine(ui,WORLD_TYPE.generate(self.level_size))
         ui.setGameEngine(self.engine)
 
     def playGame(self):
@@ -41,7 +42,7 @@ class Driver:
 
             self.logReward(reward)
 
-            #sleep(0.02)
+            time.sleep(ui.sleepTime)
 
     def logReward(self,reward):
         self.rewards.append(reward)
