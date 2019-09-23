@@ -25,8 +25,8 @@ class GameEngine:
         if 0 <= int(self.player.x) < len(self.bad_blocks):
             if self.bad_blocks[int(self.player.x)] and self.player.isOnGround:
                 reward -= 0.02
-        if draw:
-            graphics.drawGame(self, reward)
+        #if draw:
+        #    graphics.drawGame(self, reward)
         
         agentInput = self.getAgentInput()
 

@@ -1,6 +1,6 @@
 import random
 from gameEngine import *
-import graphics
+from graphics import UI 
 import threading
 from agents.deepqlearner import *
 import levelGenerator
@@ -19,10 +19,9 @@ class Driver:
         self.agent = agent
         self.rewards = []
 
-        self.playGame()
-
     def reset_engine(self):
         self.engine = GameEngine(WORLD_TYPE.generate(self.level_size))
+        ui.setGameEngine(self.engine)
 
     def playGame(self):
         agentInput = self.engine.getAgentInput()
@@ -42,6 +41,8 @@ class Driver:
 
             self.logReward(reward)
 
+            #sleep(0.02)
+
     def logReward(self,reward):
         self.rewards.append(reward)
         if len(self.rewards)==1000:
@@ -49,17 +50,21 @@ class Driver:
             self.rewards = []
 
 
+ui = UI()
 
 def main():
     agent = DeepQlearner(RANDOM_EPSILON)
-    driver = Driver(WORLD_SIZE, agent)
 
+    driver = Driver(WORLD_SIZE, agent)
     if RENDER:
-        graphics.drawGame(driver.engine, 0)
+        ui.setGameEngine(driver.engine)
+        ui.setAgent(agent)
+    
+    driver.playGame()
+
 
 if RENDER:
     threading.Thread(target=main, daemon=True).start()
-    graphics.init_screen()
-    graphics.draw_loop()
+    ui.main_loop()
 
 main()
