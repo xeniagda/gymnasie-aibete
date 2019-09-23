@@ -111,17 +111,17 @@ class Player:
             distDown = self.y+self.height-by
             distUp = by+bh-self.y
             minDist = min(distLeft,distRight,distUp,distDown)
-            if distUp == minDist:
+            if distUp == minDist and self.vy<0:
                 self.y = by+bh
                 self.vy = 0
                 return True
-            if distLeft == minDist:
+            if distLeft == minDist and self.vx>0:
                 self.x = bx-self.width
                 self.vx = 0
-            if distRight == minDist:
+            if distRight == minDist and self.vx<0:
                 self.x = bx+bw
                 self.vx = 0
-            if distDown == minDist:
+            if distDown == minDist and self.vy>0:
                 self.y = by-self.height
                 self.vy = 0
         return False
