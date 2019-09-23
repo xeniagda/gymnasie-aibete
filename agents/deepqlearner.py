@@ -150,7 +150,7 @@ class DeepQlearner:
 
     def train_on_batch(self, agent_input_before, action, agent_input_after,
                        reward):
-        q_after = self.model(agent_input_before)
+        q_after = self.model(agent_input_after)
         wanted_q = reward + FUTURE_DISCOUNT * tf.reduce_max(q_after, axis=1)
 
         tvars = self.model.trainable_variables
