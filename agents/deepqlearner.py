@@ -70,11 +70,12 @@ class DeepQlearner:
         # Varje gång träning händer så dras en slumpmässig batch härifrån
         # Består av: (agent_input, action, agent_input_after, reward)
         self.experience_replay = [
-            np.zeros(shape=(0, AGENT_INPUT_SIZE)),  # Input
-            np.zeros(shape=(0)),  # Action
-            np.zeros(shape=(0, AGENT_INPUT_SIZE)),  # Input after
-            np.zeros(shape=(0)),  # Reward
+            np.zeros(shape=(SOFT_REPLAY_LIMIT, AGENT_INPUT_SIZE)),  # Input
+            np.zeros(shape=(SOFT_REPLAY_LIMIT)),  # Action
+            np.zeros(shape=(SOFT_REPLAY_LIMIT, AGENT_INPUT_SIZE)),  # Input after
+            np.zeros(shape=(SOFT_REPLAY_LIMIT)),  # Reward
         ]
+        self.experience_replay_index = 0
 
         # Hur ofta agenten svarar med en slumpmässig action
         self.random_epsilon = random_epsilon
@@ -102,15 +103,11 @@ class DeepQlearner:
         self.t_random[0] -= 0.01
 
         # Lägg till i experience_replay
-        self.experience_replay[0] = np.concatenate([self.experience_replay[0], [oldAgentInput]], axis=0)
-        self.experience_replay[1] = np.concatenate([self.experience_replay[1], [ACTIONS.index(action)]], axis=0)
-        self.experience_replay[2] = np.concatenate([self.experience_replay[2], [newAgentInput]], axis=0)
-        self.experience_replay[3] = np.concatenate([self.experience_replay[3], [reward * REWARD_SCALE]], axis=0)
-
-        # Tillåt 10% över SOFT_REPLAY_LIMIT för att inte göra clean_er varje tick
-        # Borde hjälpa performaance, då att ta bort saker i början inte är så billigt
-        if len(self.experience_replay[0]) > SOFT_REPLAY_LIMIT * 1.1:
-            self.clean_er()
+        self.experience_replay[0][self.experience_replay_index] = oldAgentInput
+        self.experience_replay[1][self.experience_replay_index] = ACTIONS.index(action)
+        self.experience_replay[2][self.experience_replay_index] = newAgentInput
+        self.experience_replay[3][self.experience_replay_index] = reward * REWARD_SCALE
+        self.experience_replay_index = (self.experience_replay_index+1)%SOFT_REPLAY_LIMIT
 
         self.n_since_last_train += 1
 
@@ -121,14 +118,6 @@ class DeepQlearner:
             self.model.save_weights(SAVE_PATH)
 
             self.n_since_last_train = 0
-
-    def clean_er(self):
-        # Begränsa self.experience_replay till de nr_er sista elementen
-
-        self.experience_replay[0] = self.experience_replay[0][-SOFT_REPLAY_LIMIT:]
-        self.experience_replay[1] = self.experience_replay[1][-SOFT_REPLAY_LIMIT:]
-        self.experience_replay[2] = self.experience_replay[2][-SOFT_REPLAY_LIMIT:]
-        self.experience_replay[3] = self.experience_replay[3][-SOFT_REPLAY_LIMIT:]
 
     def train_on_random_minibatch(self):
         idxs = np.random.randint(self.experience_replay[0].shape[0],
