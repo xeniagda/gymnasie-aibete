@@ -56,15 +56,10 @@ class GameEngine:
                         else:
                             xMul = 1 - (atX % 1)
 
-<<<<<<< HEAD
-                ry = self.player.y + dy + 0.5
-                rx = math.ceil(self.player.x +self.player.width/2 + dx)
-=======
                         if yCorner:
                             yMul = atY % 1
                         else:
                             yMul = 1 - (atY % 1)
->>>>>>> 1d3678c2bac76cf0a790841fc9014a5e1ed5b966
 
                         if 0 <= xCoord < len(self.level):
                             value_here = self.level[xCoord][0] > yCoord
@@ -75,12 +70,7 @@ class GameEngine:
                 ix = dx + AROUND_RAD
                 iy = dy + AROUND_RAD
 
-<<<<<<< HEAD
-        res[-2] = self.player.x - round(self.player.x)
-        res[-1] = self.player.y - round(self.player.y)
-=======
                 solid_grid[int(iy) * VISION_SIZE + int(ix)] = solid_value
->>>>>>> 1d3678c2bac76cf0a790841fc9014a5e1ed5b966
 
         return solid_grid
     
