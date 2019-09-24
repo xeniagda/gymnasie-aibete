@@ -56,7 +56,7 @@ class GameEngine:
                             res[iy * (AROUND_RAD * 2 + 1) + ix] = -1
 
         res[-2] = self.player.x - round(self.player.x)
-        res[-1] = self.player.y - round(self.player.x)
+        res[-1] = self.player.y - round(self.player.y)
 
         return res
     
