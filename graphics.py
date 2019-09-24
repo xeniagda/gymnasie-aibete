@@ -146,18 +146,21 @@ class UI():
                 pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
-                print(event.key)
-                if event.key == 276: # Left, slow down
+                #print(event.key)
+                if event.key == 97: # A, slow down
                     self.sleepTime = (self.sleepTime+0.001)*1.4-0.001
-                if event.key == 275: # Right, speed up
+                if event.key == 100: # D, speed up
                     self.sleepTime = (self.sleepTime+0.001)/1.4-0.001
                     self.sleepTime = max(0,self.sleepTime)
-                if event.key == 114: # R
-                    if self.agent.random_epsilon>0:
-                        self.agent.random_epsilon = 0
-                    else:
-                        self.agent.random_epsilon = 0.005
-                    print("new eps: ",self.agent.random_epsilon)
+                if event.key == 119: # W, more random
+                    self.agent.random_epsilon += 0.001
+                if event.key == 115: # S, less random
+                    self.agent.random_epsilon -= 0.001
+                    self.agent.random_epsilon = max(0,self.agent.random_epsilon)
+
+                
+                print("eps: ",round(self.agent.random_epsilon,3))
+                print("sleep: ", round(self.sleepTime,3))
                 print(event.key)
 
     def main_loop(self):
