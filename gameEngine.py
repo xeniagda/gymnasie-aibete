@@ -1,5 +1,5 @@
 import numpy as np
-AROUND_RAD = 3
+AROUND_RAD = 1
 VISION_SIZE = AROUND_RAD * 2 + 1
 AGENT_INPUT_SIZE = VISION_SIZE ** 2
 INTERPOLATE_AGENT_INPUT = False
@@ -51,7 +51,7 @@ class GameEngine:
                     iy =  dy + AROUND_RAD
 
                     ry = self.player.y + dy + 0.5
-                    rx = math.ceil(self.player.x +self.player.width/2 + dx)
+                    rx = math.floor(self.player.x +self.player.width/2 + dx)
 
                     if 0 <= rx < len(self.level):
                         is_solid = ry < self.level[rx][0]
