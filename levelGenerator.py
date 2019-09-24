@@ -17,7 +17,7 @@ class RandomLevelGenerator(LevelGenerator):
         level = []
         y = 1
         for i in range(length):
-            delta_y = int(round(random.gauss(0, 2)))
+            delta_y = random.gauss(0, 2)
             delta_y = min(2, delta_y)
             if y + delta_y >= 1:
                 y += delta_y
