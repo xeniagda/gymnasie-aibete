@@ -30,4 +30,4 @@ class FlatLevelGenerator(LevelGenerator):
         super(FlatLevelGenerator, self).__init__()
 
     def generate(self, length):
-        return [1] * length
+        return [(1,0)] * length
