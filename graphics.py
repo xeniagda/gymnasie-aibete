@@ -1,6 +1,8 @@
+import numpy as np
 import math
 import time
 import pygame
+from gameEngine import VISION_SIZE
 
 width, height = size = 720, 600
 
@@ -83,23 +85,19 @@ class Graphics():
 
         # Rita agentInput
         agentInput = self.game_engine.getAgentInput()
+        for y in range(VISION_SIZE):
+            for x in range(VISION_SIZE):
 
-        agentInputScale = 20
-        agentInputSize = 5
+                rec = pygame.Rect(x * 5, y * 5, 5, 5)
+                inp = agentInput[y * VISION_SIZE + x]
 
-        for y in range(agentInputSize):
-            for x in range(agentInputSize):
-
-                rec = pygame.Rect(x * agentInputScale,
-                    agentInputScale*(agentInputSize-1)-y * agentInputScale, agentInputScale, agentInputScale)
-                if agentInput[y * agentInputSize + x] == 1:
-                    pygame.draw.rect(self.screen, (0, 0, 0), rec)
-                elif agentInput[y * agentInputSize + x] == 0:
-                    pygame.draw.rect(self.screen, (255, 255, 255), rec)
+                # RGB, 0..1
+                col = np.zeros((3, ))
+                if inp > 0:
+                    col = np.array([1 - inp, 1 - inp, 1 - inp])
                 else:
-                    pygame.draw.rect(self.screen, (255, 0, 0), rec)
-        rec = pygame.Rect(agentInputScale,agentInputScale*2, agentInputScale, agentInputScale)
-        pygame.draw.rect(self.screen, (0,0,255), rec)
+                    col = np.array([1, 1 + inp, 1 + inp])
+                pygame.draw.rect(self.screen, (int(col[0] * 255), int(col[1] * 255), int(col[2] * 255)), rec)
 
         #Rita text
         if self.agent != None:

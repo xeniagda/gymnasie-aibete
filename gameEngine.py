@@ -1,12 +1,14 @@
 import numpy as np
+AROUND_RAD = 3
+VISION_SIZE = AROUND_RAD * 2 + 1
+AGENT_INPUT_SIZE = VISION_SIZE ** 2
+
 from graphics import UI
 from util import * 
 import random
 import math
 
 # random.seed(1)
-
-AROUND_RAD = 2
 
 class GameEngine:
     def __init__(self,ui,level):
@@ -36,29 +38,51 @@ class GameEngine:
         return (agentInput,reward,terminate)
     
     def getAgentInput(self):
-        res = np.zeros(((AROUND_RAD * 2 + 1) ** 2 + 2, ))
+        solid_grid = np.zeros((AGENT_INPUT_SIZE, ))
 
         for dx in range(-AROUND_RAD, AROUND_RAD + 1):
             for dy in range(-AROUND_RAD, AROUND_RAD + 1):
-                ix =  dx + AROUND_RAD
-                iy =  dy + AROUND_RAD
+                atX = self.player.x + dx
+                atY = self.player.y + dy
 
+                solid_value = 0
+                for xCorner in [0, 1]:
+                    for yCorner in [0, 1]:
+                        xCoord = int(atX + xCorner)
+                        yCoord = int(atY + yCorner)
+
+                        if xCorner:
+                            xMul = atX % 1
+                        else:
+                            xMul = 1 - (atX % 1)
+
+<<<<<<< HEAD
                 ry = self.player.y + dy + 0.5
                 rx = math.ceil(self.player.x +self.player.width/2 + dx)
+=======
+                        if yCorner:
+                            yMul = atY % 1
+                        else:
+                            yMul = 1 - (atY % 1)
+>>>>>>> 1d3678c2bac76cf0a790841fc9014a5e1ed5b966
 
-                if 0 <= rx < len(self.level):
-                    is_solid = ry < self.level[rx][0]
-                    is_bad = self.level[rx][1]
+                        if 0 <= xCoord < len(self.level):
+                            value_here = self.level[xCoord][0] > yCoord
+                        else:
+                            value_here = 0
+                        solid_value += value_here * xMul * yMul
 
-                    if is_solid:
-                        res[iy * (AROUND_RAD * 2 + 1) + ix] = 1
-                        if is_bad:
-                            res[iy * (AROUND_RAD * 2 + 1) + ix] = -1
+                ix = dx + AROUND_RAD
+                iy = dy + AROUND_RAD
 
+<<<<<<< HEAD
         res[-2] = self.player.x - round(self.player.x)
         res[-1] = self.player.y - round(self.player.y)
+=======
+                solid_grid[int(iy) * VISION_SIZE + int(ix)] = solid_value
+>>>>>>> 1d3678c2bac76cf0a790841fc9014a5e1ed5b966
 
-        return res
+        return solid_grid
     
     def resolveCollisions(self):
         self.player.isOnGround = False

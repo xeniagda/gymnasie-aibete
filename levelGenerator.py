@@ -18,11 +18,15 @@ class RandomLevelGenerator(LevelGenerator):
         level = []
         y = 1
         for i in range(length):
-            delta_y = int(round(random.gauss(0, self.std_dev)))
+            delta_y = random.gauss(0, 2)
             delta_y = min(2, delta_y)
             if y + delta_y >= 1:
                 y += delta_y
-            level.append((y,np.random.uniform(0,1)<self.badRatio))
+
+            if random.random() < 0.2 and len(level) >= 2 and y - level[-2][0] < 2:
+                y += 1
+
+            level.append((y,np.random.uniform(0,1)<0.1))
 
         return level
 
