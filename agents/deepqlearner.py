@@ -7,6 +7,8 @@ import random
 import numpy as np
 from util import *
 
+from gameEngine import AGENT_INPUT_SIZE
+
 SAVE_PATH = "deep-q-learner-save.h5"
 
 FUTURE_DISCOUNT = 0.8**0.01
@@ -55,7 +57,7 @@ class RLModel(kr.models.Model):
 class DeepQlearner:
     def __init__(self, random_epsilon):
         self.model = RLModel()
-        self.model.build((None, 5 * 5 + 2))
+        self.model.build((None, AGENT_INPUT_SIZE))
 
         if os.path.isfile(SAVE_PATH):
             print("Loading")
@@ -68,9 +70,9 @@ class DeepQlearner:
         # Varje gång träning händer så dras en slumpmässig batch härifrån
         # Består av: (agent_input, action, agent_input_after, reward)
         self.experience_replay = [
-            np.zeros(shape=(0, 5 * 5 + 2)),  # Input
+            np.zeros(shape=(0, AGENT_INPUT_SIZE)),  # Input
             np.zeros(shape=(0)),  # Action
-            np.zeros(shape=(0, 5 * 5 + 2)),  # Input after
+            np.zeros(shape=(0, AGENT_INPUT_SIZE)),  # Input after
             np.zeros(shape=(0)),  # Reward
         ]
 
