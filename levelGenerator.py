@@ -21,6 +21,10 @@ class RandomLevelGenerator(LevelGenerator):
             delta_y = min(2, delta_y)
             if y + delta_y >= 1:
                 y += delta_y
+
+            if random.random() < 0.2 and len(level) >= 2 and y - level[-2][0] < 2:
+                y += 1
+
             level.append((y,np.random.uniform(0,1)<0.1))
 
         return level
