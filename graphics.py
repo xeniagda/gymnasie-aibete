@@ -120,29 +120,36 @@ class Graphics():
     
 
 class UI():
-    def __init__(self):
+    def __init__(self,RENDER):
         self.screen = None
         self.game_engine = None
         self.agent = None
         self.done = False
+        self.RENDER = RENDER
+        if RENDER:
+            pygame.init()
+            pygame.display.set_caption("Title")
 
-        pygame.init()
-        pygame.display.set_caption("Title")
+            self.screen = pygame.display.set_mode(size)
 
-        self.screen = pygame.display.set_mode(size)
+            self.graphics = Graphics(self.screen)
 
-        self.graphics = Graphics(self.screen)
-
-        self.sleepTime = 0.002
+        self.sleepTime = 0.000
 
     def setGameEngine(self,ge):
+        if not self.RENDER:
+            return
         self.game_engine = ge
         self.graphics.setGameEngine(ge)
 
     def setAgent(self,ag):
+        if not self.RENDER:
+            return
         self.agent = ag
 
     def setReward(self,reward):
+        if not self.RENDER:
+            return
         self.graphics.setReward(reward)
 
     def handleInput(self):
