@@ -92,6 +92,7 @@ class Player:
         currentSpeed = self.groundSpeed
         if not self.isOnGround:
             currentSpeed = self.airSpeed
+        self.vx = 0
         if action == Actions.LEFT:
             self.vx = -currentSpeed
         if action == Actions.RIGHT:
