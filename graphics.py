@@ -85,10 +85,13 @@ class Graphics():
 
         # Rita agentInput
         agentInput = self.game_engine.getAgentInput()
+
+        agentInputScale = 20
+
         for y in range(VISION_SIZE):
             for x in range(VISION_SIZE):
 
-                rec = pygame.Rect(x * 5, y * 5, 5, 5)
+                rec = pygame.Rect(x * agentInputScale, (VISION_SIZE-1)*agentInputScale-y * agentInputScale, agentInputScale, agentInputScale)
                 inp = agentInput[y * VISION_SIZE + x]
 
                 # RGB, 0..1
@@ -98,6 +101,10 @@ class Graphics():
                 else:
                     col = np.array([1, 1 + inp, 1 + inp])
                 pygame.draw.rect(self.screen, (int(col[0] * 255), int(col[1] * 255), int(col[2] * 255)), rec)
+        
+        rec = pygame.Rect(agentInputScale*2, agentInputScale*3, agentInputScale, agentInputScale)
+                
+        pygame.draw.rect(self.screen, (0,0,255), rec)
 
         #Rita text
         if self.agent != None:
