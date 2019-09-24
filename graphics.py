@@ -102,7 +102,7 @@ class Graphics():
                     col = np.array([1, 1 + inp, 1 + inp])
                 pygame.draw.rect(self.screen, (int(col[0] * 255), int(col[1] * 255), int(col[2] * 255)), rec)
         
-        rec = pygame.Rect(agentInputScale*2, agentInputScale*3, agentInputScale, agentInputScale)
+        rec = pygame.Rect(agentInputScale*(VISION_SIZE-1)/2, agentInputScale*(VISION_SIZE-1)/2, agentInputScale, agentInputScale)
                 
         pygame.draw.rect(self.screen, (0,0,255), rec)
 
