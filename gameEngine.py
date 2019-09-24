@@ -44,7 +44,7 @@ class GameEngine:
                 iy =  dy + AROUND_RAD
 
                 ry = self.player.y + dy + 0.5
-                rx = round(self.player.x + dx)
+                rx = math.ceil(self.player.x +self.player.width/2 + dx)
 
                 if 0 <= rx < len(self.level):
                     is_solid = ry < self.level[rx][0]
