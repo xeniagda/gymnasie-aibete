@@ -97,7 +97,7 @@ class DeepQlearner:
 
     def update(self, oldAgentInput, action, newAgentInput, reward):
         if random.random() < self.random_epsilon:
-            self.t_random = [0.1, random.choice([Actions.LEFT, Actions.RIGHT])]
+            self.t_random = [random.random(), random.choice([Actions.LEFT, Actions.RIGHT])]
 
         self.t_random[0] -= 0.01
 
