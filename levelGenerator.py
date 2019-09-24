@@ -30,6 +30,24 @@ class RandomLevelGenerator(LevelGenerator):
 
         return level
 
+class IntegerLevelGenerator(LevelGenerator):
+    def __init__(self, std_dev,badRatio):
+        super(IntegerLevelGenerator, self).__init__()
+        self.std_dev = std_dev
+        self.badRatio = badRatio
+
+    def generate(self,length):
+        level = []
+        y = 1
+        for i in range(length):
+            delta_y = int(round(random.gauss(0, self.std_dev)))
+            delta_y = min(2, delta_y)
+            if y + delta_y >= 1:
+                y += delta_y
+            level.append((y,np.random.uniform(0,1)<self.badRatio))
+
+        return level
+
 class FlatLevelGenerator(LevelGenerator):
     def __init__(self):
         super(FlatLevelGenerator, self).__init__()
