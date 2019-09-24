@@ -9,19 +9,20 @@ class LevelGenerator:
         raise NotImplementedError("Imprement me!")
 
 class RandomLevelGenerator(LevelGenerator):
-    def __init__(self, std_dev):
+    def __init__(self, std_dev,badRatio):
         super(RandomLevelGenerator, self).__init__()
         self.std_dev = std_dev
+        self.badRatio = badRatio
 
     def generate(self,length):
         level = []
         y = 1
         for i in range(length):
-            delta_y = int(round(random.gauss(0, 2)))
+            delta_y = int(round(random.gauss(0, self.std_dev)))
             delta_y = min(2, delta_y)
             if y + delta_y >= 1:
                 y += delta_y
-            level.append((y,np.random.uniform(0,1)<0.1))
+            level.append((y,np.random.uniform(0,1)<self.badRatio))
 
         return level
 

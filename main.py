@@ -8,7 +8,7 @@ import time
 
 RANDOM_EPSILON = 0.005
 RENDER = True
-WORLD_TYPE = levelGenerator.RandomLevelGenerator(3)
+WORLD_TYPE = levelGenerator.RandomLevelGenerator(0.5,0.0)
 WORLD_SIZE = 30
 
 MAX_TIME = 9000
@@ -47,7 +47,7 @@ class Driver:
     def logReward(self,reward):
         self.rewards.append(reward)
         if len(self.rewards)==1000:
-            print("Avg reward = ",int(sum(self.rewards)*100))
+            #print("Avg reward = ",int(sum(self.rewards)*100))
             self.rewards = []
 
 
