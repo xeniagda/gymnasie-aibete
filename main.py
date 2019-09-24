@@ -4,10 +4,11 @@ from graphics import UI
 import threading
 from agents.deepqlearner import *
 import levelGenerator
-import time
+import time,sys
 
 RANDOM_EPSILON = 0.005
 RENDER = True
+LOG_TIME = True
 WORLD_TYPE = levelGenerator.RandomLevelGenerator(0.5,0.0)
 WORLD_SIZE = 30
 
@@ -19,6 +20,9 @@ class Driver:
         self.reset_engine()
         self.agent = agent
         self.rewards = []
+
+        self.startTime = time.time()
+        self.numTicks = 0
 
     def reset_engine(self):
         self.engine = GameEngine(ui,WORLD_TYPE.generate(self.level_size))
@@ -41,6 +45,13 @@ class Driver:
             play_time += 1
 
             self.logReward(reward)
+            
+            if LOG_TIME:
+                self.numTicks += 1
+                if self.numTicks==1000:
+                    print("Time: ",round(time.time()-self.startTime,3))
+                    self.startTime = time.time()
+                    self.numTicks = 0
 
             time.sleep(ui.sleepTime)
 
@@ -51,7 +62,7 @@ class Driver:
             self.rewards = []
 
 
-ui = UI()
+ui = UI(RENDER)
 
 def main():
     agent = DeepQlearner(RANDOM_EPSILON)
