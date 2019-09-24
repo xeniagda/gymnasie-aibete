@@ -6,8 +6,8 @@ deep-q-learner-save.h5
 .vscode/
 
 
-/TanktroubleML/*
-/TanktroubleML/*/
-!/TanktroubleML/Assets/
-!/TanktroubleML/ProjectSettings/
+/TanktroubleML2/*
+/TanktroubleML2/*/
+!/TanktroubleML2/Assets/
+!/TanktroubleML2/ProjectSettings/
 
