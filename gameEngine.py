@@ -6,7 +6,9 @@ import math
 
 # random.seed(1)
 
-AROUND_RAD = 2
+AROUND_RAD = 3
+VISION_SIZE = AROUND_RAD * 2 + 1
+AGENT_INPUT_SIZE = VISION_SIZE ** 2
 
 class GameEngine:
     def __init__(self,ui,level):
@@ -36,29 +38,41 @@ class GameEngine:
         return (agentInput,reward,terminate)
     
     def getAgentInput(self):
-        res = np.zeros(((AROUND_RAD * 2 + 1) ** 2 + 2, ))
+        solid_grid = np.zeros((AGENT_INPUT_SIZE, ))
 
         for dx in range(-AROUND_RAD, AROUND_RAD + 1):
             for dy in range(-AROUND_RAD, AROUND_RAD + 1):
-                ix =  dx + AROUND_RAD
-                iy =  dy + AROUND_RAD
+                atX = self.player.x + dx
+                atY = self.player.y + dy
 
-                ry = self.player.y + dy + 0.5
-                rx = round(self.player.x + dx)
+                solid_value = 0
+                for xCorner in [0, 1]:
+                    for yCorner in [0, 1]:
+                        xCoord = int(atX + xCorner)
+                        yCoord = int(atY + yCorner)
 
-                if 0 <= rx < len(self.level):
-                    is_solid = ry < self.level[rx][0]
-                    is_bad = self.level[rx][1]
+                        if xCorner:
+                            xMul = atX % 1
+                        else:
+                            xMul = 1 - (atX % 1)
 
-                    if is_solid:
-                        res[iy * (AROUND_RAD * 2 + 1) + ix] = 1
-                        if is_bad:
-                            res[iy * (AROUND_RAD * 2 + 1) + ix] = -1
+                        if yCorner:
+                            yMul = atY % 1
+                        else:
+                            yMul = 1 - (atY % 1)
 
-        res[-2] = self.player.x - round(self.player.x)
-        res[-1] = self.player.y - round(self.player.x)
+                        if 0 <= xCoord < len(self.level):
+                            value_here = self.level[xCoord][0] > yCoord
+                        else:
+                            value_here = 0
+                        solid_value += value_here * xMul * yMul
 
-        return res
+                ix = dx + AROUND_RAD
+                iy = dy + AROUND_RAD
+
+                solid_grid[int(iy) * VISION_SIZE + int(ix)] = solid_value
+
+        return solid_grid
     
     def resolveCollisions(self):
         self.player.isOnGround = False
