@@ -145,11 +145,11 @@ class UI():
                     self.sleepTime = (self.sleepTime+0.001)/1.4-0.001
                     self.sleepTime = max(0,self.sleepTime)
                 if event.key == 114: # R
-                    if agent.random_epsilon>0:
-                        agent.random_epsilon = 0
+                    if self.agent.random_epsilon>0:
+                        self.agent.random_epsilon = 0
                     else:
-                        agent.random_epsilon = 0.005
-                    print("new eps: ",agent.random_epsilon)
+                        self.agent.random_epsilon = 0.005
+                    print("new eps: ",self.agent.random_epsilon)
                 print(event.key)
 
     def main_loop(self):
