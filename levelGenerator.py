@@ -1,4 +1,5 @@
 import random
+import numpy as np
 
 class LevelGenerator:
     def __init__(self):
@@ -20,7 +21,7 @@ class RandomLevelGenerator(LevelGenerator):
             delta_y = min(2, delta_y)
             if y + delta_y >= 1:
                 y += delta_y
-            level.append(y)
+            level.append((y,np.random.uniform(0,1)<0.1))
 
         return level
 

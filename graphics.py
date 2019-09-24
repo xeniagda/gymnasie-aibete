@@ -69,11 +69,11 @@ class Graphics():
         pygame.draw.rect(self.screen, (204, 90, 112), rec.inflate(-2, -2))
         pygame.draw.rect(self.screen, (186, 84, 162), rec.inflate(-4, -4))
 
-        for x, wall_height in enumerate(self.game_engine.level):
-            rec = self.getRect(x - self.delta_x, 0, 1, wall_height - self.delta_y)
+        for x, (wallHeight,isBad) in enumerate(self.game_engine.level):
+            rec = self.getRect(x - self.delta_x, 0, 1, wallHeight - self.delta_y)
             col_outer = (38, 95, 133)
             col_inner = (107, 164, 201)
-            if self.game_engine.bad_blocks[x]:
+            if isBad:
                 col_outer = (133, 50, 10)
                 col_inner = (201, 80, 47)
 

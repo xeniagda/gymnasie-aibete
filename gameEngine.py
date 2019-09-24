@@ -9,11 +9,11 @@ import math
 AROUND_RAD = 2
 
 class GameEngine:
-    def __init__(self,ui,level=[1,1,1,2,1,1]):
+    def __init__(self,ui,level):
         self.ui = ui
         self.level = level
-        self.bad_blocks = np.random.uniform(0, 1, size=(len(level), )) < 0.1
-        self.player = Player(0,level[0],0,0)
+        
+        self.player = Player(0,level[0][0],0,0)
 
     def performTick(self, action, draw=False, timeStep=0.01):
         last_x = self.player.x
@@ -23,8 +23,8 @@ class GameEngine:
 
         delta_x = self.player.x - last_x
         reward = delta_x
-        if 0 <= int(self.player.x) < len(self.bad_blocks):
-            if self.bad_blocks[int(self.player.x)] and self.player.isOnGround:
+        if 0 <= int(self.player.x) < len(self.level):
+            if self.level[int(self.player.x)][1] and self.player.isOnGround:
                 reward -= 0.2
         
         self.ui.setReward(reward)
@@ -47,8 +47,8 @@ class GameEngine:
                 rx = round(self.player.x + dx)
 
                 if 0 <= rx < len(self.level):
-                    is_solid = ry < self.level[rx]
-                    is_bad = self.bad_blocks[rx]
+                    is_solid = ry < self.level[rx][0]
+                    is_bad = self.level[rx][1]
 
                     if is_solid:
                         res[iy * (AROUND_RAD * 2 + 1) + ix] = 1
@@ -64,7 +64,7 @@ class GameEngine:
         self.player.isOnGround = False
         for i in range(int(self.player.x)-1,int(self.player.x)+2):
             if i>=0 and i<len(self.level):
-                self.player.isOnGround |= self.player.resolveCollisionWithBlock(i,0,1,self.level[i])
+                self.player.isOnGround |= self.player.resolveCollisionWithBlock(i,0,1,self.level[i][0])
             if i < 0:
                 self.player.isOnGround |= self.player.resolveCollisionWithBlock(i,0,1,1e10)
 
