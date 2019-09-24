@@ -100,14 +100,10 @@ class DeepQlearner:
         self.t_random[0] -= 0.01
 
         # Lägg till i experience_replay
-        self.experience_replay[0] = np.concatenate(
-            [self.experience_replay[0], [oldAgentInput]], axis=0)
-        self.experience_replay[1] = np.concatenate(
-            [self.experience_replay[1], [ACTIONS.index(action)]], axis=0)
-        self.experience_replay[2] = np.concatenate(
-            [self.experience_replay[2], [newAgentInput]], axis=0)
-        self.experience_replay[3] = np.concatenate(
-            [self.experience_replay[3], [reward * REWARD_SCALE]], axis=0)
+        self.experience_replay[0] = np.concatenate([self.experience_replay[0], [oldAgentInput]], axis=0)
+        self.experience_replay[1] = np.concatenate([self.experience_replay[1], [ACTIONS.index(action)]], axis=0)
+        self.experience_replay[2] = np.concatenate([self.experience_replay[2], [newAgentInput]], axis=0)
+        self.experience_replay[3] = np.concatenate([self.experience_replay[3], [reward * REWARD_SCALE]], axis=0)
 
         # Tillåt 10% över SOFT_REPLAY_LIMIT för att inte göra clean_er varje tick
         # Borde hjälpa performaance, då att ta bort saker i början inte är så billigt
@@ -127,14 +123,10 @@ class DeepQlearner:
     def clean_er(self):
         # Begränsa self.experience_replay till de nr_er sista elementen
 
-        self.experience_replay[0] = self.experience_replay[0][
-            -SOFT_REPLAY_LIMIT:]
-        self.experience_replay[1] = self.experience_replay[1][
-            -SOFT_REPLAY_LIMIT:]
-        self.experience_replay[2] = self.experience_replay[2][
-            -SOFT_REPLAY_LIMIT:]
-        self.experience_replay[3] = self.experience_replay[3][
-            -SOFT_REPLAY_LIMIT:]
+        self.experience_replay[0] = self.experience_replay[0][-SOFT_REPLAY_LIMIT:]
+        self.experience_replay[1] = self.experience_replay[1][-SOFT_REPLAY_LIMIT:]
+        self.experience_replay[2] = self.experience_replay[2][-SOFT_REPLAY_LIMIT:]
+        self.experience_replay[3] = self.experience_replay[3][-SOFT_REPLAY_LIMIT:]
 
     def train_on_random_minibatch(self):
         idxs = np.random.randint(self.experience_replay[0].shape[0],
@@ -152,6 +144,7 @@ class DeepQlearner:
                        reward):
         q_after = self.model(agent_input_after)
         wanted_q = reward + FUTURE_DISCOUNT * tf.reduce_max(q_after, axis=1)
+        #wanted_q = reward
 
         tvars = self.model.trainable_variables
 
