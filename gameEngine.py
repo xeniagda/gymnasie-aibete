@@ -1,14 +1,14 @@
 import numpy as np
+AROUND_RAD = 3
+VISION_SIZE = AROUND_RAD * 2 + 1
+AGENT_INPUT_SIZE = VISION_SIZE ** 2
+
 from graphics import UI
 from util import * 
 import random
 import math
 
 # random.seed(1)
-
-AROUND_RAD = 3
-VISION_SIZE = AROUND_RAD * 2 + 1
-AGENT_INPUT_SIZE = VISION_SIZE ** 2
 
 class GameEngine:
     def __init__(self,ui,level):
