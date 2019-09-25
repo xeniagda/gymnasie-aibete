@@ -12,7 +12,7 @@ from gameEngine import AGENT_INPUT_SIZE
 SAVE_PATH = "deep-q-learner-save.h5"
 
 FUTURE_DISCOUNT = 0.85
-LEARNING_RATE = 0.05
+LEARNING_RATE = 0.001
 
 # Tillåts att gå 10% över denna
 SOFT_REPLAY_LIMIT = 5000
