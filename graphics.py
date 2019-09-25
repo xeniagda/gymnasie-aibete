@@ -2,7 +2,7 @@ import numpy as np
 import math
 import time
 import pygame
-from gameEngine import VISION_SIZE
+from gameEngine import VISION_SIZE, AROUND_RAD
 
 width, height = size = 720, 600
 
@@ -13,6 +13,8 @@ SCALE = 50
 
 REWARD_CHANGE_SPEED = 0.2
 PLAYER_FOLLOW_MARGINS = 7
+
+AGENT_INPUT_SCALE = 20
 
 class Graphics():
     def __init__(self,screen):
@@ -83,15 +85,19 @@ class Graphics():
                 pygame.draw.rect(self.screen, col_outer, rec)
                 pygame.draw.rect(self.screen, col_inner, rec.inflate(-2, -2))
 
-        # Rita agentInput
-        agentInput = self.game_engine.getAgentInput()
+        ### Rita agentInput
 
-        agentInputScale = 20
+        rec = pygame.Rect(AGENT_INPUT_SCALE*(VISION_SIZE-1)/2, AGENT_INPUT_SCALE*(VISION_SIZE-1)/2, AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
+                
+        pygame.draw.rect(self.screen, (0,0,255), rec)
+
+        agentInput = self.game_engine.getAgentInput()
 
         for y in range(VISION_SIZE):
             for x in range(VISION_SIZE):
 
-                rec = pygame.Rect(x * agentInputScale, (VISION_SIZE-1)*agentInputScale-y * agentInputScale, agentInputScale, agentInputScale)
+                rec = pygame.Rect(x * AGENT_INPUT_SCALE, (VISION_SIZE-1)*AGENT_INPUT_SCALE-y * AGENT_INPUT_SCALE, AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
+                # Visa bakgrunden igenom
                 inp = agentInput[y * VISION_SIZE + x]
 
                 # RGB, 0..1
@@ -100,11 +106,15 @@ class Graphics():
                     col = np.array([1 - inp, 1 - inp, 1 - inp])
                 else:
                     col = np.array([1, 1 + inp, 1 + inp])
-                pygame.draw.rect(self.screen, (int(col[0] * 255), int(col[1] * 255), int(col[2] * 255)), rec)
+
+                col_back = (col + np.array([0.5, 0.5, 0.5])) / 2
+                if x == y == AROUND_RAD:
+                    col_back = (col + np.array([0, 0, 1])) / 2
+                    rec = rec.inflate(-2, -2)
+
+                pygame.draw.rect(self.screen, (int(col_back [0] * 255), int(col_back [1] * 255), int(col_back [2] * 255)), rec)
+                pygame.draw.rect(self.screen, (int(col[0] * 255), int(col[1] * 255), int(col[2] * 255)), rec.inflate(-2, -2))
         
-        rec = pygame.Rect(agentInputScale*(VISION_SIZE-1)/2, agentInputScale*(VISION_SIZE-1)/2, agentInputScale, agentInputScale)
-                
-        pygame.draw.rect(self.screen, (0,0,255), rec)
 
         #Rita text
         if self.agent != None:
