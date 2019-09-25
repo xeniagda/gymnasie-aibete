@@ -89,9 +89,9 @@ class DeepQlearner:
 
     def getAction(self, agentInput):
         if random.random() < self.random_epsilon:
-            return Actions.JUMP
-        if self.t_random[0] > 0:
-            return self.t_random[1]
+            return random.choice(ACTIONS)
+            #if self.t_random[0] > 0:
+            #    return self.t_random[1]
         else:
             pred = self.model.call_fast(agentInput)
             return ACTIONS[np.argmax(pred)]

@@ -165,9 +165,9 @@ class UI():
                     self.sleepTime = (self.sleepTime+0.001)/1.4-0.001
                     self.sleepTime = max(0,self.sleepTime)
                 if event.key == 119: # W, more random
-                    self.agent.random_epsilon += 0.001
+                    self.agent.random_epsilon += 0.01
                 if event.key == 115: # S, less random
-                    self.agent.random_epsilon -= 0.001
+                    self.agent.random_epsilon -= 0.01
                     self.agent.random_epsilon = max(0,self.agent.random_epsilon)
 
                 

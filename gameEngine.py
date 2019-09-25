@@ -21,13 +21,16 @@ class GameEngine:
         
         self.player = Player(0,level[0][0],0,0)
 
-    def performTick(self, action, draw=False, timeStep=0.01):
+    def performTick(self, action, draw=False, timeStep=0.2):
         last_x = self.player.x
         self.player.applyAction(action)
-        self.player.move(timeStep)
-        self.resolveCollisions()
+
+        for i in range(20):
+            self.player.move(timeStep/20)
+            self.resolveCollisions()
 
         delta_x = self.player.x - last_x
+        #print(delta_x)
         reward = delta_x
         if 0 <= int(self.player.x) < len(self.level):
             if self.level[int(self.player.x)][1] and self.player.isOnGround:

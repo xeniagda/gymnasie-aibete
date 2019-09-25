@@ -6,10 +6,10 @@ from agents.deepqlearner import *
 import levelGenerator
 import time,sys
 
-RANDOM_EPSILON = 0.005
+RANDOM_EPSILON = 0.05
 RENDER = True
 LOG_TIME = True
-WORLD_TYPE = levelGenerator.RandomLevelGenerator(0.5,0.0)
+WORLD_TYPE = levelGenerator.IntegerLevelGenerator(0.5,0.0)
 WORLD_SIZE = 30
 
 MAX_TIME = 9000
