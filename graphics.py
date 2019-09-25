@@ -2,7 +2,7 @@ import numpy as np
 import math
 import time
 import pygame
-from gameEngine import VISION_SIZE, AROUND_RAD
+from gameEngine import VISION_SIZE, AROUND_RAD, SECONDS_PER_TICK
 
 width, height = size = 720, 600
 
@@ -11,7 +11,7 @@ TIME_PER_FRAME = 0.002
 SCALE = 50
 # Game units
 
-REWARD_CHANGE_SPEED = 0.2
+REWARD_CHANGE_SPEED = 0.5
 PLAYER_FOLLOW_MARGINS = 7
 
 AGENT_INPUT_SCALE = 20
@@ -32,7 +32,8 @@ class Graphics():
         self.game_engine = game_engine
 
     def setReward(self,reward):
-        self.reward = self.reward * REWARD_CHANGE_SPEED ** 0.01 + (1 - REWARD_CHANGE_SPEED ** 0.01) * reward
+        reward = reward / SECONDS_PER_TICK
+        self.reward = self.reward * REWARD_CHANGE_SPEED ** SECONDS_PER_TICK + (1 - REWARD_CHANGE_SPEED ** SECONDS_PER_TICK) * reward
 
     def set_offset(self):
         player = self.game_engine.player
@@ -58,10 +59,10 @@ class Graphics():
         player = self.game_engine.player
 
         if self.reward > 0:
-            v = min(int(self.reward * 7000), 255)
+            v = min(int(self.reward * 255), 255)
             self.screen.fill((255 - v, 255, 255 - v))
         elif self.reward < 0:
-            v = min(int(-self.reward * 7000), 255)
+            v = min(int(-self.reward * 255), 255)
             self.screen.fill((255, 255 - v, 255 - v))
         else:
             self.screen.fill((255, 255, 255))

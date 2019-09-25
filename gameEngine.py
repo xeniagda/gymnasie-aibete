@@ -1,6 +1,8 @@
 import numpy as np
 
-AROUND_RAD = 2
+SECONDS_PER_TICK = 0.05
+
+AROUND_RAD = 3
 VISION_SIZE = AROUND_RAD * 2 + 1
 AGENT_INPUT_SIZE = VISION_SIZE ** 2
 INTERPOLATE_AGENT_INPUT = True
@@ -22,7 +24,7 @@ class GameEngine:
         
         self.player = Player(0,level[0][0],0,0)
 
-    def performTick(self, action, draw=False, timeStep=0.2):
+    def performTick(self, action, draw=False, timeStep=SECONDS_PER_TICK):
         last_x = self.player.x
         self.player.applyAction(action)
 
@@ -35,7 +37,7 @@ class GameEngine:
         reward = delta_x
         if 0 <= int(self.player.x) < len(self.level):
             if self.level[int(self.player.x)][1] and self.player.isOnGround:
-                reward -= 0.2
+                reward -= SECONDS_PER_TICK
         
         self.ui.setReward(reward)
         
