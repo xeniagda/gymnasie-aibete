@@ -11,8 +11,8 @@ from gameEngine import AGENT_INPUT_SIZE
 
 SAVE_PATH = "deep-q-learner-save.h5"
 
-FUTURE_DISCOUNT = 0.8**0.01
-LEARNING_RATE = 0.005
+FUTURE_DISCOUNT = 0.85
+LEARNING_RATE = 0.05
 
 # Tillåts att gå 10% över denna
 SOFT_REPLAY_LIMIT = 5000
@@ -21,8 +21,6 @@ TRAIN_RATE = 500
 BATCH_SIZE = 1024
 
 ACTIONS = [Actions.LEFT, Actions.RIGHT, Actions.JUMP]
-
-REWARD_SCALE = 100
 
 def elu(x, alpha):
     return np.where(x > 0, x, alpha * (np.exp(x) - 1))
@@ -106,7 +104,7 @@ class DeepQlearner:
         self.experience_replay[0][self.experience_replay_index] = oldAgentInput
         self.experience_replay[1][self.experience_replay_index] = ACTIONS.index(action)
         self.experience_replay[2][self.experience_replay_index] = newAgentInput
-        self.experience_replay[3][self.experience_replay_index] = reward * REWARD_SCALE
+        self.experience_replay[3][self.experience_replay_index] = reward
         self.experience_replay_index = (self.experience_replay_index+1)%SOFT_REPLAY_LIMIT
 
         self.n_since_last_train += 1
@@ -114,7 +112,7 @@ class DeepQlearner:
         if self.n_since_last_train > TRAIN_RATE:
             #print("Training")
             loss = self.train_on_random_minibatch()
-            #print("Loss =", loss)
+            print("Loss =", loss)
             self.model.save_weights(SAVE_PATH)
 
             self.n_since_last_train = 0
