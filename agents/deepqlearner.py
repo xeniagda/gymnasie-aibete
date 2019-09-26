@@ -11,9 +11,6 @@ from gameEngine import AGENT_INPUT_SIZE
 
 SAVE_PATH = "deep-q-learner-save.h5"
 
-FUTURE_DISCOUNT = 0.85
-LEARNING_RATE = 0.001
-
 # Tillåts att gå 10% över denna
 SOFT_REPLAY_LIMIT = 50000
 
@@ -53,11 +50,11 @@ class RLModel(kr.models.Model):
 
 
 class DeepQlearner:
-    def __init__(self, random_epsilon):
+    def __init__(self, random_epsilon,future_discount=0.75,learning_rate=0.001, fromSave=True):
         self.model = RLModel()
         self.model.build((None, AGENT_INPUT_SIZE))
 
-        if os.path.isfile(SAVE_PATH):
+        if os.path.isfile(SAVE_PATH) and fromSave:
             print("Loading")
             self.model.load_weights(SAVE_PATH)
         else:
@@ -75,11 +72,12 @@ class DeepQlearner:
         ]
         self.experience_replay_index = 0
 
-        # Hur ofta agenten svarar med en slumpmässig action
         self.random_epsilon = random_epsilon
+        self.learning_rate = learning_rate
+        self.future_discount = future_discount
 
         self.loss_measure = tf.losses.MeanSquaredError()
-        self.opt = tf.optimizers.Adam(lr=LEARNING_RATE)
+        self.opt = tf.optimizers.Adam(lr=self.learning_rate)
 
         self.n_since_last_train = 0
 
@@ -132,7 +130,7 @@ class DeepQlearner:
     def train_on_batch(self, agent_input_before, action, agent_input_after,
                        reward):
         q_after = self.model(agent_input_after)
-        wanted_q = reward + FUTURE_DISCOUNT * tf.reduce_max(q_after, axis=1)
+        wanted_q = reward + self.future_discount * tf.reduce_max(q_after, axis=1)
         #wanted_q = reward
 
         tvars = self.model.trainable_variables

@@ -4,3 +4,4 @@ class Actions(Enum):
     LEFT=0
     RIGHT=1
     JUMP=2
+    NONE=3

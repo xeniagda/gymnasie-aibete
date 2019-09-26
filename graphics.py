@@ -145,7 +145,9 @@ class UI():
 
             self.graphics = Graphics(self.screen)
 
-        self.sleepTime = 0.000
+        self.sleepTime = 0.01
+
+        self.pressedKeys = set()
 
     def setGameEngine(self,ge):
         if not self.RENDER:
@@ -169,6 +171,7 @@ class UI():
                 pygame.quit()
                 exit()
             if event.type == pygame.KEYDOWN:
+                self.pressedKeys.add(event.key)
                 #print(event.key)
                 if event.key == 97: # A, slow down
                     self.sleepTime = (self.sleepTime+0.001)*1.4-0.001
@@ -180,11 +183,14 @@ class UI():
                 if event.key == 115: # S, less random
                     self.agent.random_epsilon -= 0.01
                     self.agent.random_epsilon = max(0,self.agent.random_epsilon)
-
                 
-                print("eps: ",round(self.agent.random_epsilon,3))
+                #if 'random_epsilon' in self.agent:
+                #    print("eps: ",round(self.agent.random_epsilon,3))
                 print("sleep: ", round(self.sleepTime,3))
                 print(event.key)
+            if event.type == pygame.KEYUP:
+                self.pressedKeys.remove(event.key)
+
 
     def main_loop(self):
         last_time = time.time()
