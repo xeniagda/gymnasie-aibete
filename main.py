@@ -1,46 +1,19 @@
 import random
-from gameEngine import *
 from graphics import UI 
 import threading
 from agents.deepqlearner import *
+from agents.humanAgent import *
 import levelGenerator
 import time,sys
+from gamePlayer import *
 
 RANDOM_EPSILON = 0.05
 RENDER = True
 LOG_TIME = False
-WORLD_TYPE = levelGenerator.IntegerLevelGenerator(1,0.0)
+WORLD_TYPE = levelGenerator.PremadeLevelGenerator(0)
 WORLD_SIZE = 30
 
-MAX_TIME = 9000
-
-def playGame(engine,agent):
-    if RENDER:
-        ui.setGameEngine(engine)
-        ui.setAgent(agent)
-    agentInput = engine.getAgentInput()
-
-    play_time = 0
-    startTime = time.time()
-
-    while True:
-        action = agent.getAction(agentInput)
-        newAgentInput,reward,terminate = engine.performTick(action, RENDER)
-
-        agent.update(agentInput,action,newAgentInput,reward)
-        agentInput = newAgentInput
-        if terminate or play_time > MAX_TIME:
-            return play_time
-
-        play_time += 1
-
-        if LOG_TIME:
-            if play_time%1000==0:
-                print("Time: ",round(time.time()-startTime,3))
-                startTime = time.time()
-
-        time.sleep(ui.sleepTime)
-
+MAX_TIME = 2000
 
 class Driver:
     def __init__(self,level_size,agent):
@@ -53,13 +26,13 @@ class Driver:
 
     def play(self):
         while True:
-            playGame(GameEngine(ui,WORLD_TYPE.generate(self.level_size)),self.agent)
+            playGame(WORLD_TYPE.generate(self.level_size),self.agent,MAX_TIME,RENDER,ui)
 
 
-ui = UI(RENDER)
+ui = UI(RENDER,0.0)
 
 def main():
-    agent = DeepQlearner(RANDOM_EPSILON)
+    agent = HumanAgent(ui)#DeepQlearner(RANDOM_EPSILON)
 
     driver = Driver(WORLD_SIZE, agent)
     

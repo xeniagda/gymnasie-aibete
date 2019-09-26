@@ -131,7 +131,7 @@ class Graphics():
     
 
 class UI():
-    def __init__(self,RENDER):
+    def __init__(self,RENDER,sleepTime):
         self.screen = None
         self.game_engine = None
         self.agent = None
@@ -145,7 +145,7 @@ class UI():
 
             self.graphics = Graphics(self.screen)
 
-        self.sleepTime = 0.01
+        self.sleepTime = sleepTime
 
         self.pressedKeys = set()
 
@@ -184,8 +184,8 @@ class UI():
                     self.agent.random_epsilon -= 0.01
                     self.agent.random_epsilon = max(0,self.agent.random_epsilon)
                 
-                #if 'random_epsilon' in self.agent:
-                #    print("eps: ",round(self.agent.random_epsilon,3))
+                if hasattr(self.agent,'random_epsilon'):
+                    print("eps: ",round(self.agent.random_epsilon,3))
                 print("sleep: ", round(self.sleepTime,3))
                 print(event.key)
             if event.type == pygame.KEYUP:

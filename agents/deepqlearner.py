@@ -83,6 +83,8 @@ class DeepQlearner:
 
         self.t_random = [0, None]  # (time, action)
 
+        self.latestLoss = 0
+
     def getAction(self, agentInput):
         if random.random() < self.random_epsilon:
             return random.choice(ACTIONS)
@@ -110,7 +112,7 @@ class DeepQlearner:
         if self.n_since_last_train > TRAIN_RATE:
             #print("Training")
             loss = self.train_on_random_minibatch()
-            print("Loss =", loss)
+            #print("Loss =", loss)
             self.model.save_weights(SAVE_PATH)
 
             self.n_since_last_train = 0
@@ -149,4 +151,5 @@ class DeepQlearner:
             gradients = tape.gradient(loss, tvars)
         self.opt.apply_gradients(zip(gradients, tvars))
 
+        self.latestLoss = loss
         return loss
