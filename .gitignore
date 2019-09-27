@@ -4,7 +4,9 @@ launch.json
 q-table-learner.npz
 deep-q-learner-save.h5
 .vscode/
-
+*.json
+*.jsonData
+*.prof
 
 /TanktroubleML2/*
 /TanktroubleML2/*/
