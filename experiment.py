@@ -12,6 +12,7 @@ from functools import reduce
 from operator import add
 
 RENDER = False
+DESIRED_DATA_POINTS = 20
 
 ui = UI(RENDER,0.0)
 
@@ -48,9 +49,8 @@ def evaluate(numGames,random_epsilon, learning_rate, future_discount):
     return results
 
 def averageLists(lists):
-    avg = list(reduce(lambda results1,results2: map(add,results1,results2),lists))
-    avg = [s/len(lists) for s in avg]
-    return avg
+    lists = np.array(lists)
+    return lists.T.mean(axis=1)
 
 
 def evaluateManyTimes(numTimes,numGames,random_epsilon, learning_rate, future_discount):
@@ -65,10 +65,10 @@ def evaluateManyTimes(numTimes,numGames,random_epsilon, learning_rate, future_di
         partialResult = evaluate(numGames,random_epsilon,learning_rate,future_discount)
         totResults["loss"].append(partialResult["loss"])
         totResults["reward"].append(partialResult["reward"])
-        print(i+1,random_epsilon)
+        print(i+1,learning_rate)
     
-    totResults["loss"] = averageLists(totResults["loss"])
-    totResults["reward"] = averageLists(totResults["reward"])
+    #totResults["loss"] = averageLists(totResults["loss"])
+    #totResults["reward"] = averageLists(totResults["reward"])
     return totResults
 
 def averageChunks(vals,chunkSize):
@@ -77,20 +77,27 @@ def averageChunks(vals,chunkSize):
         res.append(sum(vals[i:i+chunkSize])/chunkSize)
     return res
 
-def saveResults(resultsList):
+def saveResults(resultsList,saveName):
     jsonData = json.dumps(resultsList)
 
-    f = open("latestResults.jsonData","w")
+    f = open(saveName,"w")
     f.write(jsonData)
     f.close()
 
+def loadResults(saveName):
+    with open(saveName,"r") as f:
+        return json.loads(f.read())
+
 
 def showResult(resultsList):
-    saveResults(resultsList)
+
+
+
+    chunkSize = int(math.ceil(len(resultsList[0]["loss"][0])/DESIRED_DATA_POINTS))
 
     plt.subplot(1,2,1)
     for results in resultsList:
-        plt.plot(averageChunks(results["loss"],10),label=("η="+str(results["learning_rate"])))
+        plt.plot(averageChunks(averageLists(results["loss"]),chunkSize),label=("η="+str(results["learning_rate"])))
 
     plt.title('Loss')
     plt.yscale('log')
@@ -98,7 +105,7 @@ def showResult(resultsList):
 
     plt.subplot(1,2,2)
     for results in resultsList:
-        plt.plot(averageChunks(results["reward"],10),label=("η="+str(results["learning_rate"])))
+        plt.plot(averageChunks(averageLists(results["reward"]),chunkSize),label=("η="+str(results["learning_rate"])))
 
     plt.title('Reward')
     plt.legend(loc='upper left')
@@ -106,13 +113,16 @@ def showResult(resultsList):
 
 def main():
     
-    resultsList = []
+    #resultsList = []
 
-    resultsList.append(evaluateManyTimes(20,200,0.05,0.0025,0.8))
-    resultsList.append(evaluateManyTimes(20,200,0.05,0.005,0.8))
-    resultsList.append(evaluateManyTimes(20,200,0.05,0.01,0.8))
+    #resultsList.append(evaluateManyTimes(2,20,0.05,0.0025,0.8))
+    #resultsList.append(evaluateManyTimes(2,20,0.05,0.005,0.8))
+    #resultsList.append(evaluateManyTimes(2,20,0.05,0.01,0.8))
 
-    showResult(resultsList)
+    #saveResults(resultsList,"learningRate.json")
+    #showResult(resultsList)
+
+    showResult(loadResults("learningRate.json"))
 
 if RENDER:
     threading.Thread(target=main, daemon=True).start()
