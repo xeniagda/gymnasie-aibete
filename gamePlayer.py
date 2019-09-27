@@ -20,10 +20,10 @@ def playGame(level,agent,maxTime,render,ui,logTime=False):
         rewardSum += reward
         agent.update(agentInput,action,newAgentInput,reward)
         agentInput = newAgentInput
+        play_time += 1
+
         if terminate or play_time >= maxTime:
             return (play_time,rewardSum/play_time*1000)
-
-        play_time += 1
 
         if logTime:
             if play_time%1000==0:
