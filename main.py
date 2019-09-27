@@ -10,10 +10,10 @@ from gamePlayer import *
 RANDOM_EPSILON = 0.05
 RENDER = True
 LOG_TIME = False
-WORLD_TYPE = levelGenerator.PremadeLevelGenerator(0)
+WORLD_TYPE = levelGenerator.PremadeLevelGenerator(1)
 WORLD_SIZE = 30
 
-MAX_TIME = 2000
+MAX_TIME = 1000
 
 class Driver:
     def __init__(self,level_size,agent):
@@ -29,7 +29,7 @@ class Driver:
             playGame(WORLD_TYPE.generate(self.level_size),self.agent,MAX_TIME,RENDER,ui)
 
 
-ui = UI(RENDER,0.0)
+ui = UI(RENDER,0.01)
 
 def main():
     agent = HumanAgent(ui)#DeepQlearner(RANDOM_EPSILON)

@@ -12,6 +12,8 @@ class HumanAgent:
             return Actions.RIGHT
         if pygame.K_LEFT in self.ui.pressedKeys:
             return Actions.LEFT
+        if pygame.K_r in self.ui.pressedKeys:
+            return Actions.RESTART
         return Actions.NONE
 
 

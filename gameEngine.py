@@ -44,7 +44,7 @@ class GameEngine:
         
         agentInput = self.getAgentInput()
 
-        terminate = self.player.x>=len(self.level)
+        terminate = (self.player.x>=len(self.level) or action == Actions.RESTART)
 
         return (agentInput,reward,terminate)
     
