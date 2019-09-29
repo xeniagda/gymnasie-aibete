@@ -25,4 +25,4 @@ class SingleFrame(RandomActionMethod):
             return None
 
     def __str__(self):
-        return "SingleFramf(ε={})".format(self.random_epsilon)
+        return "SingleFrame(ε={})".format(self.random_epsilon)
