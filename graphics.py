@@ -119,7 +119,7 @@ class Graphics():
 
         #Rita text
         if self.agent != None:
-            self.screen.blit(self.font.render(str(self.agent.random_epsilon), True, (0, 128, 0)),(0,0))
+            self.screen.blit(self.font.render(str(self.agent.random_action_method), True, (0, 128, 0)),(100,100))
 
         #if agent!=None:
             #print(agent.random_epsilon)
@@ -179,13 +179,13 @@ class UI():
                     self.sleepTime = (self.sleepTime+0.001)/1.4-0.001
                     self.sleepTime = max(0,self.sleepTime)
                 if event.key == 119: # W, more random
-                    self.agent.random_epsilon += 0.01
+                    self.agent.random_action_method.random_epsilon += 0.01
                 if event.key == 115: # S, less random
-                    self.agent.random_epsilon -= 0.01
-                    self.agent.random_epsilon = max(0,self.agent.random_epsilon)
+                    self.agent.random_action_method.random_epsilon -= 0.01
+                    self.agent.random_action_method.random_epsilon = max(0,self.agent.random_action_method.random_epsilon)
                 
-                if hasattr(self.agent,'random_epsilon'):
-                    print("eps: ",round(self.agent.random_epsilon,3))
+                if hasattr(self.agent,'random_action_method'):
+                    print("eps: ",round(self.agent.random_action_method.random_epsilon,3))
                 print("sleep: ", round(self.sleepTime,3))
                 print(event.key)
             if event.type == pygame.KEYUP:
