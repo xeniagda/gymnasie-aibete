@@ -31,6 +31,9 @@ class Graphics():
     def setGameEngine(self,game_engine):
         self.game_engine = game_engine
 
+    def setAgent(self, agent):
+        self.agent = agent
+
     def setReward(self,reward):
         reward = reward / SECONDS_PER_TICK
         self.reward = self.reward * REWARD_CHANGE_SPEED ** SECONDS_PER_TICK + (1 - REWARD_CHANGE_SPEED ** SECONDS_PER_TICK) * reward
@@ -159,6 +162,7 @@ class UI():
         if not self.RENDER:
             return
         self.agent = ag
+        self.graphics.setAgent(ag)
 
     def setReward(self,reward):
         if not self.RENDER:
