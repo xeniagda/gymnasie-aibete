@@ -16,6 +16,8 @@ PLAYER_FOLLOW_MARGINS = 7
 
 AGENT_INPUT_SCALE = 20
 
+DRAW_TEXT = False
+
 class Graphics():
     def __init__(self,screen):
         self.screen = screen
@@ -23,7 +25,8 @@ class Graphics():
         self.agent = None
         self.reward = 0
 
-        self.font = pygame.font.SysFont("comicsansms", 72)
+        if DRAW_TEXT:
+            self.font = pygame.font.SysFont("comicsansms", 12)
 
         self.delta_x = 0
         self.delta_y = 0
@@ -121,8 +124,9 @@ class Graphics():
         
 
         #Rita text
-        if self.agent != None:
-            self.screen.blit(self.font.render(str(self.agent.random_action_method), True, (0, 128, 0)),(100,100))
+        if DRAW_TEXT and self.agent != None:
+            text_x = VISION_SIZE * AGENT_INPUT_SCALE
+            self.screen.blit(self.font.render(str(self.agent.random_action_method), True, (0, 128, 0)),(text_x,0))
 
         #if agent!=None:
             #print(agent.random_epsilon)
