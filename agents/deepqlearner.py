@@ -17,7 +17,7 @@ SOFT_REPLAY_LIMIT = 50000
 TRAIN_RATE = 500
 BATCH_SIZE = 10240
 
-ACTIONS = [Actions.LEFT, Actions.RIGHT, Actions.JUMP]
+ACTIONS = [Actions.LEFT, Actions.RIGHT, Actions.JUMP, Actions.NONE]
 
 def elu(x, alpha):
     return np.where(x > 0, x, alpha * (np.exp(x) - 1))
@@ -28,7 +28,7 @@ class RLModel(kr.models.Model):
         self.layer1 = kr.layers.Dense(8,
                                       bias_initializer=None,
                                       activation=kr.activations.elu)
-        self.layer2 = kr.layers.Dense(3,
+        self.layer2 = kr.layers.Dense(4,
                                       bias_initializer=None,
                                       activation=kr.activations.linear)
 
