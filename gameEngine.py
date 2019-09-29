@@ -1,19 +1,20 @@
 import numpy as np
+#from graphics import UI
+from util import * 
+import random
+import math
 
+ACCELERATION = True
 SECONDS_PER_TICK = 0.05
 
 AROUND_RAD = 3
 VISION_SIZE = AROUND_RAD * 2 + 1
 AGENT_INPUT_SIZE = VISION_SIZE ** 2
-INTERPOLATE_AGENT_INPUT = True
+INTERPOLATE_AGENT_INPUT = False
 
 if not INTERPOLATE_AGENT_INPUT:
     AGENT_INPUT_SIZE += 2
 
-from graphics import UI
-from util import * 
-import random
-import math
 
 # random.seed(1)
 
@@ -43,7 +44,7 @@ class GameEngine:
         
         agentInput = self.getAgentInput()
 
-        terminate = self.player.x>=len(self.level)
+        terminate = (self.player.x>=len(self.level) or action == Actions.RESTART)
 
         return (agentInput,reward,terminate)
     
@@ -113,9 +114,9 @@ class GameEngine:
         self.player.isOnGround = False
         for i in range(int(self.player.x)-1,int(self.player.x)+2):
             if i>=0 and i<len(self.level):
-                self.player.isOnGround |= self.player.resolveCollisionWithBlock(i,0,1,self.level[i][0])
+                self.player.isOnGround |= self.player.resolveCollisionWithBlock(i,-100,1,self.level[i][0]+100)
             if i < 0:
-                self.player.isOnGround |= self.player.resolveCollisionWithBlock(i,0,1,1e10)
+                self.player.isOnGround |= self.player.resolveCollisionWithBlock(i,-100,1,1e10)
 
 
 class Player:
@@ -130,8 +131,8 @@ class Player:
         self.width = 0.2
         self.height = 1
 
-        self.groundSpeed = 1.5
-        self.airSpeed = 0.8
+        self.groundSpeed = 2.0
+        self.airSpeed = 1.2
         self.gravity = -3
         self.jump = 4
 
@@ -141,11 +142,21 @@ class Player:
         currentSpeed = self.groundSpeed
         if not self.isOnGround:
             currentSpeed = self.airSpeed
-        self.vx = 0
+        
+        if not ACCELERATION:
+            self.vx = 0
         if action == Actions.LEFT:
-            self.vx = -currentSpeed
+            if ACCELERATION:
+                self.vx -= 0.01
+                self.vx = max(self.vx,-currentSpeed)
+            else:
+                self.vx = -currentSpeed
         if action == Actions.RIGHT:
-            self.vx = currentSpeed
+            if ACCELERATION:
+                self.vx += 0.01
+                self.vx = min(self.vx,currentSpeed)
+            else:
+                self.vx = currentSpeed
         if action == Actions.JUMP and self.isOnGround:
             self.vy = self.jump
         

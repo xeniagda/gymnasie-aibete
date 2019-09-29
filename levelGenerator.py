@@ -54,3 +54,14 @@ class FlatLevelGenerator(LevelGenerator):
 
     def generate(self, length):
         return [(1,0)] * length
+
+class PremadeLevelGenerator(LevelGenerator):
+    def __init__(self,index):
+        super(PremadeLevelGenerator, self).__init__()
+        self.index = index
+
+    def generate(self,length):
+        if self.index == 0:
+            return list(zip([2,2,2,2,3,2,3,4,3,3,3,4,3,3,3,0,3,3,0,3,3,3,2,5,3,2,2,2,2],[0]*30))
+        if self.index == 1:
+            return list(zip([3,3,3,0,3,0,0,3,0,3,0,0,3,3,3,3,4,3,3,3,5,3,3,2,5,3,3,3,3],[0]*30))

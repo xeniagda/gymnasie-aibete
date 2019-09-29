@@ -11,14 +11,11 @@ from gameEngine import AGENT_INPUT_SIZE
 
 SAVE_PATH = "deep-q-learner-save.h5"
 
-FUTURE_DISCOUNT = 0.85
-LEARNING_RATE = 0.001
-
 # Tillåts att gå 10% över denna
-SOFT_REPLAY_LIMIT = 5000
+SOFT_REPLAY_LIMIT = 50000
 
 TRAIN_RATE = 500
-BATCH_SIZE = 1024
+BATCH_SIZE = 10240
 
 ACTIONS = [Actions.LEFT, Actions.RIGHT, Actions.JUMP]
 
@@ -53,11 +50,11 @@ class RLModel(kr.models.Model):
 
 
 class DeepQlearner:
-    def __init__(self, random_epsilon):
+    def __init__(self, random_epsilon,future_discount=0.75,learning_rate=0.001, fromSave=True):
         self.model = RLModel()
         self.model.build((None, AGENT_INPUT_SIZE))
 
-        if os.path.isfile(SAVE_PATH):
+        if os.path.isfile(SAVE_PATH) and fromSave:
             print("Loading")
             self.model.load_weights(SAVE_PATH)
         else:
@@ -75,15 +72,18 @@ class DeepQlearner:
         ]
         self.experience_replay_index = 0
 
-        # Hur ofta agenten svarar med en slumpmässig action
         self.random_epsilon = random_epsilon
+        self.learning_rate = learning_rate
+        self.future_discount = future_discount
 
         self.loss_measure = tf.losses.MeanSquaredError()
-        self.opt = tf.optimizers.Adam(lr=LEARNING_RATE)
+        self.opt = tf.optimizers.Adam(lr=self.learning_rate)
 
         self.n_since_last_train = 0
 
         self.t_random = [0, None]  # (time, action)
+
+        self.latestLoss = 0
 
     def getAction(self, agentInput):
         if random.random() < self.random_epsilon:
@@ -112,7 +112,7 @@ class DeepQlearner:
         if self.n_since_last_train > TRAIN_RATE:
             #print("Training")
             loss = self.train_on_random_minibatch()
-            print("Loss =", loss)
+            #print("Loss =", loss)
             self.model.save_weights(SAVE_PATH)
 
             self.n_since_last_train = 0
@@ -132,7 +132,7 @@ class DeepQlearner:
     def train_on_batch(self, agent_input_before, action, agent_input_after,
                        reward):
         q_after = self.model(agent_input_after)
-        wanted_q = reward + FUTURE_DISCOUNT * tf.reduce_max(q_after, axis=1)
+        wanted_q = reward + self.future_discount * tf.reduce_max(q_after, axis=1)
         #wanted_q = reward
 
         tvars = self.model.trainable_variables
@@ -151,4 +151,5 @@ class DeepQlearner:
             gradients = tape.gradient(loss, tvars)
         self.opt.apply_gradients(zip(gradients, tvars))
 
+        self.latestLoss = loss
         return loss
