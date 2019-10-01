@@ -3,7 +3,7 @@ from graphics import UI
 import threading
 from agents.deepqlearner import *
 from agents.humanAgent import *
-from random_action_method import SingleFrame
+from random_action_method import TRandom
 import levelGenerator
 import time,sys
 from gamePlayer import *
@@ -34,7 +34,7 @@ class Driver:
 ui = UI(RENDER,0.01)
 
 def main():
-    agent = DeepQlearner(SingleFrame(RANDOM_EPSILON))
+    agent = DeepQlearner(TRandom(RANDOM_EPSILON, 1 / 60), future_discount=0.95)
 
     driver = Driver(WORLD_SIZE, agent)
     

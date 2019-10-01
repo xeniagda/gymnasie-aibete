@@ -26,3 +26,25 @@ class SingleFrame(RandomActionMethod):
 
     def __str__(self):
         return "SingleFrame(ε={})".format(self.random_epsilon)
+
+class TRandom(RandomActionMethod):
+    def __init__(self, random_epsilon, time_lambda):
+        super(TRandom, self).__init__(random_epsilon)
+        self.current_action = None
+        self.time_lambda = time_lambda
+        self.time = 0 # ~ Exp(time_lambda)
+
+    # Give None if no random action should be chosen
+    def get_random_action(self):
+        if self.time > 0:
+            self.time -= 1
+            return self.current_action
+
+        if random.random() < self.random_epsilon:
+            self.current_action = random.choice(ACTIONS)
+            self.time = random.expovariate(self.time_lambda)
+
+        return None
+
+    def __str__(self):
+        return "TRandom(ε={})".format(self.random_epsilon)
