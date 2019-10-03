@@ -27,7 +27,7 @@ class GameEngine:
 
     def performTick(self, action, draw=False, timeStep=SECONDS_PER_TICK):
         last_x = self.player.x
-        self.player.applyAction(action)
+        self.player.applyAction(action,timeStep)
 
         for i in range(20):
             self.player.move(timeStep/20)
@@ -138,7 +138,7 @@ class Player:
 
         self.isOnGround = False
     
-    def applyAction(self,action):
+    def applyAction(self,action,timeStep):
         currentSpeed = self.groundSpeed
         if not self.isOnGround:
             currentSpeed = self.airSpeed
@@ -147,13 +147,13 @@ class Player:
             self.vx = 0
         if action == Actions.LEFT:
             if ACCELERATION:
-                self.vx -= 0.01
+                self.vx -= 0.2*timeStep
                 self.vx = max(self.vx,-currentSpeed)
             else:
                 self.vx = -currentSpeed
         if action == Actions.RIGHT:
             if ACCELERATION:
-                self.vx += 0.01
+                self.vx += 0.2*timeStep
                 self.vx = min(self.vx,currentSpeed)
             else:
                 self.vx = currentSpeed
