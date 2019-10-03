@@ -78,7 +78,7 @@ class GameEngine:
 
             for dx in range(-AROUND_RAD, AROUND_RAD + 1):
                 for dy in range(-AROUND_RAD, AROUND_RAD + 1):
-                    atX = self.player.x + dx
+                    atX = self.player.x + self.player.width / 2 - 0.5 + dx
                     atY = self.player.y + dy
 
                     solid_value = 0

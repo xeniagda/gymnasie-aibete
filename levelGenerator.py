@@ -26,7 +26,7 @@ class RandomLevelGenerator(LevelGenerator):
             if random.random() < 0.2 and len(level) >= 2 and y - level[-2][0] < 2:
                 y += 1
 
-            level.append((y,np.random.uniform(0,1)<0.1))
+            level.append((y,np.random.uniform(0,1)<self.badRatio))
 
         return level
 

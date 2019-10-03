@@ -17,7 +17,7 @@ SOFT_REPLAY_LIMIT = 50000
 TRAIN_RATE = 500
 BATCH_SIZE = 10240
 
-ACTIONS = [Actions.LEFT, Actions.RIGHT, Actions.JUMP]
+ACTIONS = [Actions.LEFT, Actions.RIGHT, Actions.JUMP, Actions.NONE]
 
 def elu(x, alpha):
     return np.where(x > 0, x, alpha * (np.exp(x) - 1))
@@ -28,7 +28,7 @@ class RLModel(kr.models.Model):
         self.layer1 = kr.layers.Dense(8,
                                       bias_initializer=None,
                                       activation=kr.activations.elu)
-        self.layer2 = kr.layers.Dense(3,
+        self.layer2 = kr.layers.Dense(4,
                                       bias_initializer=None,
                                       activation=kr.activations.linear)
 
@@ -50,7 +50,7 @@ class RLModel(kr.models.Model):
 
 
 class DeepQlearner:
-    def __init__(self, random_epsilon,future_discount=0.75,learning_rate=0.001, fromSave=True):
+    def __init__(self, random_action_method,future_discount=0.75,learning_rate=0.001, fromSave=True):
         self.model = RLModel()
         self.model.build((None, AGENT_INPUT_SIZE))
 
@@ -72,7 +72,8 @@ class DeepQlearner:
         ]
         self.experience_replay_index = 0
 
-        self.random_epsilon = random_epsilon
+        self.random_action_method = random_action_method
+
         self.learning_rate = learning_rate
         self.future_discount = future_discount
 
@@ -86,20 +87,14 @@ class DeepQlearner:
         self.latestLoss = 0
 
     def getAction(self, agentInput):
-        if random.random() < self.random_epsilon:
-            return random.choice(ACTIONS)
-            #if self.t_random[0] > 0:
-            #    return self.t_random[1]
+        rand_action = self.random_action_method.get_random_action()
+        if rand_action is not None:
+            return rand_action
         else:
             pred = self.model.call_fast(agentInput)
             return ACTIONS[np.argmax(pred)]
 
     def update(self, oldAgentInput, action, newAgentInput, reward):
-        if random.random() < self.random_epsilon:
-            self.t_random = [random.random(), random.choice([Actions.LEFT, Actions.RIGHT])]
-
-        self.t_random[0] -= 0.01
-
         # Lägg till i experience_replay
         self.experience_replay[0][self.experience_replay_index] = oldAgentInput
         self.experience_replay[1][self.experience_replay_index] = ACTIONS.index(action)
@@ -110,9 +105,9 @@ class DeepQlearner:
         self.n_since_last_train += 1
 
         if self.n_since_last_train > TRAIN_RATE:
-            #print("Training")
+            print("Training")
             loss = self.train_on_random_minibatch()
-            #print("Loss =", loss)
+            print("Loss =", loss)
             self.model.save_weights(SAVE_PATH)
 
             self.n_since_last_train = 0
