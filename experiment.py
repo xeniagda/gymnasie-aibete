@@ -16,25 +16,27 @@ DESIRED_DATA_POINTS = 20
 
 ui = UI(RENDER,0.0)
 
-levelGenerator = IntegerLevelGenerator(0.5,0.0)
+levelGenerator = PremadeLevelGenerator(1)
 evalLevels = []
-for i in range(100):
+for i in range(1000):
     evalLevels.append(levelGenerator.generate(100))
 
 def evaluate(numGames,random_epsilon, learning_rate, future_discount):
-    levelGenerator = IntegerLevelGenerator(0.5,0.0)
-    agent = DeepQlearner(random_epsilon,future_discount,learning_rate,False)
+    levelGenerator = PremadeLevelGenerator(1)
+    agent = DeepQlearner(random_epsilon(0),future_discount(0),learning_rate(0),False)
 
     results = {
         "loss": [],
         "reward":[],
-        "random_epsilon":random_epsilon,
-        "learning_rate":learning_rate,
-        "future_discount":future_discount
+        "random_epsilon":str(random_epsilon(0))+"->"+str(random_epsilon(1)),
+        "learning_rate":str(learning_rate(0))+"->"+str(learning_rate(1)),
+        "future_discount":str(future_discount(0))+"->"+str(future_discount(1)),
     }
 
     for i in range(numGames):
-        agent.random_epsilon = random_epsilon
+        agent.random_epsilon = random_epsilon(i/(numGames-1))
+        agent.learning_rate = learning_rate(i/(numGames-1))
+        agent.future_discount = future_discount(i/(numGames-1))
         playTime,avgReward = playGame(levelGenerator.generate(100),agent,2000,RENDER,ui)
 
         agent.random_epsilon = 0
@@ -44,22 +46,23 @@ def evaluate(numGames,random_epsilon, learning_rate, future_discount):
 
         results["loss"].append(agent.latestLoss.numpy().item())
         results["reward"].append(avgReward)
-       # print(str(i) + "/"+str(numGames))
+        print(str(i) + "/"+str(numGames))
 
     return results
 
 def averageLists(lists):
-    lists = np.array(lists)
-    return lists.T.mean(axis=1)
+    avg = list(reduce(lambda results1,results2: map(add,results1,results2),lists))
+    avg = [s/len(lists) for s in avg]
+    return avg
 
 
 def evaluateManyTimes(numTimes,numGames,random_epsilon, learning_rate, future_discount):
     totResults = {
         "loss": [],
         "reward":[],
-        "random_epsilon":random_epsilon,
-        "learning_rate":learning_rate,
-        "future_discount":future_discount
+        "random_epsilon":str(random_epsilon(0))+"->"+str(random_epsilon(1)),
+        "learning_rate":str(learning_rate(0))+"->"+str(learning_rate(1)),
+        "future_discount":str(future_discount(0))+"->"+str(future_discount(1)),
     }
     for i in range(numTimes):
         partialResult = evaluate(numGames,random_epsilon,learning_rate,future_discount)
@@ -90,9 +93,6 @@ def loadResults(saveName):
 
 
 def showResult(resultsList):
-
-
-
     chunkSize = int(math.ceil(len(resultsList[0]["loss"][0])/DESIRED_DATA_POINTS))
 
     plt.subplot(1,2,1)
@@ -113,16 +113,14 @@ def showResult(resultsList):
 
 def main():
     
-    #resultsList = []
+    resultsList = []
+    resultsList.append(evaluateManyTimes(2,100,lambda t: 0.05,lambda t: 0.0025,lambda t: 0.8))
+    resultsList.append(evaluateManyTimes(2,100,lambda t: 0.05,lambda t: 0.0025,lambda t: 0.8))
+    resultsList.append(evaluateManyTimes(2,100,lambda t: 0.05,lambda t: 0.0025,lambda t: 0.8))
 
-    #resultsList.append(evaluateManyTimes(2,20,0.05,0.0025,0.8))
-    #resultsList.append(evaluateManyTimes(2,20,0.05,0.005,0.8))
-    #resultsList.append(evaluateManyTimes(2,20,0.05,0.01,0.8))
-
-    #saveResults(resultsList,"learningRate.json")
-    #showResult(resultsList)
-
-    showResult(loadResults("learningRate.json"))
+    saveResults(resultsList,"accEpsilon.json")
+    showResult(resultsList)
+    
 
 if RENDER:
     threading.Thread(target=main, daemon=True).start()
