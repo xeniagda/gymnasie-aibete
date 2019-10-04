@@ -124,18 +124,20 @@ def showResult(resultsList):
     plt.show()
 
 def main():
+    saveName = "results/learningRateInterpolatred.json"
+
     resultsList = []
     resultsList.append(evaluateManyTimes(40,200,lambda t:TRandom(0.05, 1 / 60),lambda t: 2*t*0.0001+(1-t*2)*0.0005 if t<0.5 else 0.0001,lambda t: 0.8))
-    saveResults(resultsList,"learningRate.json")
+    saveResults(resultsList,saveName)
     resultsList.append(evaluateManyTimes(40,200,lambda t:TRandom(0.05, 1 / 60),lambda t: t*0.0001+(1-t)*0.0005,lambda t: 0.8))
-    saveResults(resultsList,"learningRate.json")
+    saveResults(resultsList,saveName)
     resultsList.append(evaluateManyTimes(40,200,lambda t:TRandom(0.05, 1 / 60),lambda t: 0.0001,lambda t: 0.8))
-    saveResults(resultsList,"learningRate.json")
+    saveResults(resultsList,saveName)
     resultsList.append(evaluateManyTimes(40,200,lambda t:TRandom(0.05, 1 / 60),lambda t: 0.0005,lambda t: 0.8))
-    saveResults(resultsList,"learningRate.json")
+    saveResults(resultsList,saveName)
     resultsList.append(evaluateManyTimes(40,200,lambda t:TRandom(0.05, 1 / 60),lambda t: 0.0025,lambda t: 0.8))
 
-    saveResults(resultsList,"learningRate.json")
+    saveResults(resultsList,saveName)
     showResult(resultsList)
 
 if RENDER:
