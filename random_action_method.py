@@ -47,4 +47,4 @@ class TRandom(RandomActionMethod):
         return None
 
     def __str__(self):
-        return "TRandom(ε={})".format(self.random_epsilon)
+        return "TRandom(eps={})".format(self.random_epsilon)
