@@ -18,6 +18,9 @@ AGENT_INPUT_SCALE = 20
 
 DRAW_TEXT = False
 
+def np_2_col(np):
+    return [int(min(255, np[0] * 256)), int(min(255, np[1] * 256)), int(min(255, np[2] * 256))]
+
 class Graphics():
     def __init__(self,screen):
         self.screen = screen
@@ -119,9 +122,25 @@ class Graphics():
                     col_back = (col + np.array([0, 0, 1])) / 2
                     rec = rec.inflate(-2, -2)
 
-                pygame.draw.rect(self.screen, (int(col_back [0] * 255), int(col_back [1] * 255), int(col_back [2] * 255)), rec)
-                pygame.draw.rect(self.screen, (int(col[0] * 255), int(col[1] * 255), int(col[2] * 255)), rec.inflate(-2, -2))
-        
+                pygame.draw.rect(self.screen, np_2_col(col_back), rec)
+                pygame.draw.rect(self.screen, np_2_col(col), rec.inflate(-2, -2))
+
+
+        for i in range(VISION_SIZE * VISION_SIZE, len(agentInput)):
+            i_draw = i - VISION_SIZE * VISION_SIZE
+            rec = pygame.Rect((i_draw + VISION_SIZE) * AGENT_INPUT_SCALE, 0, AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
+
+            val = agentInput[i]
+            val_draw = 1 - 1 / (abs(val) + 1)
+
+            if val < 0:
+                col = np.array([1., 1. - val_draw, 1. - val_draw])
+            else:
+                col = np.array([1. - val_draw, 1., 1. - val_draw])
+            col_back = (col + np.array([0.5, 0.5, 0.5])) / 2
+
+            pygame.draw.rect(self.screen, np_2_col(col_back), rec)
+            pygame.draw.rect(self.screen, np_2_col(col), rec.inflate(-2, -2))
 
         #Rita text
         if DRAW_TEXT and self.agent != None:
