@@ -82,8 +82,6 @@ class DeepQlearner:
 
         self.n_since_last_train = 0
 
-        self.t_random = [0, None]  # (time, action)
-
         self.latestLoss = 0
 
     def getAction(self, agentInput):
