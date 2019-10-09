@@ -2,7 +2,7 @@ __pycache__/*
 launch.json
 *.pyc
 q-table-learner.npz
-deep-q-learner-save.h5
+*.h5
 .vscode/
 *.json
 *.jsonData
