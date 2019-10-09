@@ -15,6 +15,8 @@ INTERPOLATE_AGENT_INPUT = False
 if not INTERPOLATE_AGENT_INPUT:
     AGENT_INPUT_SIZE += 2
 
+AGENT_INPUT_SIZE += 2
+
 
 # random.seed(1)
 
@@ -50,7 +52,7 @@ class GameEngine:
     
     def getAgentInput(self):
         if not INTERPOLATE_AGENT_INPUT:
-            res = np.zeros((VISION_SIZE ** 2 + 2, ))
+            res = np.zeros((AGENT_INPUT_SIZE, ))
 
             for dx in range(-AROUND_RAD, AROUND_RAD + 1):
                 for dy in range(-AROUND_RAD, AROUND_RAD + 1):
@@ -69,12 +71,15 @@ class GameEngine:
                             if is_bad:
                                 res[iy * VISION_SIZE + ix] = -1
 
+            res[-4] = self.player.vx
+            res[-3] = self.player.vy
+
             res[-2] = self.player.x - round(self.player.x)
             res[-1] = self.player.y - round(self.player.y)
 
             return res
         else:
-            solid_grid = np.zeros((AGENT_INPUT_SIZE, ))
+            agent_vision = np.zeros((AGENT_INPUT_SIZE, ))
 
             for dx in range(-AROUND_RAD, AROUND_RAD + 1):
                 for dy in range(-AROUND_RAD, AROUND_RAD + 1):
@@ -106,9 +111,12 @@ class GameEngine:
                     ix = dx + AROUND_RAD
                     iy = dy + AROUND_RAD
 
-                    solid_grid[int(iy) * VISION_SIZE + int(ix)] = solid_value
+                    agent_vision[int(iy) * VISION_SIZE + int(ix)] = solid_value
 
-            return solid_grid
+            agent_vision[-2] = self.player.vx
+            agent_vision[-1] = self.player.vy
+
+            return agent_vision
     
     def resolveCollisions(self):
         self.player.isOnGround = False
