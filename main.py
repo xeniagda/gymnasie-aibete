@@ -1,7 +1,7 @@
 import random
 from graphics import UI 
 import threading
-from agents.deepqlearner import *
+from agents.doubledeepqlearner import *
 from agents.humanAgent import *
 from random_action_method import TRandom
 import levelGenerator
@@ -34,7 +34,7 @@ class Driver:
 ui = UI(RENDER,0.01)
 
 def main():
-    agent = DeepQlearner(TRandom(RANDOM_EPSILON, 1 / 60), future_discount=0.95)
+    agent = DoubleDeepQlearner(TRandom(RANDOM_EPSILON, 1 / 60), future_discount=0.95, learning_rate=0.01)
 
     driver = Driver(WORLD_SIZE, agent)
     
