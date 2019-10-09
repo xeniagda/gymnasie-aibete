@@ -1,3 +1,5 @@
+# Modifierad version av deepqlearner.py, använder double q learing
+# Se https://towardsdatascience.com/double-deep-q-networks-905dd8325412, första formuleringen
 import os
 
 import tensorflow as tf
@@ -9,7 +11,9 @@ from util import *
 
 from gameEngine import AGENT_INPUT_SIZE
 
-SAVE_PATH = "deep-q-learner-save.h5"
+
+SAVE_PATH_A = "deep-q-learner-save-a.h5"
+SAVE_PATH_B = "deep-q-learner-save-b.h5"
 
 # Tillåts att gå 10% över denna
 SOFT_REPLAY_LIMIT = 50000
@@ -49,14 +53,18 @@ class RLModel(kr.models.Model):
         return x
 
 
-class DeepQlearner:
+class DoubleDeepQlearner:
     def __init__(self, random_action_method,future_discount=0.75,learning_rate=0.001, fromSave=True):
-        self.model = RLModel()
-        self.model.build((None, AGENT_INPUT_SIZE))
+        self.model_a = RLModel()
+        self.model_a.build((None, AGENT_INPUT_SIZE))
 
-        if os.path.isfile(SAVE_PATH) and fromSave:
+        self.model_b = RLModel()
+        self.model_b.build((None, AGENT_INPUT_SIZE))
+
+        if os.path.isfile(SAVE_PATH_A) and os.path.isfile(SAVE_PATH_B) and fromSave:
             print("Loading")
-            self.model.load_weights(SAVE_PATH)
+            self.model_a.load_weights(SAVE_PATH_A)
+            self.model_b.load_weights(SAVE_PATH_B)
         else:
             print("Creating new model")
 
@@ -89,7 +97,9 @@ class DeepQlearner:
         if rand_action is not None:
             return rand_action
         else:
-            pred = self.model.call_fast(agentInput)
+            model = random.choice([self.model_a, self.model_b])
+
+            pred = model.call_fast(agentInput)
             return ACTIONS[np.argmax(pred)]
 
     def update(self, oldAgentInput, action, newAgentInput, reward):
@@ -103,10 +113,11 @@ class DeepQlearner:
         self.n_since_last_train += 1
 
         if self.n_since_last_train > TRAIN_RATE:
-            #print("Training")
+            # print("Training")
             loss = self.train_on_random_minibatch()
-            #print("Loss =", loss)
-            self.model.save_weights(SAVE_PATH)
+            print("Loss =", loss)
+            self.model_a.save_weights(SAVE_PATH_A)
+            self.model_b.save_weights(SAVE_PATH_B)
 
             self.n_since_last_train = 0
 
@@ -124,14 +135,18 @@ class DeepQlearner:
 
     def train_on_batch(self, agent_input_before, action, agent_input_after,
                        reward):
-        q_after = self.model(agent_input_after)
+
+        # Predict and train
+        model_p, model_t = random.choice([(self.model_a, self.model_b), (self.model_b, self.model_a)])
+
+        q_after = model_p(agent_input_after)
         wanted_q = reward + self.future_discount * tf.reduce_max(q_after, axis=1)
         #wanted_q = reward
 
-        tvars = self.model.trainable_variables
+        tvars = model_t.trainable_variables
 
         with tf.GradientTape() as tape:
-            pred_q_for_all_actions = self.model(agent_input_before)
+            pred_q_for_all_actions = model_t(agent_input_before)
 
             # Indexera med rätt actions
             action_ind = tf.transpose(
