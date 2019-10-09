@@ -9,13 +9,13 @@ import time,sys
 from gamePlayer import *
 
 
-RANDOM_EPSILON = 0.05
+RANDOM_EPSILON = 0.2
 RENDER = True
 LOG_TIME = False
-WORLD_TYPE = levelGenerator.PremadeLevelGenerator(1)
+WORLD_TYPE = levelGenerator.PremadeLevelGenerator(2)
 WORLD_SIZE = 30
 
-MAX_TIME = 1000
+MAX_TIME = 100
 
 class Driver:
     def __init__(self,level_size,agent):
@@ -34,7 +34,7 @@ class Driver:
 ui = UI(RENDER,0.01)
 
 def main():
-    agent = DoubleDeepQlearner(TRandom(RANDOM_EPSILON, 1 / 60), future_discount=0.95, learning_rate=0.01)
+    agent = DoubleDeepQlearner(TRandom(RANDOM_EPSILON, 1 / 6), future_discount=0.95, learning_rate=0.01)
 
     driver = Driver(WORLD_SIZE, agent)
     

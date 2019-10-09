@@ -5,7 +5,7 @@ import random
 import math
 
 ACCELERATION = True
-SECONDS_PER_TICK = 0.05
+SECONDS_PER_TICK = 0.3
 
 AROUND_RAD = 3
 VISION_SIZE = AROUND_RAD * 2 + 1
