@@ -10,9 +10,9 @@ from gamePlayer import *
 
 
 RANDOM_EPSILON = 0.2
-RENDER = True
+RENDER = False
 LOG_TIME = False
-WORLD_TYPE = levelGenerator.PremadeLevelGenerator(2)
+WORLD_TYPE = levelGenerator.PremadeLevelGenerator(1)
 WORLD_SIZE = 30
 
 MAX_TIME = 100
