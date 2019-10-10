@@ -1,6 +1,7 @@
 import random
 from graphics import UI 
 import threading
+from agents.deepqlearner import *
 from agents.doubledeepqlearner import *
 from agents.humanAgent import *
 from random_action_method import *
@@ -39,7 +40,7 @@ class Driver:
 ui = UI(RENDER,0.01)
 
 def main():
-    agent = DoubleDeepQlearner(SingleFrame(RANDOM_EPSILON), future_discount=0.8, learning_rate=0.001,fromSave=False)
+    agent = DoubleDeepQlearner(SingleFrame(RANDOM_EPSILON), future_discount=0.8, learning_rate=0.001,saveAndLoad=False)
 
     driver = Driver(WORLD_SIZE, agent)
     
