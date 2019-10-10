@@ -34,6 +34,8 @@ class Graphics():
         self.delta_x = 0
         self.delta_y = 0
 
+        self.predLevel = None
+
     def setGameEngine(self,game_engine):
         self.game_engine = game_engine
 
@@ -102,20 +104,35 @@ class Graphics():
         pygame.draw.rect(self.screen, (0,0,255), rec)
 
         agentInput = self.game_engine.getAgentInput()
+        self.drawAgentInput(agentInput, (0, 0))
 
+        if self.predLevel is not None:
+            self.drawAgentInput(self.predLevel, (0, AGENT_INPUT_SCALE * VISION_SIZE + 20), True)
+
+        #Rita text
+        if DRAW_TEXT and self.agent != None:
+            text_x = VISION_SIZE * AGENT_INPUT_SCALE
+            self.screen.blit(self.font.render(str(self.agent.random_action_method), True, (0, 128, 0)),(text_x,0))
+
+        #if agent!=None:
+            #print(agent.random_epsilon)
+
+        pygame.display.flip()
+
+    def drawAgentInput(self, agentInput, origin=(0, 0), is_pred=False):
         for y in range(VISION_SIZE):
             for x in range(VISION_SIZE):
 
-                rec = pygame.Rect(x * AGENT_INPUT_SCALE, (VISION_SIZE-1)*AGENT_INPUT_SCALE-y * AGENT_INPUT_SCALE, AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
+                rec = pygame.Rect(x * AGENT_INPUT_SCALE + origin[0], (VISION_SIZE-1)*AGENT_INPUT_SCALE-y * AGENT_INPUT_SCALE + origin[1], AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
                 # Visa bakgrunden igenom
                 inp = agentInput[y * VISION_SIZE + x]
 
                 # RGB, 0..1
                 col = np.zeros((3, ))
                 if inp > 0:
-                    col = np.array([1 - inp, 1 - inp, 1 - inp])
+                    col = np.array([max(0, 1 - inp), max(0, 1 - inp), max(0, 1 - inp)])
                 else:
-                    col = np.array([1, 1 + inp, 1 + inp])
+                    col = np.array([1, max(0, 1 + inp), max(0, 1 + inp)])
 
                 col_back = (col + np.array([0.5, 0.5, 0.5])) / 2
                 if x == y == AROUND_RAD:
@@ -128,7 +145,7 @@ class Graphics():
 
         for i in range(VISION_SIZE * VISION_SIZE, len(agentInput)):
             i_draw = i - VISION_SIZE * VISION_SIZE
-            rec = pygame.Rect((i_draw + VISION_SIZE) * AGENT_INPUT_SCALE, 0, AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
+            rec = pygame.Rect((i_draw + VISION_SIZE) * AGENT_INPUT_SCALE + origin[0], origin[1], AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
 
             val = agentInput[i]
             val_draw = 1 - 1 / (abs(val) + 1)
@@ -142,15 +159,7 @@ class Graphics():
             pygame.draw.rect(self.screen, np_2_col(col_back), rec)
             pygame.draw.rect(self.screen, np_2_col(col), rec.inflate(-2, -2))
 
-        #Rita text
-        if DRAW_TEXT and self.agent != None:
-            text_x = VISION_SIZE * AGENT_INPUT_SCALE
-            self.screen.blit(self.font.render(str(self.agent.random_action_method), True, (0, 128, 0)),(text_x,0))
 
-        #if agent!=None:
-            #print(agent.random_epsilon)
-
-        pygame.display.flip()
 
     def getRect(self,x,y,w,h):
         return pygame.Rect(int(x*SCALE),int(height-(y+h)*SCALE),math.ceil(w*SCALE+1),math.ceil(h*SCALE+1))
@@ -174,6 +183,11 @@ class UI():
         self.sleepTime = sleepTime
 
         self.pressedKeys = set()
+
+    def setPredLevel(self, pl):
+        if not self.RENDER:
+            return
+        self.graphics.predLevel = pl
 
     def setGameEngine(self,ge):
         if not self.RENDER:

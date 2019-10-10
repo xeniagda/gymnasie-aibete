@@ -34,7 +34,7 @@ class Driver:
 ui = UI(RENDER,0.01)
 
 def main():
-    agent = ModelBasedDeepQlearner(TRandom(RANDOM_EPSILON, 1 / 6), future_discount=0.95)
+    agent = ModelBasedDeepQlearner(ui, TRandom(RANDOM_EPSILON, 1 / 6), future_discount=0.95)
 
     driver = Driver(WORLD_SIZE, agent)
     

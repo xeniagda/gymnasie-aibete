@@ -50,7 +50,9 @@ class RLModel(kr.models.Model):
 
 
 class ModelBasedDeepQlearner:
-    def __init__(self, random_action_method,future_discount=0.75,learning_rate=0.007, fromSave=True):
+    def __init__(self, ui, random_action_method,future_discount=0.75,learning_rate=0.007, fromSave=True):
+        self.ui = ui
+
         self.model = RLModel()
         self.model.build((None, AGENT_INPUT_SIZE))
 
@@ -89,8 +91,13 @@ class ModelBasedDeepQlearner:
         if rand_action is not None:
             return rand_action
         else:
-            pred = self.model.call_fast(agentInput)[:len(ACTIONS)]
-            return ACTIONS[np.argmax(pred)]
+            pred = self.model.call_fast(agentInput)
+
+            actions = pred[:len(ACTIONS)]
+            pred_level = pred[len(ACTIONS):]
+            self.ui.setPredLevel(pred_level)
+
+            return ACTIONS[np.argmax(actions)]
 
     def update(self, oldAgentInput, action, newAgentInput, reward):
         # Lägg till i experience_replay
