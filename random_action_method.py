@@ -25,7 +25,18 @@ class SingleFrame(RandomActionMethod):
             return None
 
     def __str__(self):
-        return "SingleFrame(ε={})".format(self.random_epsilon)
+        return "SingleFrame(eps={})".format(self.random_epsilon)
+
+class NoRandomness(RandomActionMethod):
+    def __init__(self):
+        super(NoRandomness, self).__init__(0)
+
+    # Give None if no random action should be chosen
+    def get_random_action(self):
+        return None
+
+    def __str__(self):
+        return "NoRandomness"
 
 class TRandom(RandomActionMethod):
     def __init__(self, random_epsilon, time_lambda):

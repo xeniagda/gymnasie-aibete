@@ -3,6 +3,7 @@ from gameEngine import *
 from graphics import UI 
 import threading
 from agents.deepqlearner import *
+from agents.doubledeepqlearner import *
 from levelGenerator import *
 import time,sys
 from gamePlayer import *
@@ -14,18 +15,18 @@ from random_action_method import *
 
 RENDER = False
 DESIRED_DATA_POINTS = 20
-GAME_LENGTH = 1000
+GAME_LENGTH = 100
 
 ui = UI(RENDER,0.0)
 
-levelGenerator = PremadeLevelGenerator(2)
+evalLevelGenerator = PremadeLevelGenerator(2)
 evalLevels = []
-for i in range(1000):
-    evalLevels.append(levelGenerator.generate(1000))
+for i in range(4000):
+    evalLevels.append(evalLevelGenerator.generate(100))
 
 def evaluate(numGames,random_epsilon, learning_rate, future_discount):
     levelGenerator = PremadeLevelGenerator(2)
-    agent = DeepQlearner(random_epsilon(0),future_discount(0),learning_rate(0),False)
+    agent = DoubleDeepQlearner(random_epsilon(0),future_discount(0),learning_rate(0),False)
 
     results = {
         "loss": [],
@@ -36,19 +37,19 @@ def evaluate(numGames,random_epsilon, learning_rate, future_discount):
     }
 
     for i in range(numGames):
-        agent.random_epsilon = random_epsilon(i/(numGames-1))
+        agent.random_action_method = random_epsilon(i/(numGames-1))
         agent.learning_rate = learning_rate(i/(numGames-1))
         agent.future_discount = future_discount(i/(numGames-1))
         playTime,avgReward = playGame(levelGenerator.generate(100),agent,GAME_LENGTH,RENDER,ui)
 
-        agent.random_epsilon = 0
-        playTime,avgReward = playGame(evalLevels[i],agent,GAME_LENGTH,RENDER,ui)
+        agent.random_action_method = NoRandomness()
+        playTime,avgReward = playGame(evalLevels[0],agent,GAME_LENGTH,RENDER,ui)
 
        # print(agent.latestLoss.numpy(),avgReward)
 
         results["loss"].append(agent.latestLoss.numpy().item())
         results["reward"].append(avgReward)
-        #print(str(i) + "/"+str(numGames))
+        print(str(i) + "/"+str(numGames))
 
     return results
 
@@ -58,7 +59,12 @@ def averageLists(lists):
     return avg
 
 def strParameterLambda(f):
-    return str(str(f(0))+"->"+str(f(1)))
+    s1 = str(f(0))
+    s2 = str(f(1))
+    if s1==s2:
+        return s1
+    else:
+        return s1+"->"+s2
 
 def evaluateManyTimes(numTimes,numGames,random_epsilon, learning_rate, future_discount):
     totResults = {
@@ -109,7 +115,7 @@ def showResult(resultsList):
 
     plt.subplot(1,2,1)
     for results in resultsList:
-        plt.plot(averageChunks(averageLists(results["loss"]),chunkSize),label=("η="+str(results["learning_rate"])))
+        plt.plot(averageChunks(averageLists(results["loss"]),chunkSize),label=(str(results["random_epsilon"])))
 
     plt.title('Loss')
     plt.yscale('log')
@@ -117,27 +123,26 @@ def showResult(resultsList):
 
     plt.subplot(1,2,2)
     for results in resultsList:
-        plt.plot(averageChunks(averageLists(results["reward"]),chunkSize),label=("η="+str(results["learning_rate"])))
+        plt.plot(averageChunks(averageLists(results["reward"]),chunkSize),label=(str(results["random_epsilon"])))
 
     plt.title('Reward')
     plt.legend(loc='upper left')
     plt.show()
 
 def main():
-    saveName = "results/learningRateInterpolatred.json"
+    saveName = "results/premade2longTraining.json"
 
     resultsList = []
-    resultsList.append(evaluateManyTimes(40,200,lambda t:TRandom(0.05, 1 / 60),lambda t: 2*t*0.0001+(1-t*2)*0.0005 if t<0.5 else 0.0001,lambda t: 0.8))
-    saveResults(resultsList,saveName)
-    resultsList.append(evaluateManyTimes(40,200,lambda t:TRandom(0.05, 1 / 60),lambda t: t*0.0001+(1-t)*0.0005,lambda t: 0.8))
-    saveResults(resultsList,saveName)
-    resultsList.append(evaluateManyTimes(40,200,lambda t:TRandom(0.05, 1 / 60),lambda t: 0.0001,lambda t: 0.8))
-    saveResults(resultsList,saveName)
-    resultsList.append(evaluateManyTimes(40,200,lambda t:TRandom(0.05, 1 / 60),lambda t: 0.0005,lambda t: 0.8))
-    saveResults(resultsList,saveName)
-    resultsList.append(evaluateManyTimes(40,200,lambda t:TRandom(0.05, 1 / 60),lambda t: 0.0025,lambda t: 0.8))
 
+    """resultsList.append(evaluateManyTimes(1,20000,lambda t:TRandom(0.2, 1 / 6),lambda t: t*0.0001+(1-t)*0.0005,lambda t: 0.8))
     saveResults(resultsList,saveName)
+    resultsList.append(evaluateManyTimes(1,20000,lambda t:TRandom(0.05, 1 / 6),lambda t: t*0.0001+(1-t)*0.0005,lambda t: 0.8))
+    saveResults(resultsList,saveName)
+    resultsList.append(evaluateManyTimes(1,20000,lambda t:SingleFrame(0.05),lambda t: t*0.0001+(1-t)*0.0005,lambda t: 0.8))
+    saveResults(resultsList,saveName)"""
+    resultsList.append(evaluateManyTimes(1,20000,lambda t:SingleFrame(0.2),lambda t: 0.001,lambda t: 0.8))
+    saveResults(resultsList,saveName)
+
     showResult(resultsList)
 
 if RENDER:
