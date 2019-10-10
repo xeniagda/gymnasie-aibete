@@ -54,14 +54,16 @@ class RLModel(kr.models.Model):
 
 
 class DoubleDeepQlearner:
-    def __init__(self, random_action_method,future_discount=0.75,learning_rate=0.001, fromSave=True):
+    def __init__(self, random_action_method,future_discount=0.75,learning_rate=0.001, saveAndLoad=True):
         self.model_a = RLModel()
         self.model_a.build((None, AGENT_INPUT_SIZE))
 
         self.model_b = RLModel()
         self.model_b.build((None, AGENT_INPUT_SIZE))
 
-        if os.path.isfile(SAVE_PATH_A) and os.path.isfile(SAVE_PATH_B) and fromSave:
+        self.saveAndLoad = saveAndLoad
+
+        if os.path.isfile(SAVE_PATH_A) and os.path.isfile(SAVE_PATH_B) and saveAndLoad:
             print("Loading")
             self.model_a.load_weights(SAVE_PATH_A)
             self.model_b.load_weights(SAVE_PATH_B)
@@ -90,7 +92,7 @@ class DoubleDeepQlearner:
 
         self.n_since_last_train = 0
 
-        self.latestLoss = 0
+        self.latestLoss = tf.add(0,0)
 
     def getAction(self, agentInput):
         rand_action = self.random_action_method.get_random_action()
@@ -115,9 +117,10 @@ class DoubleDeepQlearner:
         if self.n_since_last_train > TRAIN_RATE:
             # print("Training")
             loss = self.train_on_random_minibatch()
-            print("Loss =", loss)
-            self.model_a.save_weights(SAVE_PATH_A)
-            self.model_b.save_weights(SAVE_PATH_B)
+            #print("Loss =", loss)
+            if self.saveAndLoad:
+                self.model_a.save_weights(SAVE_PATH_A)
+                self.model_b.save_weights(SAVE_PATH_B)
 
             self.n_since_last_train = 0
 
