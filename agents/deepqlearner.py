@@ -72,6 +72,8 @@ class DeepQlearner:
         ]
         self.experience_replay_index = 0
 
+        self.highest_er = 0
+
         self.random_action_method = random_action_method
 
         self.learning_rate = learning_rate
@@ -100,6 +102,8 @@ class DeepQlearner:
         self.experience_replay[3][self.experience_replay_index] = reward
         self.experience_replay_index = (self.experience_replay_index+1)%SOFT_REPLAY_LIMIT
 
+        self.highest_er = max(self.highest_er, self.experience_replay_index)
+
         self.n_since_last_train += 1
 
         if self.n_since_last_train > TRAIN_RATE:
@@ -111,7 +115,7 @@ class DeepQlearner:
             self.n_since_last_train = 0
 
     def train_on_random_minibatch(self):
-        idxs = np.random.randint(self.experience_replay[0].shape[0],
+        idxs = np.random.randint(self.highest_er,
                                  size=(BATCH_SIZE, ))
 
         loss = self.train_on_batch(
