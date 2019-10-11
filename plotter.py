@@ -30,8 +30,17 @@ class Plotter():
         while True:
             self.plot(self.data)
             plt.pause(20)
+        
+    def saveImage(self,data,saveName,plotAll=False):
+        plt.figure(figsize=(20,10))
+        self.setupPlot(data,plotAll)
+        plt.savefig("results/img/"+saveName+".svg",dpi=500)
 
     def plot(self,data,plotAll=False):
+        self.setupPlot(data,plotAll)
+        plt.show()
+
+    def setupPlot(self,data,plotAll=False):
         if len(data)==0:
             return
         
@@ -51,7 +60,7 @@ class Plotter():
                     #else:
                     plt.plot(averageChunks(l,chunkSize),color=("C"+str(i)), alpha=.2)
             
-            plt.plot(averageChunks(averageLists(results["loss"]),chunkSize),color=("C"+str(i)),label=(results["random_epsilon"]+results["learning_rate"]))
+            plt.plot(averageChunks(averageLists(results["loss"]),chunkSize),color=("C"+str(i)),label=(results["random_epsilon"]+",lr="+results["learning_rate"]))
 
         plt.title('Loss')
         plt.yscale('log')
@@ -66,11 +75,11 @@ class Plotter():
                     #else:
                     plt.plot(averageChunks(l,chunkSize),color=("C"+str(i)), alpha=.2)
             
-            plt.plot(averageChunks(averageLists(results["reward"]),chunkSize),color=("C"+str(i)),label=(results["random_epsilon"]+results["learning_rate"]))
+            plt.plot(averageChunks(averageLists(results["reward"]),chunkSize),color=("C"+str(i)),label=(results["random_epsilon"]+",lr="+results["learning_rate"]))
 
         plt.title('Reward')
         plt.legend(loc='upper left')
-        plt.show()
+
 
     def updateData(self, data):
         self.data = data

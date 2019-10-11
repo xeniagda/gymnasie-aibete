@@ -96,12 +96,12 @@ def evaluateManyTimes(numTimes,numGames,random_epsilon, learning_rate, future_di
 def saveResults(resultsList,saveName):
     jsonData = json.dumps(resultsList)
 
-    f = open(saveName,"w")
+    f = open("results/data/" + saveName + ".json","w")
     f.write(jsonData)
     f.close()
 
 def loadResults(saveName):
-    with open(saveName,"r") as f:
+    with open("results/data/" + saveName + ".json","r") as f:
         return json.loads(f.read())
 
 def mergeResults(resultsListA,resultsListB):
@@ -117,14 +117,9 @@ def mergeResults(resultsListA,resultsListB):
             resultsListA.append(results)
     return resultsListA
 def main():
-
-    saveName = "results/premade2longTraining2.json"
-
-    resultsList = mergeResults(loadResults("results/premade2longTraining2.json"),loadResults("results/premade2longTrainingEps0.001.json"))
-
-    plotter.plot(resultsList,plotAll=True)
-    return 
-    resultsList = loadResults(saveName)
+    saveName = "premade2-REvar-LR0.001-FD0.8"
+    
+    resultsList = []#loadResults(saveName)
 
     resultsList.append(evaluateManyTimes(4,20000,lambda t:TRandom(0.2, 1 / 6),lambda t: 0.001,lambda t: 0.8))
     saveResults(resultsList,saveName)
@@ -134,6 +129,7 @@ def main():
     saveResults(resultsList,saveName)
     resultsList.append(evaluateManyTimes(4,20000,lambda t:SingleFrame(0.2),lambda t: 0.001,lambda t: 0.8))
     saveResults(resultsList,saveName)
+    plotter.saveImage(resultsList,saveName,plotAll=True)
 
     plotter.plot(resultsList)
 
