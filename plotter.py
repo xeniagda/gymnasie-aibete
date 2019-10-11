@@ -31,7 +31,7 @@ class Plotter():
             self.plot(self.data)
             plt.pause(20)
 
-    def plot(self,data):
+    def plot(self,data,plotAll=False):
         if len(data)==0:
             return
         
@@ -43,16 +43,30 @@ class Plotter():
             chunkSize = int(math.ceil(len(data[0]["loss"])/DESIRED_DATA_POINTS))
 
         plt.subplot(1,2,1)
-        for results in data:
-            plt.plot(averageChunks(averageLists(results["loss"]),chunkSize),label=(str(results["random_epsilon"])))
+        for i,results in enumerate(data):
+            if plotAll:
+                for j,l in enumerate(results["loss"]):
+                    #if j==0:
+                    #    plt.plot(averageChunks(l,chunkSize),color=("C"+str(i)), alpha=.5,label=(str(results["random_epsilon"])))
+                    #else:
+                    plt.plot(averageChunks(l,chunkSize),color=("C"+str(i)), alpha=.2)
+            
+            plt.plot(averageChunks(averageLists(results["loss"]),chunkSize),color=("C"+str(i)),label=(results["random_epsilon"]+results["learning_rate"]))
 
         plt.title('Loss')
         plt.yscale('log')
         plt.legend(loc='upper left')
 
         plt.subplot(1,2,2)
-        for results in data:
-            plt.plot(averageChunks(averageLists(results["reward"]),chunkSize),label=(str(results["random_epsilon"])))
+        for i,results in enumerate(data):
+            if plotAll:
+                for j,l in enumerate(results["reward"]):
+                    #if j==0:
+                    #    plt.plot(averageChunks(l,chunkSize),color=("C"+str(i)), alpha=.5,label=(str(results["random_epsilon"])))
+                    #else:
+                    plt.plot(averageChunks(l,chunkSize),color=("C"+str(i)), alpha=.2)
+            
+            plt.plot(averageChunks(averageLists(results["reward"]),chunkSize),color=("C"+str(i)),label=(results["random_epsilon"]+results["learning_rate"]))
 
         plt.title('Reward')
         plt.legend(loc='upper left')
