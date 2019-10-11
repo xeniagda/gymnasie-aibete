@@ -104,11 +104,27 @@ def loadResults(saveName):
     with open(saveName,"r") as f:
         return json.loads(f.read())
 
+def mergeResults(resultsListA,resultsListB):
+    for results in resultsListB:
+        found = False
+        for i in range(len(resultsListA)):
+            if results["random_epsilon"]==resultsListA[i]["random_epsilon"]:
+                found = True
+                resultsListA[i]["loss"] += results["loss"]
+                resultsListA[i]["reward"] += results["reward"]
+                break
+        if not found:
+            resultsListA.append(results)
+    return resultsListA
 def main():
 
     saveName = "results/premade2longTraining2.json"
 
-    resultsList = []
+    resultsList = mergeResults(loadResults("results/premade2longTraining2.json"),loadResults("results/premade2longTrainingEps0.001.json"))
+
+    plotter.plot(resultsList,plotAll=True)
+    return 
+    resultsList = loadResults(saveName)
 
     resultsList.append(evaluateManyTimes(4,20000,lambda t:TRandom(0.2, 1 / 6),lambda t: 0.001,lambda t: 0.8))
     saveResults(resultsList,saveName)
