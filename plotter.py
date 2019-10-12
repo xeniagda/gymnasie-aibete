@@ -60,7 +60,7 @@ class Plotter():
                     #else:
                     plt.plot(averageChunks(l,chunkSize),color=("C"+str(i)), alpha=.2)
             
-            plt.plot(averageChunks(averageLists(results["loss"]),chunkSize),color=("C"+str(i)),label=(results["random_epsilon"]+",lr="+results["learning_rate"]))
+            plt.plot(averageChunks(averageLists(results["loss"]),chunkSize),color=("C"+str(i)),label=(results["random_epsilon"]+",LR="+results["learning_rate"]+",FD="+results["future_discount"]))
 
         plt.title('Loss')
         plt.yscale('log')
@@ -75,7 +75,7 @@ class Plotter():
                     #else:
                     plt.plot(averageChunks(l,chunkSize),color=("C"+str(i)), alpha=.2)
             
-            plt.plot(averageChunks(averageLists(results["reward"]),chunkSize),color=("C"+str(i)),label=(results["random_epsilon"]+",lr="+results["learning_rate"]))
+            plt.plot(averageChunks(averageLists(results["reward"]),chunkSize),color=("C"+str(i)),label=(results["random_epsilon"]+",LR="+results["learning_rate"]+",FD="+results["future_discount"]))
 
         plt.title('Reward')
         plt.legend(loc='upper left')
