@@ -86,7 +86,7 @@ class DeepQlearner:
 
         self.n_since_last_train = 0
 
-        self.latestLoss = 0
+        self.latestLoss = tf.add(0,0)
 
     def getAction(self, agentInput):
         rand_action = self.random_action_method.get_random_action()
