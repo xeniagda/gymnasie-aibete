@@ -50,11 +50,13 @@ class RLModel(kr.models.Model):
 
 
 class DeepQlearner:
-    def __init__(self, random_action_method,future_discount=0.75,learning_rate=0.001, fromSave=True):
+    def __init__(self, random_action_method,future_discount=0.75,learning_rate=0.001, saveAndLoad=True):
+        learning_rate = learning_rate*(1-0.8)/(1-future_discount)
+
         self.model = RLModel()
         self.model.build((None, AGENT_INPUT_SIZE))
 
-        if os.path.isfile(SAVE_PATH) and fromSave:
+        if os.path.isfile(SAVE_PATH) and saveAndLoad:
             print("Loading")
             self.model.load_weights(SAVE_PATH)
         else:
@@ -110,7 +112,8 @@ class DeepQlearner:
             #print("Training")
             loss = self.train_on_random_minibatch()
             #print("Loss =", loss)
-            self.model.save_weights(SAVE_PATH)
+            if saveAndLoad:
+                self.model.save_weights(SAVE_PATH)
 
             self.n_since_last_train = 0
 
