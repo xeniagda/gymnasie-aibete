@@ -56,6 +56,8 @@ class DeepQlearner:
         self.model = RLModel()
         self.model.build((None, AGENT_INPUT_SIZE))
 
+        self.saveAndLoad = saveAndLoad
+
         if os.path.isfile(SAVE_PATH) and saveAndLoad:
             print("Loading")
             self.model.load_weights(SAVE_PATH)
@@ -112,7 +114,7 @@ class DeepQlearner:
             #print("Training")
             loss = self.train_on_random_minibatch()
             #print("Loss =", loss)
-            if saveAndLoad:
+            if self.saveAndLoad:
                 self.model.save_weights(SAVE_PATH)
 
             self.n_since_last_train = 0
