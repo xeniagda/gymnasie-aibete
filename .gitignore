@@ -7,7 +7,6 @@ q-table-learner.npz
 *.prof
 *.jpg
 *.png
-*.svg
 tmp
 
 /TanktroubleML2/*
