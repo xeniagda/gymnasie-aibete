@@ -37,6 +37,7 @@ class Plotter():
         plt.savefig("results/img/"+saveName+".svg",dpi=500)
 
     def plot(self,data,plotAll=False):
+        plt.figure(figsize=(15,8))
         self.setupPlot(data,plotAll)
         plt.show()
 
