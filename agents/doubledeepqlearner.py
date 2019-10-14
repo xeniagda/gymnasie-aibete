@@ -55,7 +55,7 @@ class RLModel(kr.models.Model):
 
 class DoubleDeepQlearner:
     def __init__(self, random_action_method,future_discount=0.75,learning_rate=0.001, saveAndLoad=True):
-        learning_rate = learning_rate*(1-0.8)/(1-future_discount)
+        learning_rate = learning_rate*(1-future_discount)/(1-0.8)
 
         self.model_a = RLModel()
         self.model_a.build((None, AGENT_INPUT_SIZE))
