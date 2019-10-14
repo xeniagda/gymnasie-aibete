@@ -4,11 +4,11 @@ launch.json
 q-table-learner.npz
 *.h5
 .vscode/
-*.json
-*.jsonData
 *.prof
 *.jpg
 *.png
+*.svg
+tmp
 
 /TanktroubleML2/*
 /TanktroubleML2/*/
