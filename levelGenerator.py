@@ -77,15 +77,18 @@ class NenaGenerator(LevelGenerator):
         super(NenaGenerator, self).__init__()
     
     def generate(self, length): 
-        modules = [[3,3,3,3,0,0,3,3,3,3],[3,4,5,6,7,7,6,5,4,3], [10, 10, 10, 10, 10, 10, 10, 10]]
+        modules = [[[3,3,3,3,0,0,3,3,3,3], [0,0,0,0,1,1,0,0,0,0]],[[3,4,5,6,7,7,6,5,4,3], [0]*10], [[10, 10, 10, 10, 10, 10, 10, 10, 10, 10], [0]*10]]
         level = []
+        badBlocks = []
         lastModule = [0, 0, 0, 0, 0, 0, 0, 0]
 
         for i in range (length): 
             module = random.choice(modules)
-            dif = lastModule[len(lastModule)-1]-module[0]
-            for j in module: 
+            dif = lastModule[len(lastModule)-1]-module[0][0]
+            for j in module[0]: 
                 level.append(j+dif)
-            lastModule = [x+dif for x in module] 
+            for j in module[1]: 
+                badBlocks.append(j)
+            lastModule = [x+dif for x in module[0]] 
 
-        return list(zip(level, [0]*len(level)))
+        return list(zip(level, badBlocks))
