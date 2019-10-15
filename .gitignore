@@ -5,7 +5,6 @@ q-table-learner.npz
 *.h5
 .vscode/
 *.prof
-*.jpg
 *.png
 tmp
 
