@@ -2,7 +2,8 @@
 
 {
     "testExperiment": {
-
+        "levelGenerator": "randomGenerator(4)",
+        
         "runsPerSet": 4,
         "ticks": 100,
         "parameterSets": [
