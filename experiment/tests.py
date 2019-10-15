@@ -6,6 +6,5 @@ def main():
 
     a = Experiment(**experimentLayouts["testExperiment"])
     a.run()
-    a.saveToFile("testResults.json")
 
 main()

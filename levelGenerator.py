@@ -71,6 +71,8 @@ class PremadeLevelGenerator(LevelGenerator):
         if self.index == 3:
             return list(zip([3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3],
                             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
+    def __str__(self):
+        return f"PremadeLevelGenerator({self.index})"
 
 class NenaGenerator(LevelGenerator):
     def __init__(self):

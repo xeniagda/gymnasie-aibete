@@ -12,8 +12,8 @@ from agents.doubledeepqlearner import DoubleDeepQlearner
 
 
 def run(parameterSet,levelGenerator,ticksPerLevel,numLevels,agentType):
-    print("Running on parameters:")
-    print(parameterSet)
+    #print("Running on parameters:")
+    #print(parameterSet)
     random.seed(0)
 
     agent = None
@@ -33,12 +33,11 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels,agentType):
 
         playTime,avgReward = gamePlayer.playGame(levelGenerator.generate(ticksPerLevel),agent,ticksPerLevel,False,None)
 
-        if i%100:
+        if i%(numLevels//100+1)==0:
             agent.random_action_method = NoRandomness()
             playTime,avgReward = gamePlayer.playGame(levelGenerator.generate(ticksPerLevel),agent,ticksPerLevel,False,None)
-
-        loss.append(agent.latestLoss.numpy().item())
-        reward.append(avgReward)
+            loss.append(agent.latestLoss.numpy().item())
+            reward.append(avgReward)
 
     parameterSet.addResult(loss,reward)
 

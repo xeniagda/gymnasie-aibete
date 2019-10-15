@@ -37,6 +37,7 @@ class Experiment:
         self.numLevels = numLevels
         self.levelGenerator = levelGenerator
         self.agentType = agentType
+        self.name = name
         
 
 
@@ -44,10 +45,11 @@ class Experiment:
     def loadFromDict(data):
         return Experiment(**data)
 
-    def saveToFile(self, path):
+    def saveToFile(self):
+        path = "results/data/"+self.name+".json"
         with open(path, "w") as f:            
             f.write(json.dumps({
-                #"settings": self.settings, 
+                **self.settings, "levelGenerator":str(self.levelGenerator), 
                 "parameterSets": [paramSet.dictify() for paramSet in self.parameterSets]
             }))
         
