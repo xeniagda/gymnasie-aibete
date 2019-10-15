@@ -10,6 +10,7 @@ from gamePlayer import *
 import json
 from random_action_method import *
 from plotter import Plotter
+from experimentSetups import experimentSetups
 
 RENDER = False
 GAME_LENGTH = 100
@@ -116,10 +117,17 @@ def mergeResults(resultsListA,resultsListB):
         if not found:
             resultsListA.append(results)
     return resultsListA
-def main():
-    saveName = "premade2-REvar-LR0.001-FD0.8"
+
+def runExperiment(experimentSetup):
     
-    resultsList = []#loadResults(saveName)
+
+def main():
+    experimentSetup = experimentSetups["premade2-RAM0.2,6-LR0.001-FDvar"]
+
+    plotter.plot(loadResults(saveName),plotAll=True)
+    #resultsList = []#loadResults(saveName)
+
+    loadExperiment("experiment2.json")
 
     resultsList.append(evaluateManyTimes(4,20000,lambda t:TRandom(0.2, 1 / 6),lambda t: 0.001,lambda t: 0.8))
     saveResults(resultsList,saveName)

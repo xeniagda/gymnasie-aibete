@@ -7,8 +7,8 @@ sys.path.append(
 from random_action_method import TRandom
 
 def parameterToString(par):
-    strFrom = par(0)
-    strTo = par(1)
+    strFrom = str(par(0))
+    strTo = str(par(1))
     if strFrom == strTo:
         return strFrom
     else:
@@ -47,3 +47,8 @@ class ParameterSet:
             "randomActionMethod": parameterToString(self.randomActionMethod),
             "results": self.results
         }
+    
+    def __str__(self):
+        return ("learningRate: " + parameterToString(self.learningRate)+"\n"
+        + "futureDiscount: " + parameterToString(self.futureDiscount)+"\n"
+        + "randomActionMethod: " + parameterToString(self.randomActionMethod))+"\n"

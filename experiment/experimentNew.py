@@ -23,10 +23,10 @@ class Experiment:
             self,
             parameterSets, 
             name="experiment", 
-            runsPerSet=1, 
-            numLevels=1, 
-            ticksPerLevel=12313, 
-            levelGenerator = None, 
+            runsPerSet=2, 
+            numLevels=10, 
+            ticksPerLevel=100, 
+            levelGenerator = levelGenerator.FlatLevelGenerator(), 
             agentType="dq", 
             **kwargs):
 
