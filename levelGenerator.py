@@ -71,3 +71,21 @@ class PremadeLevelGenerator(LevelGenerator):
         if self.index == 3:
             return list(zip([3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3,3,3,0,0,3,3,3,3],
                             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
+
+class NenaGenerator(LevelGenerator):
+    def __init__(self):
+        super(NenaGenerator, self).__init__()
+    
+    def generate(self, length): 
+        modules = [[3,3,3,3,0,0,3,3,3,3],[3,4,5,6,7,7,6,5,4,3], [10, 10, 10, 10, 10, 10, 10, 10]]
+        level = []
+        lastModule = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        for i in range (length): 
+            module = random.choice(modules)
+            dif = lastModule[len(lastModule)-1]-module[0]
+            for j in module: 
+                level.append(j+dif)
+            lastModule = [x+dif for x in module] 
+
+        return list(zip(level, [0]*len(level)))
