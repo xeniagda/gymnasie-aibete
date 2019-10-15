@@ -10,6 +10,7 @@ sys.path.append(
 import levelGenerator
 import json
 import experimentRunner
+from tqdm import tqdm
 
 class Experiment:
 
@@ -53,8 +54,10 @@ class Experiment:
 
 
     def run(self):
-        for paramSet in self.parameterSets:
-            experimentRunner.run(paramSet, self.levelGenerator, self.ticksPerLevel, self.numLevels, self.agentType) 
+        for paramSet in tqdm(self.parameterSets):
+            for i in tqdm(range(self.runsPerSet)):
+                experimentRunner.run(paramSet, self.levelGenerator, self.ticksPerLevel, self.numLevels, self.agentType) 
+            self.saveToFile()
 
     def plot(self, plt):
         self.parameterSets
