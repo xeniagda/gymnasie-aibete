@@ -1,3 +1,11 @@
+import sys
+import os.path
+sys.path.append(
+    os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
+
+
+from random_action_method import TRandom
+
 def parameterToString(par):
     strFrom = par(0)
     strTo = par(1)
@@ -13,10 +21,9 @@ class ParameterSet:
         self.randomActionMethod = randomActionMethod
 
         self.results = []
-    
+    @staticmethod
     def loadFromDict(data):
         res = ParameterSet(**data["parameters"])
-        res.results = data["results"]
         return res
     
     def addResult(self,loss,reward):
