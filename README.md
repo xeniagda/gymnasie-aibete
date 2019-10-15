@@ -1,4 +1,4 @@
-# Gymnasie
+# Gymnasie-
 
 ![](discord_logo.jpg)
 
