@@ -13,10 +13,10 @@ from gamePlayer import *
 RANDOM_EPSILON = 0.2
 RENDER = True
 LOG_TIME = False
-WORLD_TYPE = levelGenerator.PremadeLevelGenerator(2)
+WORLD_TYPE = levelGenerator.NenaGenerator()
 WORLD_SIZE = 30
 
-MAX_TIME = 100
+MAX_TIME = 1000
 
 totalTicks = 0
 
@@ -40,7 +40,8 @@ class Driver:
 ui = UI(RENDER,0.01)
 
 def main():
-    agent = DuelingDQL(TRandom(RANDOM_EPSILON, 1/6), future_discount=0.8, learning_rate=0.001,saveAndLoad=False)
+    #agent = DoubleDeepQlearner(SingleFrame(RANDOM_EPSILON), future_discount=0.8, learning_rate=0.001,saveAndLoad=False)
+    agent = HumanAgent(ui)
 
     driver = Driver(WORLD_SIZE, agent)
     
