@@ -69,8 +69,6 @@ class DoubleDeepQlearner:
             print("Loading")
             self.model_a.load_weights(SAVE_PATH_A)
             self.model_b.load_weights(SAVE_PATH_B)
-        else:
-            print("Creating new model")
 
         # Står om detta i Atari-pappret
         # Basically en pool av alla saker som har hänt i alla spel

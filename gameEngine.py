@@ -41,8 +41,9 @@ class GameEngine:
         if 0 <= int(self.player.x) < len(self.level):
             if self.level[int(self.player.x)][1] and self.player.isOnGround:
                 reward -= SECONDS_PER_TICK
-        
-        self.ui.setReward(reward)
+
+        if self.ui != None:
+            self.ui.setReward(reward)
         
         agentInput = self.getAgentInput()
 

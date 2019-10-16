@@ -61,8 +61,6 @@ class DeepQlearner:
         if os.path.isfile(SAVE_PATH) and saveAndLoad:
             print("Loading")
             self.model.load_weights(SAVE_PATH)
-        else:
-            print("Creating new model")
 
         # Står om detta i Atari-pappret
         # Basically en pool av alla saker som har hänt i alla spel

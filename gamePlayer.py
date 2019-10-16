@@ -30,4 +30,5 @@ def playGame(level,agent,maxTime,render,ui,logTime=False):
                 print("Time: ",round(time.time()-startTime,3))
                 startTime = time.time()
 
-        time.sleep(ui.sleepTime)
+        if ui != None:
+            time.sleep(ui.sleepTime)
