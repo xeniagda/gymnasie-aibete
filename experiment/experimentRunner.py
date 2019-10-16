@@ -11,16 +11,16 @@ from agents.deepqlearner import DeepQlearner
 from agents.doubledeepqlearner import DoubleDeepQlearner
 
 
-def run(parameterSet,levelGenerator,ticksPerLevel,numLevels,agentType):
+def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
     #print("Running on parameters:")
     #print(parameterSet)
     random.seed(0)
 
     agent = None
 
-    if agentType == "dq":
+    if parameterSet.agentType == "dq":
         agent = DeepQlearner(parameterSet.randomActionMethod(0),parameterSet.futureDiscount(0),parameterSet.learningRate(0),False)
-    if agentType == "ddq":
+    if parameterSet.agentType == "ddq":
         agent = DoubleDeepQlearner(parameterSet.randomActionMethod(0),parameterSet.futureDiscount(0),parameterSet.learningRate(0),False)
     
     loss = []

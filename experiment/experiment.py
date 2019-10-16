@@ -28,7 +28,6 @@ class Experiment:
             numLevels=10, 
             ticksPerLevel=100, 
             levelGenerator = levelGenerator.FlatLevelGenerator(), 
-            agentType="dq", 
             **kwargs):
 
         self.parameterSets = [ParameterSet.loadFromDict(paramSet) for paramSet in parameterSets]
@@ -36,7 +35,6 @@ class Experiment:
         self.ticksPerLevel = ticksPerLevel
         self.numLevels = numLevels
         self.levelGenerator = levelGenerator
-        self.agentType = agentType
         self.name = name
         
 
@@ -58,7 +56,7 @@ class Experiment:
     def run(self):
         for paramSet in tqdm(self.parameterSets):
             for i in tqdm(range(self.runsPerSet)):
-                experimentRunner.run(paramSet, self.levelGenerator, self.ticksPerLevel, self.numLevels, self.agentType) 
+                experimentRunner.run(paramSet, self.levelGenerator, self.ticksPerLevel, self.numLevels) 
             self.saveToFile()
 
     def plot(self, plt):

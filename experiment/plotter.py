@@ -56,8 +56,9 @@ class Plotter():
 
     def addParemterSetToSubplots(parameterSetData,subplots,colorIndex,plotOnlyAverage):
         label = "LR=" + parameterSetData["learningRate"]
-        label += ",FD=" + parameterSetData["futureDiscount"]
-        label += "," + parameterSetData["randomActionMethod"]
+        label += ", FD=" + parameterSetData["futureDiscount"]
+        label += ", " + parameterSetData["randomActionMethod"]
+        label += ", " + parameterSetData["agentType"]
 
         zippedResults = zipDicts(parameterSetData["results"])
         for key,value in zippedResults.items():

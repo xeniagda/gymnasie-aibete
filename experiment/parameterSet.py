@@ -15,10 +15,11 @@ def parameterToString(par):
         return strFrom + "->" + strTo
 
 class ParameterSet:
-    def __init__(self,randomActionMethod=TRandom(0.2,1/6),learningRate=0.03,futureDiscount=0.8):
+    def __init__(self,randomActionMethod=TRandom(0.2,1/6),learningRate=0.03,futureDiscount=0.8,agentType="dq"):
         self.learningRate = learningRate
         self.futureDiscount = futureDiscount
         self.randomActionMethod = randomActionMethod
+        self.agentType = agentType
 
         self.results = []
     @staticmethod
@@ -32,23 +33,17 @@ class ParameterSet:
             "reward":reward
         })
 
-    def getPlotTitle(self):
-        return ("LR=" + parameterToString(self.learningRate) + 
-        "FD=" + parameterToString(self.futureDiscount) + 
-        "RAM=" + parameterToString(self.randomActionMethod))
-
-    def plot(self, pltCtx,plotAllResults=True):
-        pltCtx.addData()
-
     def dictify(self):
         return {
             "learningRate": parameterToString(self.learningRate),
             "futureDiscount": parameterToString(self.futureDiscount),
             "randomActionMethod": parameterToString(self.randomActionMethod),
+            "agentType": self.agentType,
             "results": self.results
         }
     
     def __str__(self):
         return ("learningRate: " + parameterToString(self.learningRate)+"\n"
         + "futureDiscount: " + parameterToString(self.futureDiscount)+"\n"
-        + "randomActionMethod: " + parameterToString(self.randomActionMethod))+"\n"
+        + "randomActionMethod: " + parameterToString(self.randomActionMethod)+"\n"
+        + "agentType: " + self.agentType+"\n")
