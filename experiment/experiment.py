@@ -54,6 +54,7 @@ class Experiment:
 
 
     def run(self):
+        print("Running experiment " + self.name)
         for paramSet in tqdm(self.parameterSets):
             for i in tqdm(range(self.runsPerSet)):
                 experimentRunner.run(paramSet, self.levelGenerator, self.ticksPerLevel, self.numLevels) 
