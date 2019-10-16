@@ -23,7 +23,7 @@ class ParameterSet:
         self.results = []
     @staticmethod
     def loadFromDict(data):
-        res = ParameterSet(**data["parameters"])
+        res = ParameterSet(**data)
         return res
     
     def addResult(self,loss,reward):

@@ -5,24 +5,27 @@ sys.path.append(
 from random_action_method import *
 from levelGenerator import *
 
-experimentLayouts = {
-    "testExperiment": {
-        "numLevels": 10,
+experimentLayout = [{
+        "numLevels": 100,
         "ticksPerLevel": 100,
         "runsPerSet": 4,
-        "name": "Premade2-LR0-FD0-RAM0.6,6-dq",
+        "name": "Premade2-LRvar-FD0.8-RAM0.2,6-dq",
         "levelGenerator": PremadeLevelGenerator(2),
-        "agentType":"dq",
+        "agentType": "dq",
         "parameterSets": [
             {
-                "parameters": {
-                    "learningRate": lambda t: 0.1,
-                    "futureDiscount": lambda t: 0.8,
-                    "randomActionMethod": lambda t: TRandom(0.2,1/6),
-                }
+                "learningRate": lambda t: 0.1,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+            }, {
+                "learningRate": lambda t: 0.03,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+            }, {
+                "learningRate": lambda t: 0.001,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
             }
         ],
     }
-
-}
-
+}]
