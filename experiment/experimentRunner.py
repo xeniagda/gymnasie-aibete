@@ -9,6 +9,7 @@ from random_action_method import *
 
 from agents.deepqlearner import DeepQlearner
 from agents.doubledeepqlearner import DoubleDeepQlearner
+from agents.duelingdql import DuelingDQL
 
 
 def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
@@ -22,6 +23,8 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
         agent = DeepQlearner(parameterSet.randomActionMethod(0),parameterSet.futureDiscount(0),parameterSet.learningRate(0),False)
     if parameterSet.agentType == "ddq":
         agent = DoubleDeepQlearner(parameterSet.randomActionMethod(0),parameterSet.futureDiscount(0),parameterSet.learningRate(0),False)
+    if parameterSet.agentType == "dueldq":
+        agent = DuelingDQL(parameterSet.randomActionMethod(0),parameterSet.futureDiscount(0),parameterSet.learningRate(0),False)
     
     loss = []
     reward = []
