@@ -34,16 +34,14 @@ class Plotter():
     def __init__(self):
         pass
     
-    def plotExperiment(experimentData,plotOnlyAverage=True):
+    def plotExperiment(experimentData,plotOnlyAverage=False):
 
         fig, (lossSubplot,rewardSubplot) = plt.subplots(1,2)
         fig.set_size_inches(18.5, 10.5)
 
         lossSubplot.set_title('Loss')
         lossSubplot.set_yscale('log')
-        lossSubplot.legend(loc='upper left')
         rewardSubplot.set_title('Reward')
-        rewardSubplot.legend(loc='upper left')
 
         for i,parameterSetData in enumerate(experimentData["parameterSets"]):
             Plotter.addParemterSetToSubplots(parameterSetData,{
@@ -51,21 +49,24 @@ class Plotter():
                 "reward":rewardSubplot
             },i,plotOnlyAverage)
 
+        lossSubplot.legend(loc='upper left')
+        rewardSubplot.legend(loc='upper left')
         fig.show()
+
 
     def addParemterSetToSubplots(parameterSetData,subplots,colorIndex,plotOnlyAverage):
         label = "LR=" + parameterSetData["learningRate"]
-        label += "FD=" + parameterSetData["futureDiscount"]
-        label += "RAM=" + parameterSetData["randomActionMethod"]
+        label += ",FD=" + parameterSetData["futureDiscount"]
+        label += "," + parameterSetData["randomActionMethod"]
 
         zippedResults = zipDicts(parameterSetData["results"])
         for key,value in zippedResults.items():
             if not plotOnlyAverage:
-                Plotter.addCurvesToSubplot(subplots[key],value,label,colorIndex)
+                Plotter.addCurvesToSubplot(subplots[key],value,colorIndex)
             
             Plotter.addAverageToSubplot(subplots[key],value,label,colorIndex)
 
-    def addCurvesToSubplot(subplot,dataLists,label,colorIndex):
+    def addCurvesToSubplot(subplot,dataLists,colorIndex):
         for d in dataLists:
             subplot.plot(d,color=("C"+str(colorIndex)),alpha=0.2)
 
