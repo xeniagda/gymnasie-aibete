@@ -1,5 +1,5 @@
 
-from experimentNew import Experiment
+from experiment import Experiment
 from experimentLayout import experimentLayouts
 
 def main():
