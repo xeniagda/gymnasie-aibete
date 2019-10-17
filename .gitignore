@@ -7,6 +7,8 @@ q-table-learner.npz
 *.prof
 *.png
 tmp
+tmp.py
+*/tmp.py
 
 /TanktroubleML2/*
 /TanktroubleML2/*/
