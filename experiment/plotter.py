@@ -24,7 +24,8 @@ def zipDicts(d):
     
     return ret
 
-def averageChunks(vals,chunkSize):
+def averageChunks(vals):
+    chunkSize = len(vals)//20
     res = []
     for i in range(0, len(vals), chunkSize):
         res.append(sum(vals[i:i+chunkSize])/chunkSize)
@@ -69,7 +70,7 @@ class Plotter():
 
     def addCurvesToSubplot(subplot,dataLists,colorIndex):
         for d in dataLists:
-            subplot.plot(d,color=("C"+str(colorIndex)),alpha=0.2)
+            subplot.plot(averageChunks(d),color=("C"+str(colorIndex)),alpha=0.2)
 
     def addAverageToSubplot(subplot,dataLists,label,colorIndex):
-        subplot.plot(averageLists(dataLists),color=("C"+str(colorIndex)),label=label)
+        subplot.plot(averageChunks(averageLists(dataLists)),color=("C"+str(colorIndex)),label=label)
