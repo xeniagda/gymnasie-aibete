@@ -9,21 +9,21 @@ experimentLayouts = [{
         "numLevels": 20000,
         "ticksPerLevel": 100,
         "runsPerSet": 20,
-        "name": "Premade2-LR0.03-FD0.8-RAM0.2,6-ATvar",
+        "name": "Premade2-LR0.003-FD0.8-RAM0.2,6-ATvar",
         "levelGenerator": PremadeLevelGenerator(2),
         "parameterSets": [
             {
-                "learningRate": lambda t: 0.03,
+                "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
                 "agentType": "dq"
             }, {
-                "learningRate": lambda t: 0.03,
+                "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
                 "agentType": "ddq"
             }, {
-                "learningRate": lambda t: 0.03,
+                "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
                 "agentType": "dueldq"
@@ -37,22 +37,12 @@ experimentLayouts = [{
         "levelGenerator": PremadeLevelGenerator(2),
         "parameterSets": [
             {
-                "learningRate": lambda t: 0.3,
+                "learningRate": lambda t: 0.03,
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
                 "agentType": "dq"
             },
             {
-                "learningRate": lambda t: 0.1,
-                "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
-                "agentType": "dq"
-            }, {
-                "learningRate": lambda t: 0.03,
-                "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
-                "agentType": "dq"
-            }, {
                 "learningRate": lambda t: 0.01,
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
@@ -62,35 +52,45 @@ experimentLayouts = [{
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
                 "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.001,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.0003,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "agentType": "dq"
             }
         ]
 },{
         "numLevels": 20000,
         "ticksPerLevel": 100,
         "runsPerSet": 20,
-        "name": "Premade2-LR0.03-FDvar-RAM0.2,6-ATvar",
+        "name": "Premade2-LR0.003-FDvar-RAM0.2,6-ATdq",
         "levelGenerator": PremadeLevelGenerator(2),
         "parameterSets": [
             {
-                "learningRate": lambda t: 0.03,
+                "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.99,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
                 "agentType": "dq"
             }, {
-                "learningRate": lambda t: 0.03,
+                "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.95,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
-                "agentType": "ddq"
+                "agentType": "dq"
             }, {
-                "learningRate": lambda t: 0.03,
+                "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
-                "agentType": "dueldq"
+                "agentType": "dq"
             }, {
-                "learningRate": lambda t: 0.03,
+                "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.5,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
-                "agentType": "dueldq"
+                "agentType": "dq"
             }
         ]
 }]
