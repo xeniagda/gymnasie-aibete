@@ -29,10 +29,7 @@ class DuelingModel(kr.models.Model):
         super(DuelingModel, self).__init__()
 
         # Common layers
-        self.clayer1 = kr.layers.Dense(8,
-                                       bias_initializer=None,
-                                       activation=kr.activations.elu)
-        self.clayer2 = kr.layers.Dense(8,
+        self.clayer1 = kr.layers.Dense(4,
                                        bias_initializer=None,
                                        activation=kr.activations.elu)
         # Advantage specific
@@ -47,7 +44,6 @@ class DuelingModel(kr.models.Model):
 
     def call(self, x):
         x = self.clayer1(x)
-        x = self.clayer2(x)
 
         a = self.alayer(x)
         v = self.vlayer(x)[0]
@@ -61,9 +57,6 @@ class DuelingModel(kr.models.Model):
         # Anta alpha == 1 för elu, verkar stämma
         l1k, l1b = self.clayer1.kernel.numpy(), self.clayer1.bias.numpy()
         x = elu(l1b + np.dot(x, l1k), 1)
-
-        l2k, l2b = self.clayer2.kernel.numpy(), self.clayer2.bias.numpy()
-        x = elu(l2b + np.dot(x, l2k), 1)
 
         al1k, al1b = self.alayer.kernel.numpy(), self.alayer.bias.numpy()
         a = al1b + np.dot(x, al1k)
@@ -108,8 +101,7 @@ class DuelingDQL:
         self.experience_replay = [
             np.zeros(shape=(SOFT_REPLAY_LIMIT, AGENT_INPUT_SIZE)),  # Input
             np.zeros(shape=(SOFT_REPLAY_LIMIT)),  # Action
-            np.zeros(shape=(SOFT_REPLAY_LIMIT,
-                            AGENT_INPUT_SIZE)),  # Input after
+            np.zeros(shape=(SOFT_REPLAY_LIMIT, AGENT_INPUT_SIZE)),  # Input after
             np.zeros(shape=(SOFT_REPLAY_LIMIT)),  # Reward
         ]
         self.experience_replay_index = 0
@@ -139,12 +131,10 @@ class DuelingDQL:
     def update(self, oldAgentInput, action, newAgentInput, reward):
         # Lägg till i experience_replay
         self.experience_replay[0][self.experience_replay_index] = oldAgentInput
-        self.experience_replay[1][
-            self.experience_replay_index] = ACTIONS.index(action)
+        self.experience_replay[1][self.experience_replay_index] = ACTIONS.index(action)
         self.experience_replay[2][self.experience_replay_index] = newAgentInput
         self.experience_replay[3][self.experience_replay_index] = reward
-        self.experience_replay_index = (self.experience_replay_index +
-                                        1) % SOFT_REPLAY_LIMIT
+        self.experience_replay_index = (self.experience_replay_index + 1) % SOFT_REPLAY_LIMIT
 
         self.highest_er = max(self.highest_er, self.experience_replay_index)
 
@@ -173,8 +163,7 @@ class DuelingDQL:
     def train_on_batch(self, agent_input_before, action, agent_input_after,
                        reward):
         q_after = self.model.get_q(agent_input_after)
-        wanted_q = reward + self.future_discount * tf.reduce_max(q_after,
-                                                                 axis=1)
+        wanted_q = reward + self.future_discount * tf.reduce_max(q_after, axis=1)
         #wanted_q = reward
 
         tvars = self.model.trainable_variables
