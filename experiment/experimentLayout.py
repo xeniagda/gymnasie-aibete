@@ -102,27 +102,33 @@ experimentLayouts = [{
         "numLevels": 20000,
         "ticksPerLevel": 100,
         "runsPerSet": 20,
-        "name": "Premade2-LRvar-FDvar-RAM0.2,6-ATdq-moreEvals",
+        "name": "Premade2-LRvar-FD0.9-RAM0.2,6-ATdq-moreEvals",
         "levelGenerator": PremadeLevelGenerator(2),
         "parameterSets": [
             {
-                "learningRate": lambda t: 0.001,
-                "futureDiscount": lambda t: 0.95,
+                "learningRate": lambda t: 0.03,
+                "futureDiscount": lambda t: 0.9,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "agentType": "dq"
+            },
+            {
+                "learningRate": lambda t: 0.01,
+                "futureDiscount": lambda t: 0.9,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.0055,
+                "futureDiscount": lambda t: 0.9,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.003,
-                "futureDiscount": lambda t: 0.95,
+                "futureDiscount": lambda t: 0.9,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.001,
-                "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
-                "agentType": "dq"
-            }, {
-                "learningRate": lambda t: 0.003,
-                "futureDiscount": lambda t: 0.8,
+                "futureDiscount": lambda t: 0.9,
                 "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
                 "agentType": "dq"
             }
