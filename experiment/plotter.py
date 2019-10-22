@@ -35,7 +35,7 @@ class Plotter():
     def __init__(self):
         pass
     
-    def plotExperiment(experimentData,plotOnlyAverage=False):
+    def plotExperiments(experiments,plotOnlyAverage=False):
 
         fig, (lossSubplot,rewardSubplot) = plt.subplots(1,2)
         fig.set_size_inches(18.5, 10.5)
@@ -44,11 +44,14 @@ class Plotter():
         lossSubplot.set_yscale('log')
         rewardSubplot.set_title('Reward')
 
-        for i,parameterSetData in enumerate(experimentData["parameterSets"]):
-            Plotter.addParemterSetToSubplots(parameterSetData,{
-                "loss":lossSubplot,
-                "reward":rewardSubplot
-            },i,plotOnlyAverage)
+        color = 0
+        for experimentData in experiments:
+            for parameterSetData in experimentData["parameterSets"]:
+                Plotter.addParemterSetToSubplots(parameterSetData,{
+                    "loss":lossSubplot,
+                    "reward":rewardSubplot
+                },color,plotOnlyAverage)
+                color+=1
 
         lossSubplot.legend(loc='upper left')
         rewardSubplot.legend(loc='upper left')
@@ -70,7 +73,7 @@ class Plotter():
 
     def addCurvesToSubplot(subplot,dataLists,colorIndex):
         for d in dataLists:
-            subplot.plot(averageChunks(d),color=("C"+str(colorIndex)),alpha=0.2)
+            subplot.plot(averageChunks(d),color=("C"+str(colorIndex%10)),alpha=0.2)
 
     def addAverageToSubplot(subplot,dataLists,label,colorIndex):
-        subplot.plot(averageChunks(averageLists(dataLists)),color=("C"+str(colorIndex)),label=label)
+        subplot.plot(averageChunks(averageLists(dataLists)),color=("C"+str(colorIndex%10)),label=label)
