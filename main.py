@@ -16,7 +16,7 @@ LOG_TIME = False
 WORLD_TYPE = levelGenerator.NenaGenerator()
 WORLD_SIZE = 30
 
-MAX_TIME = 1000
+MAX_TIME = 400
 
 totalTicks = 0
 
@@ -40,8 +40,8 @@ class Driver:
 ui = UI(RENDER,0.01)
 
 def main():
-    #agent = DoubleDeepQlearner(SingleFrame(RANDOM_EPSILON), future_discount=0.8, learning_rate=0.001,saveAndLoad=False)
-    agent = HumanAgent(ui)
+    agent = DuelingDQL(TRandom(RANDOM_EPSILON, 1/6), future_discount=0.8, learning_rate=0.04,saveAndLoad=True)
+    # agent = HumanAgent(ui)
 
     driver = Driver(WORLD_SIZE, agent)
     
