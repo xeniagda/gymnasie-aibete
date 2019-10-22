@@ -127,4 +127,33 @@ experimentLayouts = [{
                 "agentType": "dq"
             }
         ]
+},{
+        "numLevels": 200,
+        "ticksPerLevel": 100,
+        "runsPerSet": 2,
+        "name": "Nena3-LRvar-FDvar-RAM0.2,6-ATdq-moreEvals",
+        "levelGenerator": NenaGenerator(3),
+        "parameterSets": [
+            {
+                "learningRate": lambda t: 0.03,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.01,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.0055,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.003,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "agentType": "dq"
+            }
+        ]
 }]
