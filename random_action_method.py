@@ -38,11 +38,11 @@ class NoRandomness(RandomActionMethod):
     def __str__(self):
         return "NoRandomness"
 
-class TRandom(RandomActionMethod):
-    def __init__(self, random_epsilon, time_lambda):
-        super(TRandom, self).__init__(random_epsilon)
+class MultiFrame(RandomActionMethod):
+    def __init__(self, random_epsilon, average_time):
+        super(MultiFrame, self).__init__(random_epsilon)
         self.current_action = None
-        self.time_lambda = time_lambda
+        self.time_lambda = 1 / average_time
         self.time = 0 # ~ Exp(time_lambda)
 
     # Give None if no random action should be chosen
@@ -58,7 +58,11 @@ class TRandom(RandomActionMethod):
         return None
 
     def __str__(self):
-        return "TRandom(eps={})".format(self.random_epsilon)
+        return "MultiFrame(eps={})".format(self.random_epsilon)
+
+# Backwards compatability!
+TRandom = lambda random_epsilon, time_lambda: MultiFrame(random_epsilon, 1 / time_lambda)
+
 
 class Blend(RandomActionMethod):
     def __init__(self, ram_a, ram_b, random_epsilon, prob_switch):
