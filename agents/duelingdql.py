@@ -29,10 +29,7 @@ class DuelingModel(kr.models.Model):
         super(DuelingModel, self).__init__()
 
         # Common layers
-        self.clayer1 = kr.layers.Dense(8,
-                                       bias_initializer=None,
-                                       activation=kr.activations.elu)
-        self.clayer2 = kr.layers.Dense(8,
+        self.clayer1 = kr.layers.Dense(4,
                                        bias_initializer=None,
                                        activation=kr.activations.elu)
         # Advantage specific
@@ -47,7 +44,6 @@ class DuelingModel(kr.models.Model):
 
     def call(self, x):
         x = self.clayer1(x)
-        x = self.clayer2(x)
 
         a = self.alayer(x)
         v = self.vlayer(x)[0]
@@ -61,9 +57,6 @@ class DuelingModel(kr.models.Model):
         # Anta alpha == 1 för elu, verkar stämma
         l1k, l1b = self.clayer1.kernel.numpy(), self.clayer1.bias.numpy()
         x = elu(l1b + np.dot(x, l1k), 1)
-
-        l2k, l2b = self.clayer2.kernel.numpy(), self.clayer2.bias.numpy()
-        x = elu(l2b + np.dot(x, l2k), 1)
 
         al1k, al1b = self.alayer.kernel.numpy(), self.alayer.bias.numpy()
         a = al1b + np.dot(x, al1k)
