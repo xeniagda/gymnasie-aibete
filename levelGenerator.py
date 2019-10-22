@@ -73,27 +73,35 @@ class PremadeLevelGenerator(LevelGenerator):
                             [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]))
 
 class NenaGenerator(LevelGenerator):
-    def __init__(self):
+    def __init__(self, difficulty):
         super(NenaGenerator, self).__init__()
+        self.modules = []
+        if (difficulty > 0): 
+            self.modules.extend([
+                [[10, 10, 10, 10], [0]*4],
+                [[3,4,4,5,5,6,6,7], [0]*8],
+                [[7,6,6,5,5,4,4,3], [0]*8], 
+                [[0,2,2,4,4,6], [0]*6],
+                [[3,4,5,4,2], [0]*5],
+                [[6,4,4,2,2,0], [0]*6],
+            ])
+        if (difficulty > 1): 
+            self.modules.extend([
+                [[3,3,3,3,0,0,3,3,3,3], [0,0,0,0,1,1,0,0,0,0]],   
+                [[7,6,5,6,7], [0,0,1,0,0]],
+            ])
+        if (difficulty > 2): 
+            self.modules.extend([
+                [[3,3,3,1,0,3,1,3,1,0,3], [0,0,0,1,1,0,1,0,1,1,0]]
+            ])
     
     def generate(self, length): 
-        modules = [
-            [[3,3,3,3,0,0,3,3,3,3], [0,0,0,0,1,1,0,0,0,0]],
-            [[3,4,4,5,5,6,6,7], [0]*8],
-            [[7,6,6,5,5,4,4,3], [0]*8],
-            [[10, 10, 10, 10], [0]*4],
-            [[7,6,5,6,7], [0,0,1,0,0]],
-            [[3,4,5,4,2], [0]*5],
-            [[0,2,2,4,4,6], [0]*6],
-            [[6,4,4,2,2,0], [0]*6],
-            [[3,3,3,0,0,3,0,3,0,0,3], [0,0,0,1,1,0,1,0,1,1,0]]
-        ]
         level = []
         badBlocks = []
         lastModule = [0, 0, 0, 0, 0, 0, 0, 0]
 
         for i in range (length): 
-            module = random.choice(modules)
+            module = random.choice(self.modules)
             dif = lastModule[len(lastModule)-1]-module[0][0]
             for j in module[0]: 
                 level.append(j+dif)
