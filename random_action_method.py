@@ -59,3 +59,25 @@ class TRandom(RandomActionMethod):
 
     def __str__(self):
         return "TRandom(eps={})".format(self.random_epsilon)
+
+class Blend(RandomActionMethod):
+    def __init__(self, ram_a, ram_b, random_epsilon, prob_switch):
+        super(Blend, self).__init__(random_epsilon)
+        self.ram_a = ram_a
+        self.ram_b = ram_b
+
+        self.prob_switch = prob_switch
+
+        self.at_a = True
+
+    def get_random_action(self):
+        if random.random() < self.prob_switch:
+            self.at_a = random.random() < self.random_epsilon
+
+        if self.at_a:
+            return self.ram_a.get_random_action()
+        else:
+            return self.ram_b.get_random_action()
+
+    def __str__(self):
+        return "Blend(a={}, b={}, eps={}, prob_a={})".format(self.a, self.b, self.eps, self.prob_a)
