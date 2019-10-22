@@ -4,6 +4,7 @@ sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 from random_action_method import *
 from levelGenerator import *
+import math
 
 experimentLayouts = [{
         "numLevels": 20000,
@@ -134,9 +135,34 @@ experimentLayouts = [{
             }
         ]
 },{
-        "numLevels": 200,
+        "numLevels": 20000,
         "ticksPerLevel": 100,
-        "runsPerSet": 2,
+        "runsPerSet": 20,
+        "name": "Premade2-LRvar2-FD0.8-RAM0.2,6-ATdq-moreEvals",
+        "levelGenerator": PremadeLevelGenerator(2),
+        "parameterSets": [
+            {
+                "learningRate": lambda t: 0.03 if t<0.35 else 0.003,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "agentType": "dq"
+            },
+            {
+                "learningRate": lambda t: 0.05*(1-t)+t*0.001,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: math.exp(math.log(0.05)*(1-t)+t*math.log(0.002)),
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "agentType": "dq"
+            }
+        ]
+},{
+        "numLevels": 20000,
+        "ticksPerLevel": 100,
+        "runsPerSet": 10,
         "name": "Nena3-LRvar-FDvar-RAM0.2,6-ATdq-moreEvals",
         "levelGenerator": NenaGenerator(3),
         "parameterSets": [
