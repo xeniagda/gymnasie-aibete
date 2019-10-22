@@ -18,11 +18,11 @@ def main():
             print(str(i)+": "+experimentName, "("+datetime.utcfromtimestamp(modifiedTimestamp).strftime('%Y-%m-%d %H:%M')+")")
         print(str(len(experimentNames))+": exit")
 
-        choice = int(input("Your choice:"))
+        choices = list(map(int,input("Your choice:").split(",")))
 
-        if choice==len(experimentNames):
+        if choices[0]==len(experimentNames):
             return
 
-        Plotter.plotExperiment(loadResults(experimentNames[choice][1]))
+        Plotter.plotExperiments([loadResults(experimentNames[choice][1]) for choice in choices],plotOnlyAverage=True)
 
 main()
