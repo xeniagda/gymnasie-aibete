@@ -89,10 +89,10 @@ class DuelingDQL:
         self.saveAndLoad = saveAndLoad
 
         if os.path.isfile(SAVE_PATH) and saveAndLoad:
-            print("Loading")
+            #print("Loading")
             self.model.load_weights(SAVE_PATH)
         else:
-            print("Creating new model")
+            pass#print("Creating new model")
 
         # Står om detta i Atari-pappret
         # Basically en pool av alla saker som har hänt i alla spel
@@ -141,9 +141,9 @@ class DuelingDQL:
         self.n_since_last_train += 1
 
         if self.n_since_last_train > TRAIN_RATE:
-            print("Training")
+            #print("Training")
             loss = self.train_on_random_minibatch()
-            print("Loss =", loss)
+            #print("Loss =", loss)
             if self.saveAndLoad:
                 self.model.save_weights(SAVE_PATH)
 

@@ -166,18 +166,18 @@ experimentLayouts = [{
         "numLevels": 20000,
         "ticksPerLevel": 100,
         "runsPerSet": 20,
-        "name": "Premade2-LRvar-FD0.8-RAM0.15,6-ATdueldq",
+        "name": "Premade2-LRvar-FD0.8-RAMblend0.15,0.03-ATdueldq",
         "levelGenerator": PremadeLevelGenerator(2),
         "parameterSets": [
             {
                 "learningRate": lambda t: 0.001,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: TRandom(0.15, 1 / 6),
+                "randomActionMethod": lambda t: Blend(SingleFrame(1), NoRandomness(), 0.15, 0.03),
                 "agentType": "dueldq"
             }, {
                 "learningRate": lambda t: 0.005,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: TRandom(0.15, 1 / 6),
+                "randomActionMethod": lambda t: Blend(SingleFrame(1), NoRandomness(), 0.15, 0.03),
                 "agentType": "dueldq"
             }
         ]
