@@ -84,4 +84,5 @@ class Blend(RandomActionMethod):
             return self.ram_b.get_random_action()
 
     def __str__(self):
-        return "Blend(a={}, b={}, eps={}, prob_a={})".format(self.a, self.b, self.eps, self.prob_a)
+        return "Blend(a={}, b={}, eps={}, prob_a={})".format(
+            self.ram_a, self.ram_b, self.random_epsilon, self.prob_switch)
