@@ -145,8 +145,14 @@ class DoubleDeepQlearner:
         # Predict and train
         model_p, model_t = random.choice([(self.model_a, self.model_b), (self.model_b, self.model_a)])
 
+        t_best_action = tf.math.argmax(model_t(agent_input_after), axis=1)
+        tba_ind = tf.transpose(
+            [tf.range(agent_input_before.shape[0]), tf.cast(t_best_action, "int32")])
+
         q_after = model_p(agent_input_after)
-        wanted_q = reward + self.future_discount * tf.reduce_max(q_after, axis=1)
+
+        q_after_max = tf.gather_nd(q_after, tba_ind)
+        wanted_q = reward + self.future_discount * q_after_max
         #wanted_q = reward
 
         tvars = model_t.trainable_variables
