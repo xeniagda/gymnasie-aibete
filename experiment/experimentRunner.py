@@ -34,12 +34,12 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
         agent.learning_rate = parameterSet.learningRate(i/(numLevels))
         agent.future_discount = parameterSet.futureDiscount(i/(numLevels))
 
-        playTime,avgReward = gamePlayer.playGame(levelGenerator.generate(ticksPerLevel),agent,ticksPerLevel,False,None)
+        gamePlayer.playGame(levelGenerator.generate(ticksPerLevel),agent,ticksPerLevel,False,None)
         
-        agent.random_action_method = NoRandomness()
-        playTime,avgReward = gamePlayer.playGame(levelGenerator.generate(ticksPerLevel),agent,ticksPerLevel,False,None)
 
         if i%(numLevels//100+1)==0:
+            agent.random_action_method = NoRandomness()
+            playTime,avgReward = gamePlayer.playGame(levelGenerator.generate(ticksPerLevel),agent,ticksPerLevel,False,None)
             loss.append(agent.latestLoss.numpy().item())
             reward.append(avgReward)
 
