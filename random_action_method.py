@@ -65,18 +65,32 @@ TRandom = lambda random_epsilon, time_lambda: MultiFrame(random_epsilon, 1 / tim
 
 
 class Blend(RandomActionMethod):
-    def __init__(self, ram_a, ram_b, random_epsilon, prob_switch):
-        super(Blend, self).__init__(random_epsilon)
+    def __init__(self, ram_a, ram_b, average_time_a, average_time_b):
+        # random_epsilon does not apply here
+        super(Blend, self).__init__(-1)
+
         self.ram_a = ram_a
         self.ram_b = ram_b
 
-        self.prob_switch = prob_switch
+        self.average_time_a = average_time_a
+        self.average_time_b = average_time_b
 
         self.at_a = True
+        self.time = 0
 
     def get_random_action(self):
-        if random.random() < self.prob_switch:
-            self.at_a = random.random() < self.random_epsilon
+        self.random_epsilon = -1
+
+        if self.time <= 0:
+            # Switch to other
+            self.at_a ^= True
+
+            if self.at_a:
+                self.time = random.expovariate(1 / self.average_time_a)
+            else:
+                self.time = random.expovariate(1 / self.average_time_b)
+
+        self.time -= 1
 
         if self.at_a:
             return self.ram_a.get_random_action()
@@ -84,5 +98,9 @@ class Blend(RandomActionMethod):
             return self.ram_b.get_random_action()
 
     def __str__(self):
-        return "Blend(a={}, b={}, eps={}, prob_a={})".format(
-            self.ram_a, self.ram_b, self.random_epsilon, self.prob_switch)
+        return "Blend(a={},b={},t_a={},t_b={})".format(
+            self.ram_a,
+            self.ram_b,
+            self.average_time_a,
+            self.average_time_b
+        )
