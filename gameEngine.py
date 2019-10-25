@@ -20,6 +20,8 @@ AGENT_INPUT_SIZE += 2
 
 # random.seed(1)
 
+PHYSICS_RESOLUTION = 10
+
 class GameEngine:
     def __init__(self,ui,level):
         self.ui = ui
@@ -31,8 +33,8 @@ class GameEngine:
         last_x = self.player.x
         self.player.applyAction(action,timeStep)
 
-        for i in range(20):
-            self.player.move(timeStep/20)
+        for i in range(PHYSICS_RESOLUTION):
+            self.player.move(timeStep/PHYSICS_RESOLUTION)
             self.resolveCollisions()
 
         delta_x = self.player.x - last_x
