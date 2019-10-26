@@ -10,13 +10,12 @@ import numpy as np
 from util import *
 
 from gameEngine import AGENT_INPUT_SIZE
-
+from experience_replay import ExperienceReplay
 
 SAVE_PATH_A = "deep-q-learner-save-a.h5"
 SAVE_PATH_B = "deep-q-learner-save-b.h5"
 
-# Tillåts att gå 10% över denna
-SOFT_REPLAY_LIMIT = 50000
+ER_SIZE = 50000
 
 TRAIN_RATE = 500
 BATCH_SIZE = 10240
@@ -70,19 +69,8 @@ class DoubleDeepQlearner:
             self.model_a.load_weights(SAVE_PATH_A)
             self.model_b.load_weights(SAVE_PATH_B)
 
-        # Står om detta i Atari-pappret
-        # Basically en pool av alla saker som har hänt i alla spel
-        # Varje gång träning händer så dras en slumpmässig batch härifrån
-        # Består av: (agent_input, action, agent_input_after, reward)
-        self.experience_replay = [
-            np.zeros(shape=(SOFT_REPLAY_LIMIT, AGENT_INPUT_SIZE)),  # Input
-            np.zeros(shape=(SOFT_REPLAY_LIMIT)),  # Action
-            np.zeros(shape=(SOFT_REPLAY_LIMIT, AGENT_INPUT_SIZE)),  # Input after
-            np.zeros(shape=(SOFT_REPLAY_LIMIT)),  # Reward
-        ]
-        self.experience_replay_index = 0
-
-        self.highest_er = 0
+        self.exp_rep_a = ExperienceReplay(ER_SIZE, AGENT_INPUT_SIZE)
+        self.exp_rep_b = ExperienceReplay(ER_SIZE, AGENT_INPUT_SIZE)
 
         self.random_action_method = random_action_method
 
@@ -107,14 +95,10 @@ class DoubleDeepQlearner:
             return ACTIONS[np.argmax(pred)]
 
     def update(self, oldAgentInput, action, newAgentInput, reward):
-        # Lägg till i experience_replay
-        self.experience_replay[0][self.experience_replay_index] = oldAgentInput
-        self.experience_replay[1][self.experience_replay_index] = ACTIONS.index(action)
-        self.experience_replay[2][self.experience_replay_index] = newAgentInput
-        self.experience_replay[3][self.experience_replay_index] = reward
-        self.experience_replay_index = (self.experience_replay_index+1)%SOFT_REPLAY_LIMIT
-
-        self.highest_er = max(self.highest_er, self.experience_replay_index)
+        if random.random() < 0.5:
+            self.exp_rep_a.add_experince(oldAgentInput, ACTIONS.index(action), newAgentInput, reward)
+        else:
+            self.exp_rep_b.add_experince(oldAgentInput, ACTIONS.index(action), newAgentInput, reward)
 
         self.n_since_last_train += 1
 
@@ -129,21 +113,25 @@ class DoubleDeepQlearner:
             self.n_since_last_train = 0
 
     def train_on_random_minibatch(self):
-        idxs = np.random.randint(self.highest_er, size=(BATCH_SIZE, ))
+        train_a = random.random() < 0.5
 
-        loss = self.train_on_batch(
-            self.experience_replay[0][idxs],
-            self.experience_replay[1][idxs],
-            self.experience_replay[2][idxs],
-            self.experience_replay[3][idxs],
-        )
+        if train_a:
+            input, action, new_input, reward = self.exp_rep_a.get_random_minibatch(BATCH_SIZE)
+        else:
+            input, action, new_input, reward = self.exp_rep_b.get_random_minibatch(BATCH_SIZE)
+
+        loss = self.train_on_batch(input, action, new_input, reward, train_a)
         return loss.numpy()
 
     def train_on_batch(self, agent_input_before, action, agent_input_after,
-                       reward):
+                       reward, train_a):
 
-        # Predict and train
-        model_p, model_t = random.choice([(self.model_a, self.model_b), (self.model_b, self.model_a)])
+        if train_a:
+            model_t = self.model_a
+            model_p = self.model_b
+        else:
+            model_t = self.model_b
+            model_p = self.model_a
 
         t_best_action = tf.math.argmax(model_t(agent_input_after), axis=1)
         tba_ind = tf.transpose(
