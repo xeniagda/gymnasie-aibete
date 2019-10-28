@@ -18,8 +18,6 @@ RIGHT = Actions.RIGHT.value
 JUMP = Actions.JUMP.value
 OTHER = -1
 
-DEBUG = False
-
 class MultiGameEngine:
     def __init__(self, levels):
         levels = np.array(levels)
@@ -37,6 +35,17 @@ class MultiGameEngine:
         self.players_on_ground = np.ones((self.n_games, ), dtype="bool")
 
     def performTick(self, actions, timeStep=SECONDS_PER_TICK):
+        last_xs = np.array(self.players_x)
+
+        self.movePlayers(actions, timeStep)
+
+        reward = self.players_x - last_xs
+
+        agentInput = self.getAgentInput()
+
+        return (agentInput, reward)
+
+    def movePlayers(self, actions, timeStep=SECONDS_PER_TICK):
         actions = np.array([
                  LEFT if action == Actions.LEFT
             else RIGHT if action == Actions.RIGHT
@@ -251,15 +260,17 @@ class MultiGameEngine:
 if __name__ == "__main__":
 
     mge = MultiGameEngine(
-        [[(0, 0), (1, 0), (0, 0)] for _ in range(3)]
+        [[(0, 0), (1, 0), (0, 0), (0, 0), (1, 0), (0, 0), (0, 0), (1, 0), (0, 0), (0, 0), (1, 0), (0, 0)] for _ in range(3)]
     )
 
     # mge.performTick([Actions.NONE, Actions.RIGHT, Actions.RIGHT])
 
-    mge.players_x[2] = 0.79
-    mge.players_y[2] = 0.8
-    mge.players_vx[2] = 0.2
+    mge.players_x[0] = 0.79
+    mge.players_y[0] = 0.8
+    mge.players_vx[0] = 0.2
 
     print(mge)
     mge.performTick([Actions.RIGHT, Actions.RIGHT, Actions.JUMP])
     print(mge)
+
+    print(mge.getAgentInput())
