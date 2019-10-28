@@ -18,6 +18,12 @@ RIGHT = Actions.RIGHT.value
 JUMP = Actions.JUMP.value
 OTHER = -1
 
+def ifloor(x):
+    return np.array(np.floor(x), dtype="int")
+
+def iceil(x):
+    return np.array(np.ceil(x), dtype="int")
+
 class MultiGameEngine:
     def __init__(self, levels):
         levels = np.array(levels)
@@ -84,7 +90,8 @@ class MultiGameEngine:
         # Check collision with floor
         for offset in [0, PLAYER_WIDTH]:
             at_x = self.players_x + offset
-            inds = np.array(at_x, dtype="int")
+            inds = ifloor(at_x)
+            inds %= self.level_heights.shape[1]
 
             heights = self.level_heights[np.arange(self.n_games), inds]
 
@@ -117,7 +124,8 @@ class MultiGameEngine:
             where=dx != 0 # Don't divide by zero!
         )
 
-        inds = np.array(np.ceil(self.players_x), dtype="int")
+        inds = iceil(self.players_x)
+        inds %= self.level_heights.shape[1]
         heights = self.level_heights[np.arange(self.n_games), inds]
 
         dists_left_to_block = 1 - self.players_x % 1 - PLAYER_WIDTH
@@ -147,7 +155,8 @@ class MultiGameEngine:
             where=dx != 0 # Don't divide by zero!
         )
 
-        inds = np.array(self.players_x - 1, dtype="int")
+        inds = ifloor(self.players_x - 1)
+        inds %= self.level_heights.shape[1]
         heights = self.level_heights[np.arange(self.n_games), inds]
 
         dists_left_to_block = self.players_x % 1
@@ -209,7 +218,8 @@ class MultiGameEngine:
                 xMul = np.broadcast_to(xMul, (VISION_SIZE, VISION_SIZE, self.n_games)).T
                 yMul = np.broadcast_to(yMul, (VISION_SIZE, VISION_SIZE, self.n_games)).T
 
-                heights = self.level_heights[inds.flatten(), np.array(xCoords.flatten(), dtype="int")]
+                xCoords %= self.level_heights.shape[1]
+                heights = self.level_heights[inds.flatten(), ifloor(xCoords.flatten())]
                 heights = heights.reshape(xs.shape)
 
                 vision_here = np.array(yCoords < heights, dtype="float")

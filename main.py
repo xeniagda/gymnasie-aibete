@@ -52,7 +52,7 @@ def main():
 
     timer = 0
 
-    levels = [WORLD_TYPE.generate(100) for n in range(N_GAMES)]
+    levels = [WORLD_TYPE.generate(20) for n in range(N_GAMES)]
     shortest = min(map(len, levels))
     levels = [level[:shortest] for level in levels]
 
