@@ -34,6 +34,20 @@ experimentLayouts = [{
         "numLevels": 20000,
         "ticksPerLevel": 100,
         "runsPerSet": 20,
+        "name": "Premade2-LR0.003-FD0.8-RAM0.2,6-ATddq",
+        "levelGenerator": PremadeLevelGenerator(2),
+        "parameterSets": [
+            {
+                "learningRate": lambda t: 0.003,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: Blend(SingleFrame(0.2), NoRandomness(), 20, 20),
+                "agentType": "ddq"
+            }
+        ]
+},{
+        "numLevels": 20000,
+        "ticksPerLevel": 100,
+        "runsPerSet": 20,
         "name": "Premade2-LRvar-FD0.8-RAM0.2,6-ATdq-moreEvals",
         "levelGenerator": PremadeLevelGenerator(2),
         "parameterSets": [
@@ -230,18 +244,23 @@ experimentLayouts = [{
         "numLevels": 20000,
         "ticksPerLevel": 100,
         "runsPerSet": 20,
-        "name": "Premade2-LR0.003-FD0.8-RAMvar,6-ATdq",
+        "name": "Premade2-LR0.003-FD0.8-RAMBlendvar,6-ATdq",
         "levelGenerator": PremadeLevelGenerator(2),
         "parameterSets": [
             {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: TRandom(0.2, 1 / 6),
+                "randomActionMethod": lambda t: Blend(SingleFrame(0.2), NoRandomness(), 100, 100),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(SingleFrame(0.2), NoRandomness(), 20, 20),
+                "randomActionMethod": lambda t: Blend(SingleFrame(0.2), NoRandomness(), 35, 100),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.003,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: Blend(SingleFrame(0.2), NoRandomness(), 100, 35),
                 "agentType": "dq"
             }
         ]
