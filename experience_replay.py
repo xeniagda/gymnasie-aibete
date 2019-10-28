@@ -14,12 +14,34 @@ class ExperienceReplay:
         self.highest = 0
 
     def add_experince(self, input, action, input_after, reward):
-        self.inputs[self.current_index] = input
-        self.actions[self.current_index] = action
-        self.inputs_after[self.current_index] = input_after
-        self.rewards[self.current_index] = reward
+        self.add_experinces(
+            np.array([input]),
+            np.array([action]),
+            np.array([input_after]),
+            np.array([reward]),
+        )
 
-        self.current_index = (self.current_index + 1) % self.size
+    def add_experinces(self, inputs, actions, inputs_after, rewards):
+        number = inputs.shape[0]
+
+        for (write, data) in [
+            (self.inputs, inputs),
+            (self.actions, actions),
+            (self.inputs_after, inputs_after),
+            (self.rewards, rewards),
+        ]:
+            assert data.shape[0] == number
+
+            if number + self.current_index <= self.size:
+                write[self.current_index : self.current_index + number] = data
+            else:
+                write[self.current_index : ] = data[:self.size - self.current_index]
+                if number + self.current_index > 2 * self.size:
+                    print("You're adding too much stuff to the ER!")
+                else:
+                    write[:number - self.size + self.current_index] = data[self.size - self.current_index:]
+
+        self.current_index = (self.current_index + number) % self.size
         self.highest = max(self.highest, self.current_index)
 
     def get_random_minibatch(self, minibatch_size):
