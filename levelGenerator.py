@@ -102,7 +102,7 @@ class NenaGenerator(LevelGenerator):
         badBlocks = []
         lastModule = [0, 0, 0, 0, 0, 0, 0, 0]
 
-        for i in range (length): 
+        while len(level) < length:
             module = random.choice(self.modules)
             dif = lastModule[len(lastModule)-1]-module[0][0]
             for j in module[0]: 
@@ -111,4 +111,4 @@ class NenaGenerator(LevelGenerator):
                 badBlocks.append(j)
             lastModule = [x+dif for x in module[0]] 
 
-        return list(zip(level, badBlocks))
+        return list(zip(level, badBlocks))[:length]
