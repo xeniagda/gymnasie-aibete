@@ -1,5 +1,5 @@
 import numpy as np
-from gameEngine import GameEngine
+from gameEngine import GameEngine, AROUND_RAD, AGENT_INPUT_SIZE, VISION_SIZE
 from util import Actions
 
 EPSILON = 1e-5
@@ -166,6 +166,56 @@ class MultiGameEngine:
 
         self.players_vy = self.players_vy + GRAVITY * timeStep / 2
 
+
+    def getAgentInput(self):
+        delta_range = np.arange(-AROUND_RAD, AROUND_RAD + 1)
+
+        dx, dy = np.meshgrid(delta_range, delta_range)
+
+        dxs = np.broadcast_to(dx, (self.n_games, VISION_SIZE, VISION_SIZE))
+        dys = np.broadcast_to(dy, (self.n_games, VISION_SIZE, VISION_SIZE))
+
+        xs = dxs + np.repeat(self.players_x, VISION_SIZE * VISION_SIZE).reshape(dxs.shape)
+        ys = dys + np.repeat(self.players_y, VISION_SIZE * VISION_SIZE).reshape(dys.shape)
+
+        vision = np.zeros(ys.shape)
+
+        inds = np.repeat(np.arange(self.n_games), VISION_SIZE * VISION_SIZE).reshape(dxs.shape)
+
+        for yCorner in (0, 1):
+            for xCorner in (0, 1):
+                yCoords = ys + yCorner
+                xCoords = xs + xCorner
+
+                if xCorner:
+                    xMul = self.players_x % 1
+                else:
+                    xMul = 1 - (self.players_x % 1)
+
+                if yCorner:
+                    yMul = self.players_y % 1
+                else:
+                    yMul = 1 - (self.players_y % 1)
+
+                xMul = np.broadcast_to(xMul, (VISION_SIZE, VISION_SIZE, self.n_games)).T
+                yMul = np.broadcast_to(yMul, (VISION_SIZE, VISION_SIZE, self.n_games)).T
+
+                heights = self.level_heights[inds.flatten(), np.array(xCoords.flatten(), dtype="int")]
+                heights = heights.reshape(xs.shape)
+
+                vision_here = np.array(yCoords < heights, dtype="float")
+
+                vision += vision_here * xMul * yMul
+
+        vels = np.concatenate(
+            (self.players_vx.reshape(-1, 1), self.players_vy.reshape(-1, 1)),
+            axis=1
+        )
+
+        agent_input = vision.reshape((self.n_games, -1))
+        agent_input = np.concatenate((agent_input, vels), axis=1)
+
+        return agent_input
 
     def into_regular_engine(self, index, ui):
         lvl = list(zip(self.level_heights[index], self.level_bads[index]))
