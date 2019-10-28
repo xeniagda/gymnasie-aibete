@@ -11,6 +11,7 @@ from agents.deepqlearner import DeepQlearner
 from agents.doubledeepqlearner import DoubleDeepQlearner
 from agents.duelingdql import DuelingDQL
 
+NUM_LEVELS_PARALLEL = 100
 
 def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
     #print("Running on parameters:")
@@ -29,17 +30,20 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
     loss = []
     reward = []
 
-    for i in range(numLevels):
+    for i in range(numLevels // NUM_LEVELS_PARALLEL):
         agent.random_action_method = parameterSet.randomActionMethod(i/(numLevels))
         agent.learning_rate = parameterSet.learningRate(i/(numLevels))
         agent.future_discount = parameterSet.futureDiscount(i/(numLevels))
 
-        gamePlayer.playGame(levelGenerator.generate(ticksPerLevel),agent,ticksPerLevel,False,None)
+        levels = [levelGenerator.generate(ticksPerLevel) for _ in range(NUM_LEVELS_PARALLEL)]
+
+        gamePlayer.playGames(levels,agent,ticksPerLevel,False,None)
         
 
-        if i%(numLevels//100+1)==0:
+        if i%((numLevels//NUM_LEVELS_PARALLEL)//100+1)==0:
             agent.random_action_method = NoRandomness()
-            playTime,avgReward = gamePlayer.playGame(levelGenerator.generate(ticksPerLevel),agent,ticksPerLevel,False,None)
+            levels = [levelGenerator.generate(ticksPerLevel) for _ in range(NUM_LEVELS_PARALLEL)]
+            playTime,avgReward = gamePlayer.playGames(levels,agent,ticksPerLevel,False,None)
             loss.append(agent.latestLoss.numpy().item())
             reward.append(avgReward)
 
