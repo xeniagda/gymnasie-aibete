@@ -25,6 +25,7 @@ class Graphics():
     def __init__(self,screen):
         self.screen = screen
         self.game_engine = None
+        self.agent_input = None
         self.agent = None
         self.reward = 0
 
@@ -39,6 +40,9 @@ class Graphics():
 
     def setAgent(self, agent):
         self.agent = agent
+
+    def setAgentInput(self, agent_input):
+        self.agent_input = agent_input
 
     def setReward(self,reward):
         reward = reward / SECONDS_PER_TICK
@@ -101,7 +105,10 @@ class Graphics():
                 
         pygame.draw.rect(self.screen, (0,0,255), rec)
 
-        agentInput = self.game_engine.getAgentInput()
+        if self.agent_input is not None:
+            agentInput = self.agent_input
+        else:
+            agentInput = self.game_engine.getAgentInput()
 
         for y in range(VISION_SIZE):
             for x in range(VISION_SIZE):
@@ -180,6 +187,12 @@ class UI():
             return
         self.game_engine = ge
         self.graphics.setGameEngine(ge)
+
+    def setAgentInput(self, ai):
+        if not self.RENDER:
+            return
+
+        self.graphics.setAgentInput(ai)
 
     def setAgent(self,ag):
         if not self.RENDER:
