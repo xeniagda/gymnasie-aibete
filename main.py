@@ -38,6 +38,8 @@ totalTicks = 0
 #             if totalTicks%1000==0:
 #                 print(totalTicks,round(reward))
 
+N_GAMES = 1 # Kör och växla mellan flera spel, mest för att se att inte MultiGameEngine är trasig
+
 ui = UI(RENDER,0.01)
 
 def main():
@@ -48,22 +50,34 @@ def main():
     
     # driver.play()
 
-    level = WORLD_TYPE.generate(100)
-    ges = MultiGameEngine([level])
+    timer = 0
+
+    levels = [WORLD_TYPE.generate(100) for n in range(N_GAMES)]
+    shortest = min(map(len, levels))
+    levels = [level[:shortest] for level in levels]
+
+    curr_game = 0
+    ges = MultiGameEngine(levels)
+
     ui.setAgent(agent)
 
     while True:
         agentInput = None
         action = agent.getAction(agentInput)
 
-        ai, rew = ges.performTick([action])
+        ai, rew = ges.performTick([Actions.NONE] * curr_game + [action] + [Actions.NONE] * (N_GAMES - curr_game - 1))
 
-        ui.setAgentInput(ai[0])
-        ui.setReward(rew)
-        ge = ges.into_regular_engine(0, ui)
+        ui.setAgentInput(ai[curr_game])
+        ui.setReward(rew[curr_game])
+        ge = ges.into_regular_engine(curr_game, ui)
         ui.setGameEngine(ge)
 
         sleep(ui.sleepTime)
+
+        timer += 1
+        if timer > 300:
+            timer = 0
+            curr_game = (curr_game + 1) % N_GAMES
 
 
 if RENDER:
