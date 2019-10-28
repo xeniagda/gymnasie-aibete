@@ -1,3 +1,10 @@
+# Disable tensorflow warnings
+
+import os
+
+import tensorflow as tf
+tf.get_logger().setLevel('INFO')
+tf.keras.backend.set_floatx('float64')
 
 from experiment import Experiment
 from experimentLayout import experimentLayouts
