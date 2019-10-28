@@ -76,20 +76,22 @@ class DeepQlearner:
 
         self.latestLoss = tf.add(0,0)
 
-    def getAction(self, agentInput):
+    def getActions(self, agentInputs):
         rand_action = self.random_action_method.get_random_action()
         if rand_action is not None:
-            return rand_action
+            return [rand_action] * agentInputs.shape[0]
         else:
-            pred = self.model.call_fast(agentInput)
-            return ACTIONS[np.argmax(pred)]
+            pred = self.model.call(agentInputs)
+            return [ACTIONS[x] for x in np.argmax(pred, axis=1)]
 
-    def update(self, oldAgentInput, action, newAgentInput, reward):
+    def update(self, oldAgentInputs, actions, newAgentInputs, rewards):
         # Lägg till i experience_replay
 
-        self.exp_rep.add_experince(oldAgentInput, ACTIONS.index(action), newAgentInput, reward)
+        actions = np.array([ACTIONS.index(action) for action in actions])
 
-        self.n_since_last_train += 1
+        self.exp_rep.add_experinces(oldAgentInputs, actions, newAgentInputs, rewards)
+
+        self.n_since_last_train += oldAgentInputs.shape[0]
 
         if self.n_since_last_train > TRAIN_RATE:
             #print("Training")
