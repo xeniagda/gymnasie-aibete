@@ -47,7 +47,7 @@ class MultiGameEngine:
 
         reward = self.players_x - last_xs
 
-        agentInput = self.getAgentInput()
+        agentInput = self.getAgentInputs()
 
         return (agentInput, reward)
 
@@ -167,6 +167,8 @@ class MultiGameEngine:
         rys = self.players_y + dys
 
         collisions_vert = (rys < heights) & in_range
+        # Don't go to negative x coodinates
+        collisions_vert |= self.players_x + dx < 0
 
         coll_res_x = self.players_x - dists_left_to_block + EPSILON
         coll_res_y = self.players_y - v_slopes * dists_left_to_block
@@ -185,7 +187,7 @@ class MultiGameEngine:
         self.players_vy = self.players_vy + GRAVITY * timeStep / 2
 
 
-    def getAgentInput(self):
+    def getAgentInputs(self):
         delta_range = np.arange(-AROUND_RAD, AROUND_RAD + 1)
 
         dx, dy = np.meshgrid(delta_range, delta_range)
@@ -283,4 +285,4 @@ if __name__ == "__main__":
     mge.performTick([Actions.RIGHT, Actions.RIGHT, Actions.JUMP])
     print(mge)
 
-    print(mge.getAgentInput())
+    print(mge.getAgentInputs())
