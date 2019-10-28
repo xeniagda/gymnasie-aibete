@@ -1,13 +1,14 @@
 import time
-from gameEngine import GameEngine
+from multiGameEngine import MultiGameEngine
 
-def playGame(level,agent,maxTime,render,ui,logTime=False):
-    engine = GameEngine(ui,level)
+def playGames(levels,agent,maxTime,render,ui,logTime=False):
+    engine = MultiGameEngine(levels)
 
     if render:
-        ui.setGameEngine(engine)
+        ui.setGameEngine(engine.into_regular_engine(0, ui))
         ui.setAgent(agent)
-    agentInput = engine.getAgentInput()
+
+    agentInputs = engine.getAgentInputs()
 
     play_time = 0
     startTime = time.time()
@@ -15,14 +16,15 @@ def playGame(level,agent,maxTime,render,ui,logTime=False):
     rewardSum = 0
 
     while True:
-        action = agent.getAction(agentInput)
-        newAgentInput,reward,terminate = engine.performTick(action, render)
-        rewardSum += reward
-        agent.update(agentInput,action,newAgentInput,reward)
-        agentInput = newAgentInput
+        actions = agent.getActions(agentInputs)
+        newAgentInputs, rewards = engine.performTick(actions)
+        agent.update(agentInputs,actions,newAgentInputs,rewards)
+
+        rewardSum += rewards.mean()
+        agentInputs = newAgentInputs
         play_time += 1
 
-        if terminate or play_time >= maxTime:
+        if play_time >= maxTime:
             return (play_time,rewardSum/play_time*1000)
 
         if logTime:
@@ -32,3 +34,8 @@ def playGame(level,agent,maxTime,render,ui,logTime=False):
 
         if ui != None:
             time.sleep(ui.sleepTime)
+
+        if render:
+            ui.setGameEngine(engine.into_regular_engine(0, ui))
+            ui.setAgentInput(newAgentInputs[0])
+            ui.setReward(rewards[0])
