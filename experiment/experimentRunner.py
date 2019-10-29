@@ -11,7 +11,7 @@ from agents.deepqlearner import DeepQlearner
 from agents.doubledeepqlearner import DoubleDeepQlearner
 from agents.duelingdql import DuelingDQL
 
-NUM_LEVELS_PARALLEL = 100
+NUM_LEVELS_PARALLEL = 500
 
 def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
     #print("Running on parameters:")
