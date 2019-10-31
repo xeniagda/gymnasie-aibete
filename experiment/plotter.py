@@ -101,4 +101,10 @@ class Plotter():
         subplot.plot(averageChunks(averageLists(dataLists)),color=("C"+str(colorIndex%10)),label=label)
 
     def getFluctuation(dataList):
-        return [abs(dataList[i+1]-dataList[i])/abs(dataList[i+1]+dataList[i]) for i in range(len(dataList)-1)]
+        fluct = []
+        for i in range(len(dataList)-1):
+            if abs(dataList[i+1])+abs(dataList[i])==0:
+                fluct.append(1)
+            else:
+                fluct.append(abs(dataList[i+1]-dataList[i])/(abs(dataList[i+1])+abs(dataList[i])))
+        return fluct
