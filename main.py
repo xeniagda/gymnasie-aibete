@@ -13,6 +13,7 @@ from gamePlayer import *
 RANDOM_EPSILON = 0.2
 RENDER = True
 LOG_TIME = False
+TRAIN = False
 WORLD_TYPE = levelGenerator.NenaGenerator(1)
 WORLD_SIZE = 30
 
@@ -35,7 +36,7 @@ class Driver:
         global totalTicks
         while True:
             levels = [WORLD_TYPE.generate(self.level_size) for _ in range(N_GAMES)]
-            gamelen,reward = playGames(levels,self.agent,MAX_TIME,RENDER,ui)
+            gamelen,reward = playGames(levels,self.agent,MAX_TIME,RENDER,ui,LOG_TIME, TRAIN)
             totalTicks += gamelen
             if totalTicks%1000==0:
                 print(totalTicks,round(reward))
@@ -43,7 +44,7 @@ class Driver:
 ui = UI(RENDER,0.01)
 
 def main():
-    agent = DeepQlearner(TRandom(RANDOM_EPSILON, 1/6), future_discount=0.8, learning_rate=0.04,saveAndLoad=True)
+    agent = DeepQlearner(TRandom(RANDOM_EPSILON, 1/6), future_discount=0.8, learning_rate=0.04,load_path=SAVE_PATH)
     # agent = HumanAgent(ui)
 
     driver = Driver(WORLD_SIZE, agent)

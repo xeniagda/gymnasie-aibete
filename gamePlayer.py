@@ -1,7 +1,7 @@
 import time
 from multiGameEngine import MultiGameEngine
 
-def playGames(levels,agent,maxTime,render,ui,logTime=False):
+def playGames(levels,agent,maxTime,render,ui,logTime=False, train=True):
     engine = MultiGameEngine(levels)
 
     if render:
@@ -18,7 +18,9 @@ def playGames(levels,agent,maxTime,render,ui,logTime=False):
     while True:
         actions = agent.getActions(agentInputs)
         newAgentInputs, rewards = engine.performTick(actions)
-        agent.update(agentInputs,actions,newAgentInputs,rewards)
+
+        if train:
+            agent.update(agentInputs,actions,newAgentInputs,rewards)
 
         rewardSum += rewards.mean()
         agentInputs = newAgentInputs
