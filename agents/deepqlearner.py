@@ -50,17 +50,15 @@ class RLModel(kr.models.Model):
 
 
 class DeepQlearner:
-    def __init__(self, random_action_method,future_discount=0.75,learning_rate=0.001, saveAndLoad=True):
+    def __init__(self, random_action_method,future_discount=0.75,learning_rate=0.001,load_path=None):
         learning_rate = learning_rate*(1-future_discount)/(1-0.8)
 
         self.model = RLModel()
         self.model.build((None, AGENT_INPUT_SIZE))
 
-        self.saveAndLoad = saveAndLoad
-
-        if os.path.isfile(SAVE_PATH) and saveAndLoad:
+        if load_path is not None and os.path.isfile(load_path):
             print("Loading")
-            self.model.load_weights(SAVE_PATH)
+            self.model.load_weights(load_path)
 
         self.exp_rep = ExperienceReplay(ER_SIZE, AGENT_INPUT_SIZE)
 
@@ -94,11 +92,7 @@ class DeepQlearner:
         self.n_since_last_train += oldAgentInputs.shape[0]
 
         if self.n_since_last_train > TRAIN_RATE:
-            #print("Training")
             loss = self.train_on_random_minibatch()
-            #print("Loss =", loss)
-            if self.saveAndLoad:
-                self.model.save_weights(SAVE_PATH)
 
             self.n_since_last_train = 0
 
@@ -132,3 +126,6 @@ class DeepQlearner:
 
         self.latestLoss = loss
         return loss
+
+    def save(self, path=SAVE_PATH):
+        self.model.save_weights(path)
