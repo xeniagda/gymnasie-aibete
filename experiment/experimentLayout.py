@@ -34,14 +34,14 @@ experimentLayouts = [{
         "numLevels": 20000,
         "ticksPerLevel": 100,
         "runsPerSet": 20,
-        "name": "Premade2-LR0.003-FD0.8-RAM0.2,6-ATddq",
-        "levelGenerator": PremadeLevelGenerator(2),
+        "name": "Premade1-LR0.003-FD0.8-RAM0.2,6-ATdq",
+        "levelGenerator": PremadeLevelGenerator(1),
         "parameterSets": [
             {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: Blend(SingleFrame(0.2), NoRandomness(), 20, 20),
-                "agentType": "ddq"
+                "agentType": "dq"
             }
         ]
 },{

@@ -14,10 +14,10 @@ RANDOM_EPSILON = 0.2
 RENDER = True
 LOG_TIME = False
 TRAIN = False
-WORLD_TYPE = levelGenerator.NenaGenerator(1)
+WORLD_TYPE = levelGenerator.PremadeLevelGenerator(1)
 WORLD_SIZE = 30
 
-MAX_TIME = 400
+MAX_TIME = 100
 
 totalTicks = 0
 
@@ -44,7 +44,8 @@ class Driver:
 ui = UI(RENDER,0.01)
 
 def main():
-    agent = DeepQlearner(TRandom(RANDOM_EPSILON, 1/6), future_discount=0.8, learning_rate=0.04,load_path=SAVE_PATH)
+    path = "results/networks/Premade1-LR0.003-FD0.8-RAM0.2,6-ATdq/paramset_0.h5"
+    agent = DeepQlearner(NoRandomness(), future_discount=0.8, learning_rate=0.04,load_path=path)
     # agent = HumanAgent(ui)
 
     driver = Driver(WORLD_SIZE, agent)

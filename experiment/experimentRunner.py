@@ -49,3 +49,4 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
 
     parameterSet.addResult(loss,reward)
 
+    return agent, reward[-1]

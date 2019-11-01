@@ -3,7 +3,7 @@
 from parameterSet import ParameterSet
 
 import sys
-import os.path
+import os
 sys.path.append(
     os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir)))
 
@@ -55,9 +55,27 @@ class Experiment:
 
     def run(self):
         print("Running experiment " + self.name)
-        for paramSet in tqdm(self.parameterSets):
+
+        network_path = os.path.join("results", "networks", self.name)
+        if not os.path.isdir(network_path):
+            os.makedirs(network_path)
+
+        for idx, paramSet in tqdm(enumerate(self.parameterSets)):
+            save_name = os.path.join(network_path, "paramset_" + str(idx) + ".h5")
+
+            best_reward_so_far = 0
             for i in tqdm(range(self.runsPerSet)):
-                experimentRunner.run(paramSet, self.levelGenerator, self.ticksPerLevel, self.numLevels) 
+                agent, last_reward = experimentRunner.run(
+                    paramSet,
+                    self.levelGenerator,
+                    self.ticksPerLevel,
+                    self.numLevels
+                )
+
+                if last_reward > best_reward_so_far:
+                    best_reward_so_far = last_reward
+                    agent.save(save_name)
+
             self.saveToFile()
 
     def plot(self, plt):
