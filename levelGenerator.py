@@ -112,3 +112,42 @@ class NenaGenerator(LevelGenerator):
             lastModule = [x+dif for x in module[0]] 
 
         return list(zip(level, badBlocks))[:length]
+
+
+class HoleGenerator(LevelGenerator):
+    def __init__(self, difficulty):
+        super(HoleGenerator, self).__init__()
+        self.modules = []
+        if (difficulty > 0): 
+            self.modules.extend([
+                [[3,3,0,0,3,3], [0,0,1,1,0,0]],   
+                [[7,6,5,7], [0,0,1,0]],
+            ])
+        if (difficulty > 1): 
+            self.modules.extend([
+                [[3,0,0,3,0,3], [0,1,1,0,1,0]],  
+                [[3,0,3,0,0,3], [0,1,0,1,1,0]], 
+                [[3,0,3,0,0,3], [0,1,0,1,1,0]], 
+            ])
+        if (difficulty > 2): 
+            self.modules.extend([
+                [[3,3,3,1,0,3,1,3,1,0,3], [0,0,0,1,1,0,1,0,1,1,0]],
+                [[3,0,4,4,0,0,5], [0,1,0,0,1,1,0]], 
+                [[3,0,0,2,0,3,3], [0,1,1,0,1,0,0]], 
+            ])
+    
+    def generate(self, length): 
+        level = []
+        badBlocks = []
+        lastModule = [0, 0, 0, 0, 0, 0, 0, 0]
+
+        while len(level) < length:
+            module = random.choice(self.modules)
+            dif = lastModule[len(lastModule)-1]-module[0][0]
+            for j in module[0]: 
+                level.append(j+dif)
+            for j in module[1]: 
+                badBlocks.append(j)
+            lastModule = [x+dif for x in module[0]] 
+
+        return list(zip(level, badBlocks))[:length]
