@@ -9,7 +9,8 @@ SECONDS_PER_TICK = 0.3
 GROUND_SPEED = 2.0
 AIR_SPEED = 1.2
 GRAVITY = -3
-JUMP_FORCE = 4
+JUMP_FORCE = 3.4 #4
+ACCELERATION_FORCE = 1.0 #0.2
 
 PLAYER_WIDTH = 0.2
 
@@ -63,10 +64,10 @@ class MultiGameEngine:
         # Update player based on action
         current_speeds = np.where(self.players_on_ground, GROUND_SPEED, AIR_SPEED)
 
-        vx_left = np.maximum(self.players_vx - 0.2 * timeStep, -current_speeds)
+        vx_left = np.maximum(self.players_vx - ACCELERATION_FORCE * timeStep, -current_speeds)
         self.players_vx = np.where(actions == LEFT, vx_left, self.players_vx)
 
-        vx_right = np.minimum(self.players_vx + 0.2 * timeStep, current_speeds)
+        vx_right = np.minimum(self.players_vx + ACCELERATION_FORCE * timeStep, current_speeds)
         self.players_vx = np.where(actions == RIGHT, vx_right, self.players_vx)
 
         vy_jump = JUMP_FORCE * np.ones((self.n_games, ))
