@@ -299,4 +299,33 @@ experimentLayouts = [{
                 "agentType": "dq"
             }
         ]
+}, {
+        "numLevels": 80000,
+        "ticksPerLevel": 100,
+        "runsPerSet": 20,
+        "name": "Hole2-LR0.001-FD0.8-RAMvar-ATdq",
+        "levelGenerator": HoleGenerator(2),
+        "parameterSets": [
+            {
+                "learningRate": lambda t: 0.001,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: Blend(SingleFrame(0.2), NoRandomness(), 20, 20),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.001,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: Blend(SingleFrame(0.05), NoRandomness(), 20, 20),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.001,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: Blend(MultiFrame(0.05,6), NoRandomness(), 20, 20),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.001,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,6), NoRandomness(), 20, 20),
+                "agentType": "dq"
+            }
+        ]
 }]
