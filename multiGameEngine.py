@@ -48,6 +48,14 @@ class MultiGameEngine:
 
         reward = self.players_x - last_xs
 
+        inds = ifloor(self.players_x)
+        inds %= self.level_heights.shape[1]
+        bads = self.level_bads[np.arange(self.n_games), inds]
+
+        is_on_bad = bads & self.players_on_ground
+
+        reward -= is_on_bad * SECONDS_PER_TICK
+
         agentInput = self.getAgentInputs()
 
         return (agentInput, reward)
