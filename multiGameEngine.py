@@ -74,20 +74,14 @@ class MultiGameEngine:
         self.players_vy = np.where(
             (actions == JUMP) & self.players_on_ground,
             vy_jump,
-            self.players_vy + GRAVITY * timeStep / 2
+            self.players_vy + GRAVITY * timeStep
         )
 
         dx = self.players_vx * timeStep
         dy = self.players_vy * timeStep
 
-        v_slopes = np.divide(
-            dy,
-            dx,
-            out=np.zeros((self.n_games, )),
-            where=dx != 0 # Don't divide by zero!
-        )
+        self.players_on_ground = np.zeros((self.n_games, ), dtype="bool")
 
-        collisions_horiz = np.zeros((self.n_games, ), dtype="bool")
         # Check collision with floor
         for offset in [0, PLAYER_WIDTH]:
             at_x = self.players_x + offset
@@ -95,29 +89,16 @@ class MultiGameEngine:
             inds %= self.level_heights.shape[1]
 
             heights = self.level_heights[np.arange(self.n_games), inds]
+            dists_left_down = self.players_y - heights
+            ends_up_under = dists_left_down < -dy
 
-            dist_left_down = self.players_y - heights
+            dy = np.where(ends_up_under, np.zeros_like(dy), dy)
+            self.players_vy = np.where(ends_up_under, np.zeros_like(self.players_vy), self.players_vy)
+            self.players_y = np.where(ends_up_under, self.players_y - dists_left_down, self.players_y)
 
-            ends_up_under = (dist_left_down < -dy)
-
-            dxs = np.divide(
-                dist_left_down,
-                v_slopes,
-                out=np.zeros((self.n_games, )),
-                where=v_slopes != 0,
-            )
-            coll_res_x = self.players_x + dxs
-            coll_res_y = heights
-
-            self.players_x = np.where(ends_up_under, coll_res_x, self.players_x)
-            self.players_y = np.where(ends_up_under, coll_res_y, self.players_y) + EPSILON
-            self.players_vy = np.where(ends_up_under, np.zeros((self.n_games, )), self.players_vy)
-            dy = np.where(ends_up_under, np.zeros((self.n_games, )), dy)
-
-            collisions_horiz |= ends_up_under
+            self.players_on_ground |= ends_up_under
 
         # Check for collisions between the bottom right corner and the next block's left edge
-
         v_slopes = np.divide(
             dy,
             dx,
@@ -128,64 +109,32 @@ class MultiGameEngine:
         inds = iceil(self.players_x)
         inds %= self.level_heights.shape[1]
         heights = self.level_heights[np.arange(self.n_games), inds]
-
         dists_left_to_block = 1 - self.players_x % 1 - PLAYER_WIDTH
 
-
         in_range = (0 < dists_left_to_block) & (dists_left_to_block < dx)
+        height_at_pass = self.players_y + v_slopes * dists_left_to_block
+        collisions = (height_at_pass < heights) & in_range
 
-        dys = v_slopes * dists_left_to_block
-        rys = self.players_y + dys
-
-        collisions_vert = (rys < heights) & in_range
-
-        coll_res_x = self.players_x + dists_left_to_block - EPSILON
-        coll_res_y = self.players_y + v_slopes * dists_left_to_block
-
-        self.players_x = np.where(collisions_vert, coll_res_x, self.players_x)
-        self.players_y = np.where(collisions_vert, coll_res_y, self.players_y)
-        self.players_vx = np.where(collisions_vert, np.zeros((self.n_games, )), self.players_vx)
-        dx = np.where(collisions_vert, np.zeros((self.n_games, )), dx)
+        dx = np.where(collisions, np.zeros_like(dx), dx)
+        self.players_vx = np.where(collisions, np.zeros_like(self.players_vx), self.players_vx)
+        self.players_x = np.where(collisions, self.players_x + dists_left_to_block - EPSILON, self.players_x)
 
         # Check for collisions between the bottom left corner and the previous block's right edge
-
-        v_slopes = np.divide(
-            dy,
-            dx,
-            out=np.zeros((self.n_games, )),
-            where=dx != 0 # Don't divide by zero!
-        )
-
         inds = ifloor(self.players_x - 1)
         inds %= self.level_heights.shape[1]
         heights = self.level_heights[np.arange(self.n_games), inds]
-
         dists_left_to_block = self.players_x % 1
 
         in_range = (0 < dists_left_to_block) & (dists_left_to_block < -dx)
+        height_at_pass = self.players_y - v_slopes * dists_left_to_block
+        collisions = (height_at_pass < heights) & in_range
 
-        dys = -v_slopes * dists_left_to_block
-        rys = self.players_y + dys
-
-        collisions_vert = (rys < heights) & in_range
-        # Don't go to negative x coodinates
-        collisions_vert |= self.players_x + dx < 0
-
-        coll_res_x = self.players_x - dists_left_to_block + EPSILON
-        coll_res_y = self.players_y - v_slopes * dists_left_to_block
-
-        self.players_x = np.where(collisions_vert, coll_res_x, self.players_x)
-        self.players_y = np.where(collisions_vert, coll_res_y, self.players_y)
-        self.players_vx = np.where(collisions_vert, np.zeros((self.n_games, )), self.players_vx)
-        dx = np.where(collisions_vert, np.zeros((self.n_games, )), dx)
-
+        dx = np.where(collisions, np.zeros_like(dx), dx)
+        self.players_vx = np.where(collisions, np.zeros_like(self.players_vx), self.players_vx)
+        self.players_x = np.where(collisions, self.players_x - dists_left_to_block + EPSILON, self.players_x)
 
         self.players_x += dx
         self.players_y += dy
-
-        self.players_on_ground = collisions_horiz
-
-        self.players_vy = self.players_vy + GRAVITY * timeStep / 2
 
 
     def getAgentInputs(self):
