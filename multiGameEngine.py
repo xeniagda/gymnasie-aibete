@@ -34,7 +34,7 @@ class MultiGameEngine:
         self.level_bads = levels[:,:,1]
 
         self.players_x = np.zeros((self.n_games, ))
-        self.players_y = 5 + np.array(self.level_heights[:,0], dtype="float")
+        self.players_y = np.array(self.level_heights[:,0], dtype="float")
 
         self.players_vx = np.zeros((self.n_games, ))
         self.players_vy = np.zeros((self.n_games, ))
@@ -207,6 +207,7 @@ class MultiGameEngine:
             for xCorner in (0, 1):
                 yCoords = ys + yCorner
                 xCoords = xs + xCorner
+                xCoordsI = ifloor(xCoords) % self.level_heights.shape[1]
 
                 if xCorner:
                     xMul = self.players_x % 1
@@ -221,8 +222,7 @@ class MultiGameEngine:
                 xMul = np.broadcast_to(xMul, (VISION_SIZE, VISION_SIZE, self.n_games)).T
                 yMul = np.broadcast_to(yMul, (VISION_SIZE, VISION_SIZE, self.n_games)).T
 
-                xCoords %= self.level_heights.shape[1]
-                heights = self.level_heights[inds.flatten(), ifloor(xCoords.flatten())]
+                heights = self.level_heights[inds.flatten(), xCoordsI.flatten()]
                 heights = heights.reshape(xs.shape)
 
                 vision_here = np.array(yCoords < heights, dtype="float")
