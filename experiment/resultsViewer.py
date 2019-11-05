@@ -23,6 +23,6 @@ def main():
         if choices[0]==len(experimentNames):
             return
 
-        Plotter.plotExperiments([loadResults(experimentNames[choice][1]) for choice in choices],plotOnlyAverage=False)
+        Plotter.plotExperimentsWithFluctuation([loadResults(experimentNames[choice][1]) for choice in choices],plotOnlyAverage=True)
 
 main()
