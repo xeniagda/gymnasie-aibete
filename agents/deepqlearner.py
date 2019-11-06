@@ -25,7 +25,7 @@ def elu(x, alpha):
 class RLModel(kr.models.Model):
     def __init__(self):
         super(RLModel, self).__init__()
-        self.layer1 = kr.layers.Dense(4,
+        self.layer1 = kr.layers.Dense(8,
                                       bias_initializer=None,
                                       activation=kr.activations.elu)
         self.layer2 = kr.layers.Dense(4,

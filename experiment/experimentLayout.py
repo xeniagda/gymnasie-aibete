@@ -328,4 +328,18 @@ experimentLayouts = [{
                 "agentType": "dq"
             }
         ]
+}, {
+        "numLevels": 100000,
+        "ticksPerLevel": 200,
+        "runsPerSet": 5,
+        "name": "Nena-LR0.003-FD0.8-RAMblend-ATdq",
+        "levelGenerator": NenaGenerator(3.5),
+        "parameterSets": [
+            {
+                "learningRate": lambda t: 0.001,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: Blend(SingleFrame(0.2), NoRandomness(), 20, 20),
+                "agentType": "dq"
+            }
+        ]
 }]
