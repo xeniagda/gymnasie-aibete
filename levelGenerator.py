@@ -94,6 +94,14 @@ class NenaGenerator(LevelGenerator):
             ])
         if (difficulty > 2): 
             self.modules.extend([
+                [[2, 0, 3, 1, 4, 2, 5], [0, 1, 0, 1, 0, 1, 0]],
+                [[4, 0, 0, 3, -1, -1, 2, -2, -2, 1], [0,1, 1, 0, 1, 1, 0, 1, 1, 0]],
+                [[0, 2, 0, 0, 0, 2, 0], [0, 1, 0, 0, 0, 1, 0]],
+                [[3, 0, 0, 0, 3, 5], [0, 1, 1, 1, 0, 0]],
+                [[1, 0, 1, 0, 1, 0, 1], [0, 1, 0, 1, 0, 1, 0]],
+            ])
+        if (difficulty > 3): 
+            self.modules.extend([
                 [[3,3,3,1,0,3,1,3,1,0,3], [0,0,0,1,1,0,1,0,1,1,0]]
             ])
     
@@ -137,8 +145,8 @@ class HoleGenerator(LevelGenerator):
             ])
     
     def generate(self, length): 
-        level = []
-        badBlocks = []
+        level = [0] * 10
+        badBlocks = [0] * 10
         lastModule = [0, 0, 0, 0, 0, 0, 0, 0]
 
         while len(level) < length:
