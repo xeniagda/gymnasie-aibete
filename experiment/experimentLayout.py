@@ -41,11 +41,11 @@ experimentLayouts = [{
             }
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 300000,
         "ticksPerLevel": 100,
         "runsPerSet": 20,
-        "name": "Premade2-LRvar-FD0.8-RAMBlend-ATdq",
-        "levelGenerator": PremadeLevelGenerator(2),
+        "name": "Nena3-LRvar-FD0.8-RAMBlend-ATdq-manyLevels",
+        "levelGenerator": NenaGenerator(3),
         "parameterSets": [
             {
                 "learningRate": lambda t: 0.03,
@@ -339,6 +339,20 @@ experimentLayouts = [{
                 "learningRate": lambda t: 0.001,
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: Blend(SingleFrame(0.2), NoRandomness(), 20, 20),
+                "agentType": "dq"
+            }
+        ]
+}, {
+        "numLevels": 400000,
+        "ticksPerLevel": 200,
+        "runsPerSet": 5,
+        "name": "Hole3-LR0.001-FD0.8-RAMblend-ATdq",
+        "levelGenerator": HoleGenerator(3),
+        "parameterSets": [
+            {
+                "learningRate": lambda t: 0.001,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,6), NoRandomness(), 20, 20),
                 "agentType": "dq"
             }
         ]
