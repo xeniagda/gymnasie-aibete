@@ -145,8 +145,8 @@ class HoleGenerator(LevelGenerator):
             ])
     
     def generate(self, length): 
-        level = [0] * 10
-        badBlocks = [0] * 10
+        level = [0] * 5
+        badBlocks = [0] * 5
         lastModule = [0, 0, 0, 0, 0, 0, 0, 0]
 
         while len(level) < length:
