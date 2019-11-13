@@ -11,7 +11,6 @@ def loadResults(saveName):
         return json.loads(f.read())
 
 def main():
-
     experimentNames = getExperimentFiles()
     while True:
         for i,(modifiedTimestamp, experimentName) in enumerate(experimentNames):
@@ -23,6 +22,8 @@ def main():
         if choices[0]==len(experimentNames):
             return
 
-        Plotter.plotExperiments([loadResults(experimentNames[choice][1]) for choice in choices],plotOnlyAverage=True)
+        #Plotter.plotExperiments([loadResults(experimentNames[choice][1]) for choice in choices],plotOnlyAverage=True)
+
+        Plotter.plotForPaper([loadResults(experimentNames[choice][1]) for choice in choices],plotOnlyAverage=True)
 
 main()

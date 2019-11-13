@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 from functools import reduce
 from operator import add
 import math,time
+import numpy as np
 
 DESIRED_DATA_POINTS = 20
 
@@ -25,10 +26,10 @@ def zipDicts(d):
     return ret
 
 def averageChunks(vals):
-    chunkSize = len(vals)//10
+    chunkSize = len(vals)//15
     res = []
     for i in range(0, len(vals), chunkSize):
-        res.append(sum(vals[i:i+chunkSize])/chunkSize)
+        res.append(sum(vals[i:min(i+chunkSize,len(vals))])/(min(i+chunkSize,len(vals))-i))
     return res
 
 class Plotter():
@@ -50,7 +51,7 @@ class Plotter():
                 Plotter.addParemterSetToSubplots(parameterSetData,{
                     "loss":lossSubplot,
                     "reward":rewardSubplot
-                },color,plotOnlyAverage)
+                },color,plotOnlyAverage,experimentData["numLevels"]*experimentData["ticksPerLevel"]/1000)
                 color+=1
 
         lossSubplot.legend(loc='upper left')
@@ -73,32 +74,94 @@ class Plotter():
                 Plotter.addParemterSetToSubplots(parameterSetData,{
                     "reward":rewardSubplot,
                     "fluctuation":fluctuationSubplot
-                },color,plotOnlyAverage)
+                },color,plotOnlyAverage,experimentData["numLevels"]*experimentData["ticksPerLevel"]/1000)
                 color+=1
 
         rewardSubplot.legend(loc='upper left')
         fig.show()
 
+    
+    def plotForPaper(experiments,plotOnlyAverage=False):
 
-    def addParemterSetToSubplots(parameterSetData,subplots,colorIndex,plotOnlyAverage):
-        label = "LR=" + parameterSetData["learningRate"]
-        label += ", FD=" + parameterSetData["futureDiscount"]
-        label += ", " + parameterSetData["randomActionMethod"]
-        label += ", " + parameterSetData["agentType"]
+        fig, rewardSubplot = plt.subplots(1,1)
+        fig.set_size_inches(5, 5)
+
+        rewardSubplot.set_xlabel('Thousands of ticks played [kt]')
+        rewardSubplot.set_ylabel('Reward')
+
+        parameterValueLists = {
+            "learningRate":set(),
+            "futureDiscount": set(),
+            "randomActionMethod": set(),
+            "agentType": set(),
+        }
+        for experimentData in experiments:
+            for parameterSetData in experimentData["parameterSets"]:
+                for key,val in parameterSetData.items():
+                    if key=="results":
+                        continue
+                    parameterValueLists[key].add(val)
+
+        notInLabel = []
+
+        for key,val in parameterValueLists.items():
+            if len(val)==1:
+                notInLabel.append(key)
+
+
+        color = 0
+        for experimentData in experiments:
+            for parameterSetData in experimentData["parameterSets"]:
+                Plotter.addParemterSetToSubplots(parameterSetData,{
+                    "reward":rewardSubplot
+                },color,plotOnlyAverage,experimentData["numLevels"]*experimentData["ticksPerLevel"]/1000,notInLabel=notInLabel)
+                color+=1
+
+        #fig.show()
+
+        rewardSubplot.legend(loc='lower right')
+
+        box = rewardSubplot.get_position()
+        rewardSubplot.set_position([box.x0, box.y0, box.width, box.height*0.8])
+
+        # Put a legend to the right of the current axis
+        rewardSubplot.legend(loc='lower center', bbox_to_anchor=(0.5, 1))
+        fig.savefig("paper/"+experiments[0]["name"]+".png", bbox_inches='tight')
+
+
+    def addParemterSetToSubplots(parameterSetData,subplots,colorIndex,plotOnlyAverage,ticksPlayed,haveLabel=True,notInLabel=[]):
+        label = []
+        if "learningRate" not in notInLabel:
+            label.append("LR=" + parameterSetData["learningRate"])
+        if "futureDiscount" not in notInLabel:
+            label.append("FD=" + parameterSetData["futureDiscount"])
+        if "randomActionMethod" not in notInLabel:
+            label.append(parameterSetData["randomActionMethod"])
+        if "agentType" not in notInLabel:
+            label.append(parameterSetData["agentType"])
+            
+        label = ", ".join(label)
 
         zippedResults = zipDicts(parameterSetData["results"])
         for key,value in subplots.items():
             if not plotOnlyAverage:
-                Plotter.addCurvesToSubplot(subplots[key],zippedResults[key],colorIndex)
+                Plotter.addCurvesToSubplot(subplots[key],zippedResults[key],ticksPlayed,colorIndex)
             
-            Plotter.addAverageToSubplot(subplots[key],zippedResults[key],label,colorIndex)
+            Plotter.addAverageToSubplot(subplots[key],zippedResults[key],label,colorIndex,ticksPlayed,haveLabel)
 
-    def addCurvesToSubplot(subplot,dataLists,colorIndex):
+    def addCurvesToSubplot(subplot,dataLists,colorIndex,ticksPlayed):
         for d in dataLists:
-            subplot.plot(averageChunks(d),color=("C"+str(colorIndex%10)),alpha=0.2)
+            yVals = averageChunks(d)
+            xVals = np.linspace(0,ticksPlayed,len(yVals))
+            subplot.plot(xVals,yVals,color=("C"+str(colorIndex%10)),alpha=0.2)
 
-    def addAverageToSubplot(subplot,dataLists,label,colorIndex):
-        subplot.plot(averageChunks(averageLists(dataLists)),color=("C"+str(colorIndex%10)),label=label)
+    def addAverageToSubplot(subplot,dataLists,label,colorIndex,ticksPlayed,haveLabel):
+        yVals = averageChunks(averageLists(dataLists))
+        xVals = np.linspace(0,ticksPlayed,len(yVals))
+        if not haveLabel:
+            subplot.plot(xVals,yVals,color=("C"+str(colorIndex%10)))
+        else:
+            subplot.plot(xVals,yVals,color=("C"+str(colorIndex%10)),label=label)
 
     def getFluctuation(dataList):
         fluct = []
