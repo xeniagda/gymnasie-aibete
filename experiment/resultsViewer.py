@@ -24,6 +24,6 @@ def main():
 
         #Plotter.plotExperiments([loadResults(experimentNames[choice][1]) for choice in choices],plotOnlyAverage=True)
 
-        Plotter.plotForPaper([loadResults(experimentNames[choice][1]) for choice in choices],plotOnlyAverage=True)
+        Plotter.plotForPaper([loadResults(experimentNames[choice][1]) for choice in choices],1,plotOnlyAverage=True)
 
 main()

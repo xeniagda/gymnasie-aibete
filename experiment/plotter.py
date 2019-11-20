@@ -7,11 +7,7 @@ import numpy as np
 DESIRED_DATA_POINTS = 20
 
 def averageLists(lists):
-    if type(lists[0])!=list:
-        return lists
-    avg = list(reduce(lambda results1,results2: map(add,results1,results2),lists))
-    avg = [s/len(lists) for s in avg]
-    return avg
+    return lists.mean(axis=0)
 
 def zipDicts(d):
     ret = {}
@@ -26,11 +22,13 @@ def zipDicts(d):
     return ret
 
 def averageChunks(vals):
-    chunkSize = len(vals)//15
+    """chunkSize = 1#len(vals)//15
     res = []
     for i in range(0, len(vals), chunkSize):
         res.append(sum(vals[i:min(i+chunkSize,len(vals))])/(min(i+chunkSize,len(vals))-i))
     return res
+    """
+    return vals
 
 class Plotter():
     def __init__(self):
@@ -81,7 +79,7 @@ class Plotter():
         fig.show()
 
     
-    def plotForPaper(experiments,plotOnlyAverage=False):
+    def plotForPaper(experiments,verticalZoom,plotOnlyAverage=False):
 
         fig, rewardSubplot = plt.subplots(1,1)
         fig.set_size_inches(5, 5)
@@ -114,10 +112,10 @@ class Plotter():
             for parameterSetData in experimentData["parameterSets"]:
                 Plotter.addParemterSetToSubplots(parameterSetData,{
                     "reward":rewardSubplot
-                },color,plotOnlyAverage,experimentData["numLevels"]*experimentData["ticksPerLevel"]/1000,notInLabel=notInLabel)
+                },color,plotOnlyAverage,experimentData["numLevels"]*experimentData["ticksPerLevel"]/1000,verticalZoom,notInLabel=notInLabel)
                 color+=1
 
-        #fig.show()
+        fig.show()
 
         rewardSubplot.legend(loc='lower right')
 
@@ -129,7 +127,7 @@ class Plotter():
         fig.savefig("paper/"+experiments[0]["name"]+".png", bbox_inches='tight')
 
 
-    def addParemterSetToSubplots(parameterSetData,subplots,colorIndex,plotOnlyAverage,ticksPlayed,haveLabel=True,notInLabel=[]):
+    def addParemterSetToSubplots(parameterSetData,subplots,colorIndex,plotOnlyAverage,ticksPlayed,verticalZoom,haveLabel=True,notInLabel=[]):
         label = []
         if "learningRate" not in notInLabel:
             label.append("LR=" + parameterSetData["learningRate"])
@@ -144,10 +142,14 @@ class Plotter():
 
         zippedResults = zipDicts(parameterSetData["results"])
         for key,value in subplots.items():
+            if key not in zippedResults:
+                continue
+            data = np.array(zippedResults[key])
+
             if not plotOnlyAverage:
-                Plotter.addCurvesToSubplot(subplots[key],zippedResults[key],ticksPlayed,colorIndex)
+                Plotter.addCurvesToSubplot(subplots[key],data[:,:int(data.shape[1]*verticalZoom)],ticksPlayed*verticalZoom,colorIndex)
             
-            Plotter.addAverageToSubplot(subplots[key],zippedResults[key],label,colorIndex,ticksPlayed,haveLabel)
+            Plotter.addAverageToSubplot(subplots[key],data[:,:int(data.shape[1]*verticalZoom)],label,colorIndex,ticksPlayed*verticalZoom,haveLabel)
 
     def addCurvesToSubplot(subplot,dataLists,colorIndex,ticksPlayed):
         for d in dataLists:
@@ -158,6 +160,7 @@ class Plotter():
     def addAverageToSubplot(subplot,dataLists,label,colorIndex,ticksPlayed,haveLabel):
         yVals = averageChunks(averageLists(dataLists))
         xVals = np.linspace(0,ticksPlayed,len(yVals))
+        print(len(yVals))
         if not haveLabel:
             subplot.plot(xVals,yVals,color=("C"+str(colorIndex%10)))
         else:
