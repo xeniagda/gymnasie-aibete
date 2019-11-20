@@ -12,6 +12,8 @@ from agents.doubledeepqlearner import DoubleDeepQlearner
 from agents.duelingdql import DuelingDQL
 
 NUM_LEVELS_PARALLEL = 500
+RESULT_RESOLUTION = 0.1
+
 
 def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
     #print("Running on parameters:")
@@ -40,7 +42,7 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
         gamePlayer.playGames(levels,agent,ticksPerLevel,False,None)
         
 
-        if i%((numLevels//NUM_LEVELS_PARALLEL)//100+1)==0:
+        if i % max(1, int(numLevels / NUM_LEVELS_PARALLEL * RESULT_RESOLUTION)) == 0:
             agent.random_action_method = NoRandomness()
             levels = [levelGenerator.generate(ticksPerLevel) for _ in range(NUM_LEVELS_PARALLEL)]
             playTime,avgReward = gamePlayer.playGames(levels,agent,ticksPerLevel,False,None)
