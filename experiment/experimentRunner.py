@@ -12,7 +12,7 @@ from agents.doubledeepqlearner import DoubleDeepQlearner
 from agents.duelingdql import DuelingDQL
 
 NUM_LEVELS_PARALLEL = 500
-RESULT_RESOLUTION = 0.1
+RESULT_RESOLUTION = 0.001
 
 
 def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
