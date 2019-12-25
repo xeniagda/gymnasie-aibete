@@ -58,7 +58,7 @@ class MultiFrame(RandomActionMethod):
         return None
 
     def __str__(self):
-        return "MultiFrame(eps={})".format(self.random_epsilon)
+        return "MultiFrame({},{})".format(self.random_epsilon,int(1/self.time_lambda))
 
 # Backwards compatability!
 TRandom = lambda random_epsilon, time_lambda: MultiFrame(random_epsilon, 1 / time_lambda)
