@@ -18,7 +18,6 @@ RESULT_RESOLUTION = 0.001
 def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
     #print("Running on parameters:")
     #print(parameterSet)
-    random.seed(0)
 
     agent = None
 
@@ -29,6 +28,7 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
     if parameterSet.agentType == "dueldq":
         agent = DuelingDQL(parameterSet.randomActionMethod(0),parameterSet.futureDiscount(0),parameterSet.learningRate(0),False)
     
+    random.seed(0)
     loss = []
     reward = []
 
