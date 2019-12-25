@@ -84,7 +84,7 @@ class Plotter():
         fig, rewardSubplot = plt.subplots(1,1)
         fig.set_size_inches(5, 5)
 
-        rewardSubplot.set_xlabel('Thousands of ticks played [kt]')
+        rewardSubplot.set_xlabel('Thousands of ticks played')
         rewardSubplot.set_ylabel('Reward')
 
         parameterValueLists = {
