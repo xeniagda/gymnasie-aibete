@@ -7,7 +7,7 @@ from levelGenerator import *
 import math
 
 experimentLayouts = [{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Nena3-LRvar-FD0.8-RAMblend-ATdq",
@@ -36,7 +36,7 @@ experimentLayouts = [{
             }
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Nena3-LR0.003-FD0var-RAMblend-ATdq",
@@ -75,7 +75,7 @@ experimentLayouts = [{
             }
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Nena3-LR0.003-FD0.8-RAMblendVar1-ATdq",
@@ -109,7 +109,7 @@ experimentLayouts = [{
             }
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Nena3-LR0.003-FD0.8-RAMblendVar2-ATdq",
@@ -149,7 +149,7 @@ experimentLayouts = [{
             }
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Nena3-LR0.003-FD0.8-RAMvar-ATdq",
@@ -183,7 +183,7 @@ experimentLayouts = [{
             },
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Nena3-LR0.003-FD0.8-RAMblend-ATdq",
@@ -216,18 +216,13 @@ experimentLayouts = [{
             }
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Premade2-LRvar-FD0.8-RAMblend-ATdq",
         "levelGenerator": PremadeLevelGenerator(2),
         "parameterSets": [
             {
-                "learningRate": lambda t: 0.1,
-                "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,6), NoRandomness(), 20, 20),
-                "agentType": "dq"
-            }, {
                 "learningRate": lambda t: 0.03,
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: Blend(MultiFrame(0.2,6), NoRandomness(), 20, 20),
@@ -242,10 +237,15 @@ experimentLayouts = [{
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: Blend(MultiFrame(0.2,6), NoRandomness(), 20, 20),
                 "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.001,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,6), NoRandomness(), 20, 20),
+                "agentType": "dq"
             }
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Premade2-LR0.003-FD0var-RAMblend-ATdq",
@@ -284,7 +284,7 @@ experimentLayouts = [{
             }
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Premade2-LR0.003-FD0.8-RAMblendVar1-ATdq",
@@ -318,7 +318,7 @@ experimentLayouts = [{
             }
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Premade2-LR0.003-FD0.8-RAMblendVar2-ATdq",
@@ -358,7 +358,7 @@ experimentLayouts = [{
             }
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Premade2-LR0.003-FD0.8-RAMvar-ATdq",
@@ -392,7 +392,7 @@ experimentLayouts = [{
             },
         ]
 },{
-        "numLevels": 80000,
+        "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Premade2-LR0.003-FD0.8-RAMblend-ATdq",
