@@ -45,7 +45,7 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
         if i % max(1, int(numLevels / NUM_LEVELS_PARALLEL * RESULT_RESOLUTION)) == 0:
             agent.random_action_method = NoRandomness()
             levels = [levelGenerator.generate(ticksPerLevel) for _ in range(NUM_LEVELS_PARALLEL)]
-            playTime,avgReward = gamePlayer.playGames(levels,agent,ticksPerLevel,False,None)
+            playTime,avgReward = gamePlayer.playGames(levels,agent,ticksPerLevel,False,None,train=False)
             loss.append(agent.latestLoss.numpy().item())
             reward.append(avgReward)
 
