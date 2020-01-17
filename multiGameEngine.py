@@ -6,8 +6,8 @@ EPSILON = 1e-5
 
 SECONDS_PER_TICK = 0.3
 
-GROUND_SPEED = 1.5
-AIR_SPEED = 0.8
+GROUND_SPEED = 1.5#2.0
+AIR_SPEED = 0.8#1.2
 GRAVITY = -3
 JUMP_FORCE = 3.4 #4
 ACCELERATION_FORCE = 1.0 #0.2
@@ -143,6 +143,13 @@ class MultiGameEngine:
 
         self.players_x += dx
         self.players_y += dy
+
+        at_x = self.players_x
+        inds = ifloor(at_x)
+        inds %= self.level_heights.shape[1]
+
+        heights = self.level_heights[np.arange(self.n_games), inds]
+        self.players_on_ground = (self.players_y-1e-3) <= heights
 
 
     def getAgentInputs(self):
