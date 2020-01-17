@@ -216,7 +216,7 @@ experimentLayouts = [{
             }
         ]
 },{
-        "numLevels": 40000,
+        "numLevels": 80000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
         "name": "Premade2-LRvar-FD0.8-RAMsingle0.2-ATdq",
