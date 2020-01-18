@@ -168,6 +168,11 @@ experimentLayouts = [{
             }, {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: SingleFrame((1-t)*0.95+0.05),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.003,
+                "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: MultiFrame(0.2,6),
                 "agentType": "dq"
             }, {
@@ -378,6 +383,11 @@ experimentLayouts = [{
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: SingleFrame(0.2),
+                "agentType": "dq"
+            }, {
+                "learningRate": lambda t: 0.003,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: SingleFrame((1-t)*0.95+0.05),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.003,
