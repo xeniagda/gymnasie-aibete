@@ -83,33 +83,33 @@ experimentLayouts = [{
         "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
-        "name": "Nena3-LR0.003-FD0.8-RAMblendVar1-ATdq",
+        "name": "Nena3-LR0.003-FD0.8-RAMepsvar-ATdq",
         "levelGenerator": NenaGenerator(3),
         "parameterSets": [
             {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(SingleFrame(0.2), NoRandomness(), 20, 20),
+                "randomActionMethod": lambda t: SingleFrame(0),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,1), NoRandomness(), 20, 20),
+                "randomActionMethod": lambda t: SingleFrame(0.05),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,5), NoRandomness(), 20, 20),
+                "randomActionMethod": lambda t: SingleFrame(0.2),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,10), NoRandomness(), 20, 20),
+                "randomActionMethod": lambda t: SingleFrame(0.5),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,30), NoRandomness(), 20, 20),
+                "randomActionMethod": lambda t: SingleFrame(1.0),
                 "agentType": "dq"
             }
         ]
@@ -302,33 +302,33 @@ experimentLayouts = [{
         "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
-        "name": "Premade2-LR0.003-FD0.8-RAMblendVar1-ATdq",
+        "name": "Premade2-LR0.003-FD0.8-RAMepsvar-ATdq",
         "levelGenerator": PremadeLevelGenerator(2),
         "parameterSets": [
             {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(SingleFrame(0.2), NoRandomness(), 20, 20),
+                "randomActionMethod": lambda t: SingleFrame(0),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,1), NoRandomness(), 20, 20),
+                "randomActionMethod": lambda t: SingleFrame(0.05),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,5), NoRandomness(), 20, 20),
+                "randomActionMethod": lambda t: SingleFrame(0.2),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,10), NoRandomness(), 20, 20),
+                "randomActionMethod": lambda t: SingleFrame(0.5),
                 "agentType": "dq"
             }, {
                 "learningRate": lambda t: 0.003,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: Blend(MultiFrame(0.2,30), NoRandomness(), 20, 20),
+                "randomActionMethod": lambda t: SingleFrame(1.0),
                 "agentType": "dq"
             }
         ]
