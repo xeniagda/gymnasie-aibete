@@ -102,8 +102,8 @@ class DeepQlearner:
 
         loss = self.train_on_batch(input, action, new_input, reward)
         
-        if self.load_path is not None:
-            self.save(self.load_path)
+        #if self.load_path is not None:
+        #    self.save(self.load_path)
 
         return loss.numpy()
 
