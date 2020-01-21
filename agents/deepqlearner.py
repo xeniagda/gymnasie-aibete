@@ -80,7 +80,7 @@ class DeepQlearner:
             return [rand_action] * agentInputs.shape[0]
         else:
             pred = self.model.call(agentInputs)
-            print(pred[0])
+            #print(pred[0])
             return [ACTIONS[x] for x in np.argmax(pred, axis=1)]
 
     def update(self, oldAgentInputs, actions, newAgentInputs, rewards):
