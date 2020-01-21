@@ -33,9 +33,9 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
     reward = []
 
     for i in range(numLevels // NUM_LEVELS_PARALLEL):
-        agent.random_action_method = parameterSet.randomActionMethod(i/(numLevels))
-        agent.learning_rate = parameterSet.learningRate(i/(numLevels))
-        agent.future_discount = parameterSet.futureDiscount(i/(numLevels))
+        agent.random_action_method = parameterSet.randomActionMethod(float(i)/(numLevels // NUM_LEVELS_PARALLEL))
+        agent.learning_rate = parameterSet.learningRate(float(i)/(numLevels // NUM_LEVELS_PARALLEL))
+        agent.future_discount = parameterSet.futureDiscount(float(i)/(numLevels // NUM_LEVELS_PARALLEL))
 
         levels = [levelGenerator.generate(ticksPerLevel) for _ in range(NUM_LEVELS_PARALLEL)]
 
