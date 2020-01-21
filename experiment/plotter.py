@@ -85,7 +85,7 @@ class Plotter():
         fig.show()
 
     
-    def plotForPaper(experiments,verticalZoom,plotOnlyAverage=False,smoothing=1):
+    def plotForPaper(experiments,verticalZoom,plotOnlyAverage=False,smoothing=1, show_plot=False):
 
         fig, rewardSubplot = plt.subplots(1,1)
         fig.set_size_inches(6, 5)
@@ -121,7 +121,8 @@ class Plotter():
                 },color,plotOnlyAverage,experimentData["numLevels"]*experimentData["ticksPerLevel"]/1000,verticalZoom,smoothing,notInLabel=notInLabel)
                 color+=1
 
-        #fig.show()
+        if show_plot:
+            fig.show()
 
         rewardSubplot.legend(loc='lower right')
 
@@ -170,7 +171,13 @@ class Plotter():
         else:
             subplot.plot(xVals,yVals,color=("C"+str(colorIndex%10)),label=label)
 
-        stds = dataLists.std(axis=0)
+        smoothed_data = []
+        for dataList in dataLists:
+            smoothed_data.append(smoothCurve(dataList, smoothing))
+
+        smoothed_data = np.array(smoothed_data)
+
+        stds = smoothed_data.std(axis=0)
         stds /= 4
         subplot.fill_between(xVals,yVals - stds, yVals + stds, color=("C" +str(colorIndex%10)), alpha=0.1)
 
