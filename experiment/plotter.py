@@ -166,6 +166,10 @@ class Plotter():
         else:
             subplot.plot(xVals,yVals,color=("C"+str(colorIndex%10)),label=label)
 
+        stds = dataLists.std(axis=0)
+        stds /= 4
+        subplot.fill_between(xVals,yVals - stds, yVals + stds, color=("C" +str(colorIndex%10)), alpha=0.1)
+
     def getFluctuation(dataList):
         fluct = []
         for i in range(len(dataList)-1):
