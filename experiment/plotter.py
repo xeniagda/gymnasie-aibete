@@ -21,14 +21,20 @@ def zipDicts(d):
     
     return ret
 
-def averageChunks(vals):
+def smoothCurve(vals,smoothing):
     """chunkSize = 1#len(vals)//15
     res = []
     for i in range(0, len(vals), chunkSize):
         res.append(sum(vals[i:min(i+chunkSize,len(vals))])/(min(i+chunkSize,len(vals))-i))
     return res
     """
-    return vals
+    vals2 = [0,0]
+    for v in vals:
+        vals2.append(v)
+    newVals = []
+    for i in range(len(vals2)-smoothing+1):
+        newVals.append(sum(vals2[i:i+smoothing])/smoothing)
+    return newVals
 
 class Plotter():
     def __init__(self):
@@ -79,10 +85,10 @@ class Plotter():
         fig.show()
 
     
-    def plotForPaper(experiments,verticalZoom,plotOnlyAverage=False):
+    def plotForPaper(experiments,verticalZoom,plotOnlyAverage=False,smoothing=1):
 
         fig, rewardSubplot = plt.subplots(1,1)
-        fig.set_size_inches(5, 5)
+        fig.set_size_inches(6, 5)
 
         rewardSubplot.set_xlabel('Thousands of ticks played')
         rewardSubplot.set_ylabel('Reward')
@@ -112,22 +118,20 @@ class Plotter():
             for parameterSetData in experimentData["parameterSets"]:
                 Plotter.addParemterSetToSubplots(parameterSetData,{
                     "reward":rewardSubplot
-                },color,plotOnlyAverage,experimentData["numLevels"]*experimentData["ticksPerLevel"]/1000,verticalZoom,notInLabel=notInLabel)
+                },color,plotOnlyAverage,experimentData["numLevels"]*experimentData["ticksPerLevel"]/1000,verticalZoom,smoothing,notInLabel=notInLabel)
                 color+=1
 
-        fig.show()
+        #fig.show()
 
         rewardSubplot.legend(loc='lower right')
 
         box = rewardSubplot.get_position()
         rewardSubplot.set_position([box.x0, box.y0, box.width, box.height*0.8])
 
-        # Put a legend to the right of the current axis
         rewardSubplot.legend(loc='lower center', bbox_to_anchor=(0.5, 1))
         fig.savefig("paper/"+experiments[0]["name"]+".png", bbox_inches='tight')
 
-
-    def addParemterSetToSubplots(parameterSetData,subplots,colorIndex,plotOnlyAverage,ticksPlayed,verticalZoom,haveLabel=True,notInLabel=[]):
+    def addParemterSetToSubplots(parameterSetData,subplots,colorIndex,plotOnlyAverage,ticksPlayed,verticalZoom,smoothing,haveLabel=True,notInLabel=[]):
         label = []
         if "learningRate" not in notInLabel:
             label.append("LR=" + parameterSetData["learningRate"])
@@ -137,7 +141,7 @@ class Plotter():
             label.append(parameterSetData["randomActionMethod"])
         if "agentType" not in notInLabel:
             label.append(parameterSetData["agentType"])
-            
+        
         label = ", ".join(label)
 
         zippedResults = zipDicts(parameterSetData["results"])
@@ -147,19 +151,19 @@ class Plotter():
             data = np.array(zippedResults[key])
 
             if not plotOnlyAverage:
-                Plotter.addCurvesToSubplot(subplots[key],data[:,:int(data.shape[1]*verticalZoom)],ticksPlayed*verticalZoom,colorIndex)
+                Plotter.addCurvesToSubplot(subplots[key],data[:,:int(data.shape[1]*verticalZoom)],colorIndex,ticksPlayed*verticalZoom,smoothing)
             
-            Plotter.addAverageToSubplot(subplots[key],data[:,:int(data.shape[1]*verticalZoom)],label,colorIndex,ticksPlayed*verticalZoom,haveLabel)
+            Plotter.addAverageToSubplot(subplots[key],data[:,:int(data.shape[1]*verticalZoom)],label,colorIndex,ticksPlayed*verticalZoom,haveLabel,smoothing)
 
-    def addCurvesToSubplot(subplot,dataLists,colorIndex,ticksPlayed):
+    def addCurvesToSubplot(subplot,dataLists,colorIndex,ticksPlayed,smoothing):
         for d in dataLists:
-            yVals = averageChunks(d)
-            xVals = np.linspace(0,ticksPlayed,len(yVals))
-            subplot.plot(xVals,yVals,color=("C"+str(colorIndex%10)),alpha=0.2)
+            yVals = smoothCurve(d,smoothing)
+            xVals = np.linspace(ticksPlayed/len(yVals),ticksPlayed,len(yVals))
+            subplot.plot(xVals,yVals,color=("C"+str(int(colorIndex%10))),alpha=0.2)
 
-    def addAverageToSubplot(subplot,dataLists,label,colorIndex,ticksPlayed,haveLabel):
-        yVals = averageChunks(averageLists(dataLists))
-        xVals = np.linspace(0,ticksPlayed,len(yVals))
+    def addAverageToSubplot(subplot,dataLists,label,colorIndex,ticksPlayed,haveLabel,smoothing):
+        yVals = smoothCurve(averageLists(dataLists),smoothing)
+        xVals = np.linspace(ticksPlayed/len(yVals),ticksPlayed,len(yVals))
         print(len(yVals))
         if not haveLabel:
             subplot.plot(xVals,yVals,color=("C"+str(colorIndex%10)))
