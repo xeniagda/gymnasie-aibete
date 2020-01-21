@@ -85,7 +85,7 @@ class Plotter():
         fig.show()
 
     
-    def plotForPaper(experiments,verticalZoom,plotOnlyAverage=False,smoothing=1):
+    def plotForPaper(experiments,verticalZoom,plotOnlyAverage=False,smoothing=1, show_plot=False):
 
         fig, rewardSubplot = plt.subplots(1,1)
         fig.set_size_inches(6, 5)
@@ -121,7 +121,8 @@ class Plotter():
                 },color,plotOnlyAverage,experimentData["numLevels"]*experimentData["ticksPerLevel"]/1000,verticalZoom,smoothing,notInLabel=notInLabel)
                 color+=1
 
-        #fig.show()
+        if show_plot:
+            fig.show()
 
         rewardSubplot.legend(loc='lower right')
 
@@ -169,6 +170,19 @@ class Plotter():
             subplot.plot(xVals,yVals,color=("C"+str(colorIndex%10)))
         else:
             subplot.plot(xVals,yVals,color=("C"+str(colorIndex%10)),label=label)
+
+        smoothed_data = []
+        for dataList in dataLists:
+            smoothed_data.append(smoothCurve(dataList, smoothing))
+
+        smoothed_data = np.array(smoothed_data).T
+
+        smoothed_data.sort()
+        for (low, high) in [(0.25, 0.75)]:
+            quartile_low = smoothed_data[:, int(low * smoothed_data.shape[1])]
+            quartile_high = smoothed_data[:, int(high * smoothed_data.shape[1])]
+
+            subplot.fill_between(xVals, quartile_low, quartile_high, color=("C" +str(colorIndex%10)), alpha=0.1)
 
     def getFluctuation(dataList):
         fluct = []
