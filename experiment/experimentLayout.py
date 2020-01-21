@@ -444,4 +444,32 @@ experimentLayouts = [{
                 "agentType": "dq"
             }
         ]
+},{
+        "numLevels": 40000,
+        "ticksPerLevel": 100,
+        "runsPerSet": 100,
+        "name": "Nena3-LR0.003-FD0.8-RAMepsdec-ATdq",
+        "levelGenerator": NenaGenerator(3),
+        "parameterSets": [
+            {
+                "learningRate": lambda t: 0.003,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: SingleFrame((1-t)*0.95+0.05),
+                "agentType": "dq"
+            }
+        ]
+},{
+        "numLevels": 40000,
+        "ticksPerLevel": 100,
+        "runsPerSet": 100,
+        "name": "Premade2-LR0.003-FD0.8-RAMepsdec-ATdq",
+        "levelGenerator": PremadeLevelGenerator(2),
+        "parameterSets": [
+            {
+                "learningRate": lambda t: 0.003,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: SingleFrame((1-t)*0.95+0.05),
+                "agentType": "dq"
+            }
+        ]
 }]
