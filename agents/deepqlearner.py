@@ -55,7 +55,7 @@ class DeepQlearner:
 
         self.model = RLModel()
         self.model.build((None, AGENT_INPUT_SIZE))
-
+        self.load_path = load_path
         if load_path is not None and os.path.isfile(load_path):
             print("Loading")
             self.model.load_weights(load_path)
@@ -80,13 +80,14 @@ class DeepQlearner:
             return [rand_action] * agentInputs.shape[0]
         else:
             pred = self.model.call(agentInputs)
+            print(pred[0])
             return [ACTIONS[x] for x in np.argmax(pred, axis=1)]
 
     def update(self, oldAgentInputs, actions, newAgentInputs, rewards):
         # Lägg till i experience_replay
 
         actions = np.array([ACTIONS.index(action) for action in actions])
-
+        #print(["LEFT","RIGHT","JUMP","NONE"][actions[0]],rewards[0])
         self.exp_rep.add_experinces(oldAgentInputs, actions, newAgentInputs, rewards)
 
         self.n_since_last_train += oldAgentInputs.shape[0]
@@ -100,6 +101,10 @@ class DeepQlearner:
         input, action, new_input, reward = self.exp_rep.get_random_minibatch(BATCH_SIZE)
 
         loss = self.train_on_batch(input, action, new_input, reward)
+        
+        if self.load_path is not None:
+            self.save(self.load_path)
+
         return loss.numpy()
 
     def train_on_batch(self, agent_input_before, action, agent_input_after,
