@@ -175,11 +175,14 @@ class Plotter():
         for dataList in dataLists:
             smoothed_data.append(smoothCurve(dataList, smoothing))
 
-        smoothed_data = np.array(smoothed_data)
+        smoothed_data = np.array(smoothed_data).T
 
-        stds = smoothed_data.std(axis=0)
-        stds /= 4
-        subplot.fill_between(xVals,yVals - stds, yVals + stds, color=("C" +str(colorIndex%10)), alpha=0.1)
+        smoothed_data.sort()
+        for (low, high) in [(0.25, 0.75)]:
+            quartile_low = smoothed_data[:, int(low * smoothed_data.shape[1])]
+            quartile_high = smoothed_data[:, int(high * smoothed_data.shape[1])]
+
+            subplot.fill_between(xVals, quartile_low, quartile_high, color=("C" +str(colorIndex%10)), alpha=0.1)
 
     def getFluctuation(dataList):
         fluct = []
