@@ -27,7 +27,8 @@ class Experiment:
             runsPerSet=2, 
             numLevels=10, 
             ticksPerLevel=100, 
-            levelGenerator = levelGenerator.FlatLevelGenerator(), 
+            levelGenerator = levelGenerator.FlatLevelGenerator(),
+            saveEveryRun = False,
             **kwargs):
 
         self.parameterSets = [ParameterSet.loadFromDict(paramSet) for paramSet in parameterSets]
@@ -36,7 +37,7 @@ class Experiment:
         self.numLevels = numLevels
         self.levelGenerator = levelGenerator
         self.name = name
-        
+        self.saveEveryRun = saveEveryRun
 
 
     @staticmethod
@@ -61,7 +62,12 @@ class Experiment:
             os.makedirs(network_path)
 
         for idx, paramSet in tqdm(enumerate(self.parameterSets)):
-            save_name = os.path.join(network_path, "paramset_" + str(idx) + ".h5")
+            if self.saveEveryRun:
+                ser_path = os.path.join(network_path, "every_run", "paramset-" + str(idx))
+                if not os.path.isdir(ser_path):
+                    os.makedirs(ser_path)
+
+            save_name = os.path.join(network_path, "best_paramset_" + str(idx) + ".h5")
 
             best_reward_so_far = 0
             for i in tqdm(range(self.runsPerSet)):
@@ -74,6 +80,10 @@ class Experiment:
 
                 if last_reward > best_reward_so_far:
                     best_reward_so_far = last_reward
+                    agent.save(save_name)
+
+                if self.saveEveryRun:
+                    save_name = os.path.join(ser_path, "run-" + str(i) + ".h5")
                     agent.save(save_name)
 
             self.saveToFile()
