@@ -10,28 +10,13 @@ experimentLayouts = [{
         "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
-        "name": "Nena3-LRvar-FD0.8-RAMsingle0.2-ATdq",
+        "name": "Nena3-LR0.01-FD0.8-RAMsingle0.2-ATdq",
         "levelGenerator": NenaGenerator(3),
         "parameterSets": [
             {
-                "learningRate": lambda t: 0.1,
-                "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: SingleFrame(0.2),
-                "agentType": "dq"
-            }, {
-                "learningRate": lambda t: 0.03,
-                "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: SingleFrame(0.2),
-                "agentType": "dq"
-            }, {
                 "learningRate": lambda t: 0.01,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: SingleFrame(0.2),
-                "agentType": "dq"
-            }, {
-                "learningRate": lambda t: 0.003,
-                "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: SingleFrame(0.2),
+                "randomActionMethod": lambda t: MultiFrame(0.2, 6),
                 "agentType": "dq"
             }
         ]
