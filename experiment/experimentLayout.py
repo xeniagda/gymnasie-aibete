@@ -10,7 +10,7 @@ experimentLayouts = [{
         "numLevels": 40000,
         "ticksPerLevel": 100,
         "runsPerSet": 100,
-        "name": "Nena3-LR0.01-FD0.8-RAMsingle0.2-ATdq",
+        "name": "Nena3-LR0.01-FD0.8-RAMsingle0.2-ATdq-SER",
         "levelGenerator": NenaGenerator(3),
         "parameterSets": [
             {
@@ -19,7 +19,8 @@ experimentLayouts = [{
                 "randomActionMethod": lambda t: MultiFrame(0.2, 6),
                 "agentType": "dq"
             }
-        ]
+        ],
+        "saveEveryRun": True,
 },{
         "numLevels": 40000,
         "ticksPerLevel": 100,
