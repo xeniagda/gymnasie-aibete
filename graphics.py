@@ -16,11 +16,14 @@ PLAYER_FOLLOW_MARGINS = 7
 
 AGENT_INPUT_SCALE = 20
 
+SAVE_PATH = "render_game/frame-{:02}-{:04}.png" #.format(level-nr, tick)
+
+AGENT_NAME = "80"
 DRAW_TEXT = True
 
 STATIC_SCROLL = True
 
-SAVE_PATH = "render_game/frame-{:02}-{:04}.png" #.format(level-nr, tick)
+DRAW_BACKGROUND = False
 
 def np_2_col(np):
     return [int(min(255, np[0] * 256)), int(min(255, np[1] * 256)), int(min(255, np[2] * 256))]
@@ -41,6 +44,7 @@ class Graphics():
 
     def setGameEngine(self,game_engine):
         self.game_engine = game_engine
+        self.set_offset()
 
     def setAgent(self, agent):
         self.agent = agent
@@ -54,7 +58,7 @@ class Graphics():
 
     def set_offset(self):
         if STATIC_SCROLL:
-            self.delta_x = self.delta_x * 0.8 + 0.2 * (self.game_engine.ticks * 0.3 - 7)
+            self.delta_x = (self.game_engine.ticks * 0.3 - 7) #self.delta_x * 0.8 + 0.2 * (self.game_engine.ticks * 0.3 - 7)
             self.delta_y = self.delta_y * 0.9 + 0.1 * (self.game_engine.level[int(self.delta_x) + 7][0] - 5)
         else:
             player = self.game_engine.player
@@ -77,93 +81,98 @@ class Graphics():
         if self.game_engine == None:
             return
 
-        self.set_offset()
+        #self.set_offset()
 
         player = self.game_engine.player
 
-        if self.reward > 0:
-            v = min(int(self.reward * 255), 255)
-            self.screen.fill((255 - v, 255, 255 - v))
-        elif self.reward < 0:
-            v = min(int(-self.reward * 255), 255)
-            self.screen.fill((255, 255 - v, 255 - v))
+        if DRAW_BACKGROUND:
+            if self.reward > 0:
+                v = min(int(self.reward * 255), 255)
+                self.screen.fill((255 - v, 255, 255 - v))
+            elif self.reward < 0:
+                v = min(int(-self.reward * 255), 255)
+                self.screen.fill((255, 255 - v, 255 - v))
+            else:
+                self.screen.fill((255, 255, 255))
         else:
             self.screen.fill((255, 255, 255))
 
         player_rec = self.getRect(player.x - self.delta_x, player.y - self.delta_y,
                       player.width, player.height)
 
-        pygame.draw.rect(self.screen, (22, 55, 22), player_rec)
-        pygame.draw.rect(self.screen, (55, 112, 55), player_rec.inflate(-2, -2))
-        pygame.draw.rect(self.screen, (112, 162, 112), player_rec.inflate(-4, -4))
+        pygame.draw.rect(self.screen, (55, 55, 22), player_rec)
+        pygame.draw.rect(self.screen, (112, 112, 55), player_rec.inflate(-2, -2))
+        pygame.draw.rect(self.screen, (162, 162, 112), player_rec.inflate(-4, -4))
 
-        for x, (wallHeight,isBad) in enumerate(self.game_engine.level):
-            rec = self.getRect(x - self.delta_x, 0, 1, wallHeight - self.delta_y)
-            col_outer = (38, 95, 133)
-            col_inner = (107, 164, 201)
-            if isBad:
-                col_outer = (133, 50, 10)
-                col_inner = (201, 80, 47)
+        if DRAW_BACKGROUND:
+            for x, (wallHeight,isBad) in enumerate(self.game_engine.level):
+                rec = self.getRect(x - self.delta_x, 0, 1, wallHeight - self.delta_y)
+                col_outer = (38, 95, 133)
+                col_inner = (107, 164, 201)
+                if isBad:
+                    col_outer = (133, 50, 10)
+                    col_inner = (201, 80, 47)
 
-            if self.screen.get_bounding_rect().colliderect(rec):
-                pygame.draw.rect(self.screen, col_outer, rec)
-                pygame.draw.rect(self.screen, col_inner, rec.inflate(-2, -2))
+                if self.screen.get_bounding_rect().colliderect(rec):
+                    pygame.draw.rect(self.screen, col_outer, rec)
+                    pygame.draw.rect(self.screen, col_inner, rec.inflate(-2, -2))
 
         ### Rita agentInput
 
-        rec = pygame.Rect(AGENT_INPUT_SCALE*(VISION_SIZE-1)/2, AGENT_INPUT_SCALE*(VISION_SIZE-1)/2, AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
-                
-        pygame.draw.rect(self.screen, (0,0,255), rec)
+        if DRAW_BACKGROUND:
+            rec = pygame.Rect(AGENT_INPUT_SCALE*(VISION_SIZE-1)/2, AGENT_INPUT_SCALE*(VISION_SIZE-1)/2, AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
 
-        if self.agent_input is not None:
-            agentInput = self.agent_input
-        else:
-            agentInput = self.game_engine.getAgentInput()
+            pygame.draw.rect(self.screen, (0,0,255), rec)
 
-        for y in range(VISION_SIZE):
-            for x in range(VISION_SIZE):
+            if self.agent_input is not None:
+                agentInput = self.agent_input
+            else:
+                agentInput = self.game_engine.getAgentInput()
 
-                rec = pygame.Rect(x * AGENT_INPUT_SCALE, (VISION_SIZE-1)*AGENT_INPUT_SCALE-y * AGENT_INPUT_SCALE, AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
-                # Visa bakgrunden igenom
-                inp = agentInput[y * VISION_SIZE + x]
+            for y in range(VISION_SIZE):
+                for x in range(VISION_SIZE):
 
-                # RGB, 0..1
-                col = np.zeros((3, ))
-                if inp > 0:
-                    col = np.array([1 - inp, 1 - inp, 1 - inp])
+                    rec = pygame.Rect(x * AGENT_INPUT_SCALE, (VISION_SIZE-1)*AGENT_INPUT_SCALE-y * AGENT_INPUT_SCALE, AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
+                    # Visa bakgrunden igenom
+                    inp = agentInput[y * VISION_SIZE + x]
+
+                    # RGB, 0..1
+                    col = np.zeros((3, ))
+                    if inp > 0:
+                        col = np.array([1 - inp, 1 - inp, 1 - inp])
+                    else:
+                        col = np.array([1, 1 + inp, 1 + inp])
+
+                    col_back = (col + np.array([0.5, 0.5, 0.5])) / 2
+                    if x == y == AROUND_RAD:
+                        col_back = (col + np.array([0, 0, 1])) / 2
+                        rec = rec.inflate(-2, -2)
+
+                    pygame.draw.rect(self.screen, np_2_col(col_back), rec)
+                    pygame.draw.rect(self.screen, np_2_col(col), rec.inflate(-2, -2))
+
+
+            for i in range(VISION_SIZE * VISION_SIZE, len(agentInput)):
+                i_draw = i - VISION_SIZE * VISION_SIZE
+                rec = pygame.Rect((i_draw + VISION_SIZE) * AGENT_INPUT_SCALE, 0, AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
+
+                val = agentInput[i]
+                val_draw = 1 - 1 / (abs(val) + 1)
+
+                if val < 0:
+                    col = np.array([1., 1. - val_draw, 1. - val_draw])
                 else:
-                    col = np.array([1, 1 + inp, 1 + inp])
-
+                    col = np.array([1. - val_draw, 1., 1. - val_draw])
                 col_back = (col + np.array([0.5, 0.5, 0.5])) / 2
-                if x == y == AROUND_RAD:
-                    col_back = (col + np.array([0, 0, 1])) / 2
-                    rec = rec.inflate(-2, -2)
 
                 pygame.draw.rect(self.screen, np_2_col(col_back), rec)
                 pygame.draw.rect(self.screen, np_2_col(col), rec.inflate(-2, -2))
-
-
-        for i in range(VISION_SIZE * VISION_SIZE, len(agentInput)):
-            i_draw = i - VISION_SIZE * VISION_SIZE
-            rec = pygame.Rect((i_draw + VISION_SIZE) * AGENT_INPUT_SCALE, 0, AGENT_INPUT_SCALE, AGENT_INPUT_SCALE)
-
-            val = agentInput[i]
-            val_draw = 1 - 1 / (abs(val) + 1)
-
-            if val < 0:
-                col = np.array([1., 1. - val_draw, 1. - val_draw])
-            else:
-                col = np.array([1. - val_draw, 1., 1. - val_draw])
-            col_back = (col + np.array([0.5, 0.5, 0.5])) / 2
-
-            pygame.draw.rect(self.screen, np_2_col(col_back), rec)
-            pygame.draw.rect(self.screen, np_2_col(col), rec.inflate(-2, -2))
 
         #Rita text
         if DRAW_TEXT and self.agent != None:
             text_x = (VISION_SIZE + 2) * AGENT_INPUT_SCALE
             self.screen.blit(self.font.render(str(self.game_engine.level_n) + "," + str(self.game_engine.ticks), True, (0, 128, 0)),(text_x,0))
-            id_text = self.font.render("hello world", True, (0, 128, 0))
+            id_text = self.font.render(AGENT_NAME, True, (0, 128, 0))
             self.screen.blit(id_text, (player_rec.left, player_rec.top - id_text.get_height()))
 
         #if agent!=None:
