@@ -49,8 +49,8 @@ ui = UI(RENDER,0.06)
 
 def main():
     path = "results/networks/Nena3-LRvar-FD0.8-RAMsingle0.2-ATdq-SER/every_run/paramset-1-run-0/save-10.h5"
-    # agent = DeepQlearner(NoRandomness(), future_discount=0.8, learning_rate=0.00,load_path=path)
-    agent = HumanAgent(ui)
+    agent = DeepQlearner(NoRandomness(), future_discount=0.8, learning_rate=0.00,load_path=path)
+    # agent = HumanAgent(ui)
 
     driver = Driver(WORLD_SIZE, agent)
     
