@@ -68,10 +68,10 @@ class Experiment:
             for i in tqdm(range(self.runsPerSet)):
                 if self.saveEveryRun:
                     serPath = os.path.join(network_path, "every_run", "paramset-" + str(idx) + "-run-" + str(i))
-                    if not os.path.isdir(ser_path):
-                        os.makedirs(ser_path)
+                    if not os.path.isdir(serPath):
+                        os.makedirs(serPath)
                 else:
-                    ser_path = None
+                    serPath = None
 
                 agent, last_reward = experimentRunner.run(
                     paramSet,
