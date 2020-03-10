@@ -93,7 +93,7 @@ class DeepQlearner:
         self.n_since_last_train += oldAgentInputs.shape[0]
 
         if self.n_since_last_train > TRAIN_RATE:
-            loss = self.train_on_random_minibatch()
+            #loss = self.train_on_random_minibatch()
 
             self.n_since_last_train = 0
 
