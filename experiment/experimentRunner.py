@@ -55,6 +55,8 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels,serPath):
                 serSavePath = os.path.join(serPath, "save-" + str(save_n) + ".h5")
                 agent.save(serSavePath)
 
+                save_n += 1
+
     parameterSet.addResult(loss,reward)
 
     return agent, reward[-1]
