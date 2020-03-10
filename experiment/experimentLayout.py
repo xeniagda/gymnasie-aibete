@@ -14,9 +14,9 @@ experimentLayouts = [{
         "levelGenerator": NenaGenerator(3),
         "parameterSets": [
             {
-                "learningRate": lambda t: 0.003,
+                "learningRate": lambda t: 0.01,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: MultiFrame(0.2, 6),
+                "randomActionMethod": lambda t: SinSingleFrame(0.2),
                 "agentType": "dq"
             }
         ],
