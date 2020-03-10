@@ -1,8 +1,9 @@
 import time
 from multiGameEngine import MultiGameEngine
 
-def playGames(levels,agent,maxTime,render,ui,logTime=False, train=True):
+def playGames(levels,agent,maxTime,render,ui,logTime=False, train=True, i=0):
     engine = MultiGameEngine(levels)
+    engine.level_n = i
 
     if render:
         ui.setGameEngine(engine.into_regular_engine(0, ui))

@@ -20,6 +20,8 @@ DRAW_TEXT = True
 
 STATIC_SCROLL = True
 
+SAVE_PATH = "render_game/frame-{:02}-{:04}.png" #.format(level-nr, tick)
+
 def np_2_col(np):
     return [int(min(255, np[0] * 256)), int(min(255, np[1] * 256)), int(min(255, np[2] * 256))]
 
@@ -160,7 +162,7 @@ class Graphics():
         #Rita text
         if DRAW_TEXT and self.agent != None:
             text_x = (VISION_SIZE + 2) * AGENT_INPUT_SCALE
-            self.screen.blit(self.font.render(str(self.game_engine.ticks), True, (0, 128, 0)),(text_x,0))
+            self.screen.blit(self.font.render(str(self.game_engine.level_n) + "," + str(self.game_engine.ticks), True, (0, 128, 0)),(text_x,0))
             id_text = self.font.render("hello world", True, (0, 128, 0))
             self.screen.blit(id_text, (player_rec.left, player_rec.top - id_text.get_height()))
 
@@ -168,6 +170,11 @@ class Graphics():
             #print(agent.random_epsilon)
 
         pygame.display.flip()
+
+        if SAVE_PATH is not None:
+            sp = SAVE_PATH.format(self.game_engine.level_n, self.game_engine.ticks)
+            print(sp)
+            pygame.image.save(self.screen, sp)
 
     def getRect(self,x,y,w,h):
         return pygame.Rect(int(x*SCALE),int(height-(y+h)*SCALE),math.ceil(w*SCALE+1),math.ceil(h*SCALE+1))

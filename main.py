@@ -9,19 +9,20 @@ import levelGenerator
 import time,sys
 from gamePlayer import *
 
+#random.seed(11)
 
 RANDOM_EPSILON = 0.2
 RENDER = True
 LOG_TIME = False
 TRAIN = False
-WORLD_TYPE = levelGenerator.NenaGenerator(3)
-WORLD_SIZE = 30
+WORLD_TYPE = levelGenerator.NenaGenerator(2)
+WORLD_SIZE = 60
 
-MAX_TIME = 100
+MAX_TIME = 200
 
 totalTicks = 0
 
-N_GAMES = 100
+N_GAMES = 1
 
 class Driver:
     def __init__(self,level_size,agent):
@@ -34,19 +35,22 @@ class Driver:
 
     def play(self):
         global totalTicks
+
+        i = 0
         while True:
             levels = [WORLD_TYPE.generate(self.level_size) for _ in range(N_GAMES)]
-            gamelen,reward = playGames(levels,self.agent,MAX_TIME,RENDER,ui,LOG_TIME, TRAIN)
+            gamelen,reward = playGames(levels,self.agent,MAX_TIME,RENDER,ui,LOG_TIME, TRAIN, i)
             totalTicks += gamelen
             if totalTicks%1000==0:
                 print(totalTicks,round(reward))
+            i += 1
 
-ui = UI(RENDER,0.01)
+ui = UI(RENDER,0.06)
 
 def main():
-    path = "results/networks/Nena3-LR0.01-FD0.8-RAMsingle0.2-ATdq-SER/every_run/paramset-0-run-0/save-40.h5"
-    agent = DeepQlearner(SingleFrame(0.01), future_discount=0.8, learning_rate=0.00,load_path=path)
-    # agent = HumanAgent(ui)
+    path = "results/networks/Nena3-LRvar-FD0.8-RAMsingle0.2-ATdq-SER/every_run/paramset-1-run-0/save-10.h5"
+    # agent = DeepQlearner(NoRandomness(), future_discount=0.8, learning_rate=0.00,load_path=path)
+    agent = HumanAgent(ui)
 
     driver = Driver(WORLD_SIZE, agent)
     

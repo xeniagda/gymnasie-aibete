@@ -29,6 +29,7 @@ class GameEngine:
         
         self.player = Player(0,level[0][0],0,0)
         self.ticks = 0
+        self.level_n = 0
 
     def performTick(self, action, draw=False, timeStep=SECONDS_PER_TICK):
         last_x = self.player.x
