@@ -9,7 +9,7 @@ import levelGenerator
 import time,sys
 from gamePlayer import *
 
-#random.seed(11)
+random.seed(11)
 
 RANDOM_EPSILON = 0.2
 RENDER = True
@@ -48,7 +48,7 @@ class Driver:
 ui = UI(RENDER,0.06)
 
 def main():
-    path = "results/networks/Nena3-LRvar-FD0.8-RAMsingle0.2-ATdq-SER/every_run/paramset-1-run-0/save-10.h5"
+    path = "results/networks/Nena3-LRvar-FD0.8-RAMsingle0.2-ATdq-SER/every_run/paramset-1-run-0/save-80.h5"
     agent = DeepQlearner(NoRandomness(), future_discount=0.8, learning_rate=0.00,load_path=path)
     # agent = HumanAgent(ui)
 
