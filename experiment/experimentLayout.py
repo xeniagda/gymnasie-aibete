@@ -18,7 +18,13 @@ experimentLayouts = [{
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: SingleFrame(0.2),
                 "agentType": "dq"
-            }
+            },
+            {
+                "learningRate": lambda t: 0.003,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: SingleFrame(0.2),
+                "agentType": "dq"
+            },
         ],
         "saveEveryRun": True,
 },{
