@@ -41,6 +41,8 @@ class MultiGameEngine:
 
         self.players_on_ground = np.ones((self.n_games, ), dtype="bool")
 
+        self.ticks = 0
+
     def performTick(self, actions, timeStep=SECONDS_PER_TICK):
         last_xs = np.array(self.players_x)
 
@@ -57,6 +59,8 @@ class MultiGameEngine:
         reward -= is_on_bad * SECONDS_PER_TICK
 
         agentInput = self.getAgentInputs()
+
+        self.ticks += 1
 
         return (agentInput, reward)
 
@@ -212,6 +216,7 @@ class MultiGameEngine:
         ge.player.vx = self.players_vx[index]
         ge.player.vy = self.players_vy[index]
         ge.player.width = PLAYER_WIDTH
+        ge.ticks = self.ticks
 
         return ge
 

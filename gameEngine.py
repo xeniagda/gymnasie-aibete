@@ -28,6 +28,7 @@ class GameEngine:
         self.level = level
         
         self.player = Player(0,level[0][0],0,0)
+        self.ticks = 0
 
     def performTick(self, action, draw=False, timeStep=SECONDS_PER_TICK):
         last_x = self.player.x
@@ -50,6 +51,8 @@ class GameEngine:
         agentInput = self.getAgentInput()
 
         terminate = (self.player.x>=len(self.level) or action == Actions.RESTART)
+
+        self.ticks += 1
 
         return (agentInput,reward,terminate)
     

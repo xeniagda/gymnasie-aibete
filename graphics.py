@@ -4,7 +4,7 @@ import time
 import pygame
 from gameEngine import VISION_SIZE, AROUND_RAD, SECONDS_PER_TICK
 
-width, height = size = 720, 600
+width, height = size = 1020, 800 # 720, 600
 
 TIME_PER_FRAME = 0.002
 
@@ -17,6 +17,8 @@ PLAYER_FOLLOW_MARGINS = 7
 AGENT_INPUT_SCALE = 20
 
 DRAW_TEXT = False
+
+STATIC_SCROLL = True
 
 def np_2_col(np):
     return [int(min(255, np[0] * 256)), int(min(255, np[1] * 256)), int(min(255, np[2] * 256))]
@@ -33,7 +35,7 @@ class Graphics():
             self.font = pygame.font.SysFont("comicsansms", 12)
 
         self.delta_x = 0
-        self.delta_y = 0
+        self.delta_y = -8
 
     def setGameEngine(self,game_engine):
         self.game_engine = game_engine
@@ -49,19 +51,25 @@ class Graphics():
         self.reward = self.reward * REWARD_CHANGE_SPEED ** SECONDS_PER_TICK + (1 - REWARD_CHANGE_SPEED ** SECONDS_PER_TICK) * reward
 
     def set_offset(self):
-        player = self.game_engine.player
+        if STATIC_SCROLL:
+            self.delta_x = self.delta_x * 0.8 + 0.2 * (self.game_engine.ticks * 0.3 - 7)
+            self.delta_y = self.delta_y * 0.9 + 0.1 * (self.game_engine.level[int(self.delta_x) + 7][0] - 5)
+        else:
+            player = self.game_engine.player
 
-        if player.x - self.delta_x < PLAYER_FOLLOW_MARGINS:
-            self.delta_x = player.x - PLAYER_FOLLOW_MARGINS
+            if player.x - self.delta_x < PLAYER_FOLLOW_MARGINS:
+                self.delta_x = player.x - PLAYER_FOLLOW_MARGINS
 
-        if player.x - self.delta_x > (width - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE:
-            self.delta_x = player.x - (width - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE
+            if player.x - self.delta_x > (width - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE:
+                self.delta_x = player.x - (width - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE
 
-        if player.y - self.delta_y < PLAYER_FOLLOW_MARGINS:
-            self.delta_y = player.y - PLAYER_FOLLOW_MARGINS
+            if player.y - self.delta_y < PLAYER_FOLLOW_MARGINS:
+                self.delta_y = player.y - PLAYER_FOLLOW_MARGINS
 
-        if player.y - self.delta_y > (height - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE:
-            self.delta_y = player.y - (height - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE
+            if player.y - self.delta_y > (height - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE:
+                self.delta_y = player.y - (height - PLAYER_FOLLOW_MARGINS * SCALE) / SCALE
+
+            print(self.delta_x, self.delta_y)
 
     def draw(self):
         if self.game_engine == None:
