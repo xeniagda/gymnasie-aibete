@@ -16,7 +16,7 @@ PLAYER_FOLLOW_MARGINS = 7
 
 AGENT_INPUT_SCALE = 20
 
-DRAW_TEXT = False
+DRAW_TEXT = True
 
 STATIC_SCROLL = True
 
@@ -32,7 +32,7 @@ class Graphics():
         self.reward = 0
 
         if DRAW_TEXT:
-            self.font = pygame.font.SysFont("comicsansms", 12)
+            self.font = pygame.font.SysFont("comicsansms", 15)
 
         self.delta_x = 0
         self.delta_y = -8
@@ -88,12 +88,12 @@ class Graphics():
         else:
             self.screen.fill((255, 255, 255))
 
-        rec = self.getRect(player.x - self.delta_x, player.y - self.delta_y,
+        player_rec = self.getRect(player.x - self.delta_x, player.y - self.delta_y,
                       player.width, player.height)
 
-        pygame.draw.rect(self.screen, (138, 36, 55), rec)
-        pygame.draw.rect(self.screen, (204, 90, 112), rec.inflate(-2, -2))
-        pygame.draw.rect(self.screen, (186, 84, 162), rec.inflate(-4, -4))
+        pygame.draw.rect(self.screen, (22, 55, 22), player_rec)
+        pygame.draw.rect(self.screen, (55, 112, 55), player_rec.inflate(-2, -2))
+        pygame.draw.rect(self.screen, (112, 162, 112), player_rec.inflate(-4, -4))
 
         for x, (wallHeight,isBad) in enumerate(self.game_engine.level):
             rec = self.getRect(x - self.delta_x, 0, 1, wallHeight - self.delta_y)
@@ -159,8 +159,10 @@ class Graphics():
 
         #Rita text
         if DRAW_TEXT and self.agent != None:
-            text_x = VISION_SIZE * AGENT_INPUT_SCALE
-            self.screen.blit(self.font.render(str(self.agent.random_action_method), True, (0, 128, 0)),(text_x,0))
+            text_x = (VISION_SIZE + 2) * AGENT_INPUT_SCALE
+            self.screen.blit(self.font.render(str(self.game_engine.ticks), True, (0, 128, 0)),(text_x,0))
+            id_text = self.font.render("hello world", True, (0, 128, 0))
+            self.screen.blit(id_text, (player_rec.left, player_rec.top - id_text.get_height()))
 
         #if agent!=None:
             #print(agent.random_epsilon)
