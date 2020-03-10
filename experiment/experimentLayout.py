@@ -7,7 +7,7 @@ from levelGenerator import *
 import math
 
 experimentLayouts = [{
-        "numLevels": 40000,
+        "numLevels": 80000,
         "ticksPerLevel": 100,
         "runsPerSet": 1,
         "name": "Nena3-LRvar-FD0.8-RAMsingle0.2-ATdq-SER",
