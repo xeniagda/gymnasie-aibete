@@ -62,28 +62,27 @@ class Experiment:
             os.makedirs(network_path)
 
         for idx, paramSet in tqdm(enumerate(self.parameterSets)):
-            if self.saveEveryRun:
-                ser_path = os.path.join(network_path, "every_run", "paramset-" + str(idx))
-                if not os.path.isdir(ser_path):
-                    os.makedirs(ser_path)
-
             save_name = os.path.join(network_path, "best_paramset_" + str(idx) + ".h5")
 
             best_reward_so_far = 0
             for i in tqdm(range(self.runsPerSet)):
+                if self.saveEveryRun:
+                    serPath = os.path.join(network_path, "every_run", "paramset-" + str(idx) + "-run-" + str(i))
+                    if not os.path.isdir(ser_path):
+                        os.makedirs(ser_path)
+                else:
+                    ser_path = None
+
                 agent, last_reward = experimentRunner.run(
                     paramSet,
                     self.levelGenerator,
                     self.ticksPerLevel,
-                    self.numLevels
+                    self.numLevels,
+                    serPath,
                 )
 
                 if last_reward > best_reward_so_far:
                     best_reward_so_far = last_reward
-                    agent.save(save_name)
-
-                if self.saveEveryRun:
-                    save_name = os.path.join(ser_path, "run-" + str(i) + ".h5")
                     agent.save(save_name)
 
             self.saveToFile()

@@ -15,7 +15,7 @@ NUM_LEVELS_PARALLEL = 500
 RESULT_RESOLUTION = 0.001
 
 
-def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
+def run(parameterSet,levelGenerator,ticksPerLevel,numLevels,serPath):
     #print("Running on parameters:")
     #print(parameterSet)
 
@@ -31,6 +31,8 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
     random.seed(0)
     loss = []
     reward = []
+
+    save_n = 0
 
     for i in range(numLevels // NUM_LEVELS_PARALLEL):
         agent.random_action_method = parameterSet.randomActionMethod(float(i)/(numLevels // NUM_LEVELS_PARALLEL))
@@ -48,6 +50,10 @@ def run(parameterSet,levelGenerator,ticksPerLevel,numLevels):
             playTime,avgReward = gamePlayer.playGames(levels,agent,ticksPerLevel,False,None,train=False)
             loss.append(agent.latestLoss.numpy().item())
             reward.append(avgReward)
+
+            if serPath is not None:
+                serSavePath = os.path.join(serPath, "save-" + str(save_n) + ".h5")
+                agent.save(serSavePath)
 
     parameterSet.addResult(loss,reward)
 
