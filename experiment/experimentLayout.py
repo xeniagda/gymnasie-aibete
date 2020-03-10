@@ -16,7 +16,7 @@ experimentLayouts = [{
             {
                 "learningRate": lambda t: 0.01,
                 "futureDiscount": lambda t: 0.8,
-                "randomActionMethod": lambda t: SinSingleFrame(0.2),
+                "randomActionMethod": lambda t: SingleFrame(0.2),
                 "agentType": "dq"
             }
         ],
