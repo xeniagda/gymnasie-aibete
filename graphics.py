@@ -16,9 +16,9 @@ PLAYER_FOLLOW_MARGINS = 7
 
 AGENT_INPUT_SCALE = 20
 
-SAVE_PATH = "render_game/frame-{:02}-{:04}.png" #.format(level-nr, tick)
+SAVE_PATH = "render_game/frame-{:04}.png" #.format(level-nr, tick)
 
-AGENT_NAME = "80"
+AGENT_NAME = "20"
 DRAW_TEXT = True
 
 STATIC_SCROLL = True
@@ -42,9 +42,12 @@ class Graphics():
         self.delta_x = 0
         self.delta_y = -8
 
+        self.save_idx = 0
+
     def setGameEngine(self,game_engine):
         self.game_engine = game_engine
         self.set_offset()
+        self.save_idx += 1
 
     def setAgent(self, agent):
         self.agent = agent
@@ -100,9 +103,12 @@ class Graphics():
         player_rec = self.getRect(player.x - self.delta_x, player.y - self.delta_y,
                       player.width, player.height)
 
-        pygame.draw.rect(self.screen, (55, 55, 22), player_rec)
-        pygame.draw.rect(self.screen, (112, 112, 55), player_rec.inflate(-2, -2))
-        pygame.draw.rect(self.screen, (162, 162, 112), player_rec.inflate(-4, -4))
+        player_color = [80, 193, 45]
+        for i in range(3):
+            col_mul = 1 / (3 - i)
+            col_mod = [int(ch * col_mul) for ch in player_color]
+
+            pygame.draw.rect(self.screen, col_mod, player_rec.inflate(-2 * i, -2 * i))
 
         if DRAW_BACKGROUND:
             for x, (wallHeight,isBad) in enumerate(self.game_engine.level):
@@ -181,7 +187,7 @@ class Graphics():
         pygame.display.flip()
 
         if SAVE_PATH is not None:
-            sp = SAVE_PATH.format(self.game_engine.level_n, self.game_engine.ticks)
+            sp = SAVE_PATH.format(self.save_idx)
             print(sp)
             pygame.image.save(self.screen, sp)
 
