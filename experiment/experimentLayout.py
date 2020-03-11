@@ -7,7 +7,7 @@ from levelGenerator import *
 import math
 
 experimentLayouts = [{
-        "numLevels": 80000,
+        "numLevels": 160000,
         "ticksPerLevel": 100,
         "runsPerSet": 1,
         "name": "Nena3-LRvar-FD0.8-RAMsingle0.2-ATdq-SER",
@@ -21,6 +21,12 @@ experimentLayouts = [{
             },
             {
                 "learningRate": lambda t: 0.003,
+                "futureDiscount": lambda t: 0.8,
+                "randomActionMethod": lambda t: SingleFrame(0.2),
+                "agentType": "dq"
+            },
+            {
+                "learningRate": lambda t: 0.001,
                 "futureDiscount": lambda t: 0.8,
                 "randomActionMethod": lambda t: SingleFrame(0.2),
                 "agentType": "dq"
